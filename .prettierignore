@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+dist/
+pnpm-lock.yaml
+
+# The brief is hand-written and is the source of truth — Prettier would reflow
+# its tables for no gain. See docs/ and CLAUDE.md.
+CLAUDE.md
+docs/

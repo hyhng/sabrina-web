@@ -5,7 +5,7 @@
 
 Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje klientka
 
-**Aktuální fáze: F1**
+**Aktuální fáze: F2**
 
 ---
 
@@ -14,8 +14,8 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | Fáze | Cíl | Závisí na | Stav |
 |---|---|---|---|
 | **F0** | Účty a infrastruktura | klientka zakládá účty | 🔒 čeká |
-| **F1** | Základ repa | — | ⏳ další |
-| **F2** | Web na seed datech + náhled pro klientku | F1 | |
+| **F1** | Základ repa | — | ✅ hotovo |
+| **F2** | Web na seed datech + náhled pro klientku | F1 | ⏳ další |
 | **F3** | CMS | F1, server z F0 | |
 | **F4** | Napojení webu na CMS, publikace | F2, F3 | |
 | **F5** | Reálný obsah a doladění | F4, obsah od klientky 🔒 | |
@@ -46,18 +46,18 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 
 **Cíl:** prázdná, ale kompletní kostra, na které jde stavět.
 
-- [ ] pnpm workspace: `apps/web`, `apps/cms`, `packages/shared`, `packages/ui`
-- [ ] TypeScript strict, ESLint, Prettier, Vitest; skripty `dev:web`, `dev:cms`, `build:web`, `lint`, `typecheck`, `test`
-- [ ] `apps/web`: Next 16, `output: 'export'`, `trailingSlash: true`, Tailwind
-- [ ] Tailwind theme z `DESIGN.md` (barvy, breakpointy 600 / 768 / 1024)
-- [ ] Lora přes `next/font/google` (400, 500, latin + latin-ext)
-- [ ] `packages/shared/schema.ts` — zod: Project, Photo, Homepage, Settings, kategorie
-- [ ] `packages/shared/grid.ts` + unit testy (musí sedět na UI 04, viz TECH 4.5)
-- [ ] `packages/shared/photo-url.ts` — srcset helper
-- [ ] Seed: vyexportovat fotky z Figmy (sekce `91:58`, `99:72`) přes Figma MCP, dev skript vygeneruje WebP varianty do `apps/web/public/seed/`, `content/seed.json` s 9 projekty z UI 04 (sharp smí být jen devDependency tohoto skriptu)
-- [ ] `lib/content.ts` s přepínačem `CONTENT_SOURCE`
-- [ ] GitHub repo, CI (lint, typecheck, test, build webu)
-- [ ] `.env.example`
+- [x] pnpm workspace: `apps/web`, `apps/cms`, `packages/shared`, `packages/ui`
+- [x] TypeScript strict, ESLint, Prettier, Vitest; skripty `dev:web`, `dev:cms`, `build:web`, `lint`, `typecheck`, `test`
+- [x] `apps/web`: Next 16, `output: 'export'`, `trailingSlash: true`, Tailwind
+- [x] Tailwind theme z `DESIGN.md` (barvy, breakpointy 600 / 768 / 1024)
+- [x] Lora přes `next/font/google` (400, 500, latin + latin-ext)
+- [x] `packages/shared/schema.ts` — zod: Project, Photo, Homepage, Settings, kategorie
+- [x] `packages/shared/grid.ts` + unit testy (musí sedět na UI 04, viz TECH 4.5)
+- [x] `packages/shared/photo-url.ts` — srcset helper
+- [x] Seed: vyexportovat fotky z Figmy (sekce `91:58`, `99:72`) přes Figma MCP, dev skript vygeneruje WebP varianty do `apps/web/public/seed/`, `content/seed.json` s 9 projekty z UI 04 (sharp smí být jen devDependency tohoto skriptu)
+- [x] `lib/content.ts` s přepínačem `CONTENT_SOURCE`
+- [x] GitHub repo, CI (lint, typecheck, test, build webu)
+- [x] `.env.example`
 
 **Hotovo když:** `pnpm build:web` vyrobí `out/` s prázdnou stránkou v Loře na správném pozadí, CI je zelené, testy gridu projdou.
 
@@ -190,6 +190,10 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 23. 9. | Filtr na klientovi, stav v URL | bez rebuildu, sdílitelné |
 | 23. 9. | WebP v Safari přes `@jsquash/webp` | Safari z canvasu WebP neumí |
 | 23. 9. | Stavět hned, obsah přes CMS | nečekat na klientku |
+| 23. 9. | TypeScript 5.9, ne 7 | typescript-eslint podporuje jen `<6.1`; TS 7 je nativní kompilátor, nástroje na něj zatím nedošly |
+| 23. 9. | `dominantColor` = průměr kanálů, ne sharp `dominant` | SPEC 8.4 chce průměrnou barvu; `dominant` u tmavých fotek spadne na černou a je jako placeholder k ničemu |
+| 23. 9. | `sharp` jen jako devDependency seed skriptu, hlídá CI | pravidlo 10 chrání produkční server, ne build-time fixture; hlídá to stroj, ne paměť |
+| 23. 9. | `captionGap` (12) oddělen od `captionHeight` (42) v `GridConfig` | čísla z DESIGN.md jdou do konfigurace 1:1 |
 
 ---
 
@@ -211,3 +215,4 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | Datum | Co se udělalo | Co dál |
 |---|---|---|
 | 23. 9. 2026 | Dokumentace pro stavbu: CLAUDE.md, SPEC, DESIGN, TECH, PHASES | F1 — kostra repa; klientce poslat seznam účtů k založení (F0) a otázky 1, 3, 4 |
+| 23. 9. 2026 | **F1 hotová** — 12 commitů. pnpm workspace, TS strict + ESLint + Prettier + Vitest, Next 16.3.6 statický export + Tailwind 4, tokeny a breakpointy z DESIGN.md, Lora přes `next/font` (ověřeno: nula requestů na Google), zod schéma, algoritmus gridu s testem na UI 04, `photo-url.ts`, seed z Figmy (9 projektů, 36 WebP), přepínač `CONTENT_SOURCE`, `.env.example`, CI. 36 testů zelených. | F2 — grid, detail, Information, 404. Pozor: seed nemá portrét pro Information, bude potřeba z UI 07 (`161:2`). Klientce pořád chybí odpovědi na otázky 1, 3, 4 a účty pro F0. |

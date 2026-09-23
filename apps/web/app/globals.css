@@ -36,5 +36,7 @@
   body {
     background-color: var(--color-paper);
     color: var(--color-ink);
+    /* --font-lora comes from next/font in app/layout.tsx. */
+    font-family: var(--font-lora), serif;
   }
 }

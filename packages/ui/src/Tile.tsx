@@ -1,3 +1,5 @@
+'use client';
+
 import { CATEGORY_LABELS } from '@sabrina/shared/categories';
 import type { Project } from '@sabrina/shared/schema';
 
@@ -20,12 +22,27 @@ export interface TileProps {
   eager?: boolean;
   /** The LCP photo. One per page. */
   priority?: boolean;
+  /**
+   * Open the detail without navigating. The href stays real, so the link is
+   * crawlable and middle-click still opens a tab; only a plain left click is
+   * intercepted (docs/TECH.md 4.1).
+   */
+  onOpen?: (project: Project) => void;
 }
 
-export function Tile({ project, imgBase, eager = false, priority = false }: TileProps) {
+export function Tile({ project, imgBase, eager = false, priority = false, onOpen }: TileProps) {
   return (
     <a
       href={`/work/${project.slug}/`}
+      onClick={
+        onOpen === undefined
+          ? undefined
+          : (event) => {
+              if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+              event.preventDefault();
+              onOpen(project);
+            }
+      }
       className="group flex w-full flex-col gap-[12px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
     >
       <Photo

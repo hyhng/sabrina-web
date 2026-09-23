@@ -64,9 +64,17 @@ export interface OffsetGridProps {
   visibleSlugs?: ReadonlySet<string>;
   /** Leading tiles that skip lazy loading (docs/SPEC.md 9.1). */
   eagerCount?: number;
+  /** Open a project without navigating. */
+  onOpen?: (project: Project) => void;
 }
 
-export function OffsetGrid({ projects, imgBase, visibleSlugs, eagerCount = 4 }: OffsetGridProps) {
+export function OffsetGrid({
+  projects,
+  imgBase,
+  visibleSlugs,
+  eagerCount = 4,
+  onOpen,
+}: OffsetGridProps) {
   const remembered = useRef(new Map<string, TileVars>());
 
   const isVisible = (project: Project) =>
@@ -121,6 +129,7 @@ export function OffsetGrid({ projects, imgBase, visibleSlugs, eagerCount = 4 }: 
                 imgBase={imgBase}
                 eager={!hidden && (position ?? 0) < eagerCount}
                 priority={position === 0}
+                onOpen={onOpen}
               />
             </div>
           );

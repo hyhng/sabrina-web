@@ -233,7 +233,10 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
 - LCP < 2,0 s na mobilu (4G), CLS ≈ 0 (poměry stran z dat)
 - Prvních ~4 dlaždic `loading="eager"` + `fetchpriority="high"` na první, zbytek `lazy`
 - `srcset` z variant 400–2400, `sizes` podle breakpointu
-- First-load JS < 150 kB gzip **[návrh]**
+- First-load JS: **podlaha Next 16 + React 19 je ~169 kB gzip** (změřeno 23. 9. 2026 na stránce 404, kde není žádný náš kód). Původní cíl 150 kB nešlo splnit ani s prázdnou stránkou. Co hlídáme, je **náš vlastní kód: ≤ 25 kB gzip**, tedy celkem **≤ 195 kB**. Aktuálně 2,6 kB našeho / 171,5 kB celkem. **[návrh]**
+  - Měří se součet skriptů, které stránka skutečně spouští (`<script src>`), ne preloady.
+  - Tenhle strop existuje kvůli nehodám typu „knihovna se omylem dostala do prohlížeče" — přesně tak uteklo 88 kB zodu přes barrel export. Framework neovlivníme, vlastní kód ano.
+  - Přidání `motion` (~38 kB) by strop prorazilo a je to samostatné rozhodnutí, ne automatika.
 
 ### 9.2 SEO a sdílení
 - Každý `/work/[slug]/` vlastní `<title>` („Fog — Sabrina Kulhankova"), description, OG obrázek = titulní fotka

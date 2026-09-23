@@ -90,3 +90,26 @@ describe('DetailOverlay', () => {
     expect(html).toContain('sizes="620px"');
   });
 });
+
+describe('DetailOverlay — how the photo sits in the area', () => {
+  const landscape = { ...cover, id: 'soda', width: 1604, height: 1068, aspectRatio: 1604 / 1068 };
+  const areaShaped = { ...cover, id: 'fit', width: 620, height: 740, aspectRatio: 620 / 740 };
+
+  it('fits a landscape photo inside the area instead of cropping it (UI 05B)', () => {
+    const html = render({ ...commercial, cover: landscape, photos: [landscape] });
+    expect(html).toContain('object-contain');
+    expect(html).not.toContain('object-cover');
+  });
+
+  it('fills the area when the photo is shaped like it', () => {
+    const html = render({ ...commercial, cover: areaShaped, photos: [areaShaped] });
+    expect(html).toContain('object-cover');
+    expect(html).not.toContain('object-contain');
+  });
+
+  it('keeps the area itself at 740 either way, so nothing else moves', () => {
+    for (const photo of [landscape, areaShaped]) {
+      expect(render({ ...commercial, cover: photo, photos: [photo] })).toContain('h-[740px]');
+    }
+  });
+});

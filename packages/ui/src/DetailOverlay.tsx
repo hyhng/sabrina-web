@@ -1,5 +1,6 @@
 'use client';
 
+import { photoFit } from '@sabrina/shared/detail';
 import type { Project } from '@sabrina/shared/schema';
 
 import { Photo } from './Photo.tsx';
@@ -16,9 +17,14 @@ import { Photo } from './Photo.tsx';
  * (CLAUDE.md), and it reads correctly: the plate is there to mask the ghost
  * of the grid behind the text, not to be a white card.
  *
- * The photo area is a fixed 620 × 740 here, matching a 1024-tall window.
- * Scaling it to shorter windows, the carousel, the arrows and the mobile
- * layout are the next tasks in docs/PHASES.md F2.
+ * A photo shaped roughly like the area fills it and takes the small crop the
+ * design signs off on; anything further off — a landscape frame above all — is
+ * fitted inside and centred, with the title, meta and arrows staying put
+ * (Figma UI 05B).
+ *
+ * The area is a fixed 620 × 740 here, matching a 1024-tall window. Scaling it
+ * to shorter windows, the carousel, the arrows and the mobile layout are the
+ * next tasks in docs/PHASES.md F2.
  */
 export interface DetailOverlayProps {
   project: Project;
@@ -28,6 +34,7 @@ export interface DetailOverlayProps {
 
 export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps) {
   const photo = project.cover;
+  const fit = photoFit(photo.aspectRatio);
 
   return (
     <div
@@ -57,14 +64,18 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
           </button>
         </div>
 
-        <div className="mt-[21px] h-[740px] w-full">
+        <div className="mt-[21px] flex h-[740px] w-full items-center justify-center">
           <Photo
             photo={photo}
             imgBase={imgBase}
             sizes="620px"
             eager
             alt={photo.alt ?? `${project.title} — photo 1`}
-            className="h-full w-full object-cover"
+            className={
+              fit === 'cover'
+                ? 'h-full w-full object-cover'
+                : 'max-h-full max-w-full object-contain'
+            }
           />
         </div>
 

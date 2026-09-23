@@ -29,7 +29,12 @@ export interface PhotoProps {
   imgBase: string;
   /** The `sizes` attribute. Defaults to the grid; overlays pass their own. */
   sizes?: string;
-  /** Above the fold. docs/SPEC.md 9.1 wants the first tiles eager. */
+  /** Skip lazy loading. docs/SPEC.md 9.1 wants the first few tiles eager. */
+  eager?: boolean;
+  /**
+   * The LCP photo. Implies eager, and lets React hoist a preload link.
+   * Only ever one per page — SPEC 9.1 puts high priority on the first tile.
+   */
   priority?: boolean;
   className?: string;
   /** Falls back to the pattern in docs/SPEC.md 9.3 when the CMS has no alt. */
@@ -40,6 +45,7 @@ export function Photo({
   photo,
   imgBase,
   sizes = GRID_SIZES,
+  eager = false,
   priority = false,
   className,
   alt,
@@ -52,7 +58,7 @@ export function Photo({
       width={photo.width}
       height={photo.height}
       alt={alt ?? photo.alt ?? ''}
-      loading={priority ? 'eager' : 'lazy'}
+      loading={eager || priority ? 'eager' : 'lazy'}
       fetchPriority={priority ? 'high' : 'auto'}
       decoding="async"
       className={className}

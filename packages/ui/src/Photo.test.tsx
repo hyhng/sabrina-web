@@ -74,3 +74,21 @@ describe('Photo', () => {
     expect(render(<Photo photo={photo} imgBase="/seed" />)).toContain('alt=""');
   });
 });
+
+describe('Photo — eager vs priority', () => {
+  it('can be eager without claiming high priority', () => {
+    const html = render(<Photo photo={photo} imgBase="/seed" eager />);
+    expect(html).toContain('loading="eager"');
+    expect(html).toContain('fetchPriority="auto"');
+  });
+
+  it('preloads anything that is not lazy, and ranks only the LCP photo high', () => {
+    // React 19 hoists a preload link for every non-lazy <img>; omitting the
+    // loading attribute does not avoid it. So the first few tiles are all
+    // preloaded and fetchPriority is what separates the LCP photo from the
+    // rest (docs/SPEC.md 9.1).
+    expect(render(<Photo photo={photo} imgBase="/seed" eager />)).toContain('rel="preload"');
+    expect(render(<Photo photo={photo} imgBase="/seed" priority />)).toContain('rel="preload"');
+    expect(render(<Photo photo={photo} imgBase="/seed" />)).not.toContain('rel="preload"');
+  });
+});

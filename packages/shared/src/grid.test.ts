@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { type GridConfig, layoutColumns, tileHeight } from './grid.ts';
+import {
+  GRID_MOBILE,
+  GRID_TABLET,
+  type GridConfig,
+  layoutColumns,
+  placeTiles,
+  tileHeight,
+} from './grid.ts';
 
 /**
  * Figma UI 04 — Grid 3 sloupce · Desktop (node 154:3), read 23. 9. 2026.
@@ -92,5 +99,47 @@ describe('layoutColumns — rules', () => {
 
   it('rejects an offsets array that does not match the column count', () => {
     expect(() => layoutColumns([], { ...DESKTOP, offsets: [0, 0] })).toThrow(RangeError);
+  });
+});
+
+describe('placeTiles', () => {
+  /** Resolve `scale * columnWidth + pixels` the way CSS calc() will. */
+  const resolve = (p: { scale: number; pixels: number }, columnWidth: number) =>
+    Math.round(p.scale * columnWidth + p.pixels);
+
+  it('resolves to the y positions on the artboard', () => {
+    const { tiles } = placeTiles(UI_04, DESKTOP);
+    expect(tiles.map((t) => GRID_TOP + resolve(t, DESKTOP.columnWidth))).toEqual([
+      104, 174, 274, 691, 789, 859, 1276, 1342, 1474,
+    ]);
+  });
+
+  it('agrees with layoutColumns', () => {
+    const { tiles } = placeTiles(UI_04, DESKTOP);
+    expect(tiles.map((t) => t.column)).toEqual(layoutColumns(UI_04, DESKTOP));
+  });
+
+  it('folds the column offset into the scale so it stretches with the column', () => {
+    const { tiles } = placeTiles(UI_04, DESKTOP);
+    // Summer in the Mountains opens column 3, whose offset is 70 of 401.
+    expect(tiles[1]?.scale).toBeCloseTo(70 / 401, 10);
+    expect(tiles[1]?.pixels).toBe(0);
+    // At half the column width the offset halves too.
+    expect(resolve(tiles[1]!, DESKTOP.columnWidth / 2)).toBe(35);
+  });
+
+  it('gives a container height that clears the tallest column', () => {
+    const { columnBottoms } = placeTiles(UI_04, DESKTOP);
+    const tallest = Math.max(...columnBottoms.map((b) => resolve(b, DESKTOP.columnWidth)));
+    expect(tallest - DESKTOP.gapY).toBe(1959);
+  });
+
+  it('places two columns on tablet and mobile, alternating', () => {
+    expect(placeTiles(UI_04, GRID_TABLET).tiles.map((t) => t.column)).toEqual([
+      0, 1, 0, 1, 0, 1, 0, 1, 0,
+    ]);
+    expect(placeTiles(UI_04, GRID_MOBILE).tiles.map((t) => t.column)).toEqual([
+      0, 1, 0, 1, 0, 1, 0, 1, 0,
+    ]);
   });
 });

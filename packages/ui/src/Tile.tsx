@@ -16,10 +16,12 @@ export interface TileProps {
   project: Project;
   imgBase: string;
   /** Above the fold — docs/SPEC.md 9.1 wants the first few tiles eager. */
+  eager?: boolean;
+  /** The LCP photo. One per page. */
   priority?: boolean;
 }
 
-export function Tile({ project, imgBase, priority = false }: TileProps) {
+export function Tile({ project, imgBase, eager = false, priority = false }: TileProps) {
   return (
     <a
       href={`/work/${project.slug}/`}
@@ -28,6 +30,7 @@ export function Tile({ project, imgBase, priority = false }: TileProps) {
       <Photo
         photo={project.cover}
         imgBase={imgBase}
+        eager={eager}
         priority={priority}
         alt={project.cover.alt ?? `${project.title} — cover`}
         className="w-full object-cover"

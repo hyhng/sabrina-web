@@ -43,3 +43,72 @@
     font-family: var(--font-lora), serif;
   }
 }
+
+/**
+ * Offset grid — paired with OffsetGrid.tsx in packages/ui.
+ *
+ * The component emits per-breakpoint custom properties on each tile
+ * (--c-m/-t/-d for the column, --a-* for the column-width multiple, --b-* for
+ * the fixed pixels); these rules pick which set applies. Numbers live in the
+ * HTML, breakpoint switching lives here — no JavaScript either side.
+ *
+ * Widths are cqw, not %, because a percentage in `top` would resolve against
+ * the container's height. Column widths from docs/DESIGN.md → Grid.
+ */
+@layer components {
+  .offset-grid {
+    container-type: inline-size;
+    margin-inline: auto;
+    max-width: 1680px; /* [návrh] docs/DESIGN.md */
+    padding-inline: 16px;
+  }
+
+  .offset-grid__canvas {
+    position: relative;
+    --cols: 2;
+    --gap: 12px;
+    --cw: calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols));
+    height: var(--h-m);
+  }
+
+  .offset-grid__item {
+    position: absolute;
+    width: var(--cw);
+    left: calc((var(--cw) + var(--gap)) * var(--c));
+    top: calc(var(--cw) * var(--a) + var(--b));
+    --c: var(--c-m);
+    --a: var(--a-m);
+    --b: var(--b-m);
+  }
+
+  @media (min-width: 600px) {
+    .offset-grid {
+      padding-inline: 24px;
+    }
+    .offset-grid__canvas {
+      --gap: 20px;
+      height: var(--h-t);
+    }
+    .offset-grid__item {
+      --c: var(--c-t);
+      --a: var(--a-t);
+      --b: var(--b-t);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .offset-grid {
+      padding-inline: 34px;
+    }
+    .offset-grid__canvas {
+      --cols: 3;
+      --gap: 84px;
+      height: var(--h-d);
+    }
+    .offset-grid__item {
+      --c: var(--c-d);
+      --a: var(--a-d);
+      --b: var(--b-d);
+    }
+  }
+}

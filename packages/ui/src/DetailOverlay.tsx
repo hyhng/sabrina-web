@@ -7,9 +7,18 @@ import { Photo } from './Photo.tsx';
 /**
  * Project detail (Figma UI 05 node 154:71).
  *
- * Minimal for now — this commit is the routing underneath it (docs/TECH.md
- * 4.1). The exact plate, the carousel, the arrows and the meta block are the
- * next tasks in docs/PHASES.md F2.
+ * The homepage stays behind at 12% — a veil of paper over it, not a dimming
+ * of the grid — and a plate 800px wide carries a 620px content column: title
+ * and ✕, the photo, then the meta in two columns.
+ *
+ * The plate is paper, not white. DESIGN.md calls it "bílá plocha" and lists
+ * white for it, but node 154:170 is #faf9f6. Figma wins on pixel values
+ * (CLAUDE.md), and it reads correctly: the plate is there to mask the ghost
+ * of the grid behind the text, not to be a white card.
+ *
+ * The photo area is a fixed 620 × 740 here, matching a 1024-tall window.
+ * Scaling it to shorter windows, the carousel, the arrows and the mobile
+ * layout are the next tasks in docs/PHASES.md F2.
  */
 export interface DetailOverlayProps {
   project: Project;
@@ -18,35 +27,68 @@ export interface DetailOverlayProps {
 }
 
 export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps) {
+  const photo = project.cover;
+
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="detail-title"
-      className="fixed inset-0 z-50 overflow-auto bg-paper/85"
+      className="fixed inset-0 z-50 overflow-y-auto bg-paper/88"
       onClick={onClose}
     >
       <div
-        className="mx-auto my-[35px] w-[min(800px,100vw-48px)] bg-white px-[90px] py-[35px]"
+        className="mx-auto my-[35px] w-[800px] max-w-[calc(100vw-48px)] bg-paper px-[90px] pt-[48px] pb-[61px]"
         onClick={(event) => {
           event.stopPropagation();
         }}
       >
-        <div className="mb-[24px] flex items-start justify-between">
-          <h1 id="detail-title" className="text-[19px] text-ink">
+        <div className="flex items-start justify-between text-[18px] leading-[1.5]">
+          <h1 id="detail-title" className="font-medium text-ink">
             {project.title}
           </h1>
-          <button type="button" onClick={onClose} aria-label="Close" className="text-[19px]">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="cursor-pointer text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
+          >
             ✕
           </button>
         </div>
-        <Photo
-          photo={project.cover}
-          imgBase={imgBase}
-          sizes="620px"
-          className="w-full object-contain"
-          alt={project.cover.alt ?? `${project.title} — photo 1`}
-        />
+
+        <div className="mt-[21px] h-[740px] w-full">
+          <Photo
+            photo={photo}
+            imgBase={imgBase}
+            sizes="620px"
+            eager
+            alt={photo.alt ?? `${project.title} — photo 1`}
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="mt-[26px] flex items-start text-[12.5px] leading-[1.5]">
+          {project.client === undefined ? null : (
+            <div className="min-w-px flex-1">
+              <p className="text-muted">Client :</p>
+              <p className="font-medium text-ink">{project.client}</p>
+              {project.clientLine2 === undefined ? null : (
+                <p className="text-ink">{project.clientLine2}</p>
+              )}
+            </div>
+          )}
+          {project.credits.length === 0 ? null : (
+            <div className="min-w-px flex-1">
+              <p className="text-muted">Credits :</p>
+              {project.credits.map((credit) => (
+                <p key={`${credit.role}-${credit.name}`} className="text-ink">
+                  {credit.role} · {credit.name}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

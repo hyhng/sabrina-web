@@ -1,0 +1,10 @@
+{
+  "name": "sabrina-web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Portfolio of photographer Sabrina Kulhankova",
+  "packageManager": "pnpm@12.5.1",
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}

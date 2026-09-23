@@ -1,1 +1,40 @@
 @import 'tailwindcss';
+
+/**
+ * Design tokens — docs/DESIGN.md → Barvy, Grid → Mezi breakpointy.
+ * One place for every value, so a contrast change is a one-line change.
+ */
+@theme {
+  --color-paper: #faf9f6; /* page background */
+  --color-ink: #14130f; /* text */
+  --color-muted: #78746b; /* footer, category on hover */
+  --color-soft: #a19c91; /* category in the caption */
+  --color-line: #e2dfd7; /* rules */
+  --color-arrow: #9e9e9e; /* carousel arrow background, used at 55% */
+
+  /*
+   * Inactive filter item: ink at 40%. That is 2.6:1 against paper, below the
+   * 4.5:1 AA needs for small text — open question 6 in docs/PHASES.md proposes
+   * 60% (#14130f99). Changing this one value is the whole fix.
+   */
+  --color-filter-inactive: #14130f66;
+
+  /*
+   * Breakpoints, named after what they mean rather than sm/md/lg:
+   *   below tablet          mobile grid, 2 columns (UI 06)
+   *   tablet   >= 600px     tablet grid, 2 columns (UI 12)
+   *   detail   >= 768px     detail opens as an overlay, not full screen
+   *   desktop  >= 1024px    desktop grid, 3 offset columns (UI 04)
+   */
+  --breakpoint-*: initial;
+  --breakpoint-tablet: 600px;
+  --breakpoint-detail: 768px;
+  --breakpoint-desktop: 1024px;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+}

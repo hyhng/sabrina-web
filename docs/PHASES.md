@@ -162,10 +162,10 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 
 | # | Otázka | Kdo | Blokuje | Stav |
 |---|---|---|---|---|
-| 1 | Jaká doména? | Sabrina | F0, F6 | 🔒 |
+| 1 | Jaká doména? | Sabrina | F0, F6 | doménu má; konkrétní název potřebný až pro F0/F6 |
 | 2 | Kategorie Commercial / Art — sedí? Změna je levná. | Sabrina | F5 | 🔒 |
-| 3 | Chce v Information „Vybraní klienti" a „Publikace"? Mění datový model. | Sabrina | **F3** (schéma) | 🔒 |
-| 4 | Vícejazyčnost — potvrdit, že **ne**. Přidat později je drahé. | Sabrina | **F3** (schéma) | 🔒 |
+| 3 | Chce v Information „Vybraní klienti" a „Publikace"? Jde o seznamy jmen, ne o projekty — mění `Settings`. | Sabrina | **F3** (schéma) | 🔒 poslední otevřená blokující F3 |
+| 4 | ~~Vícejazyčnost~~ | — | — | ✅ **ne, web je jen anglicky** (23. 9.) |
 | 5 | Kolik fotek má typická série? Nad ~12 zvážit vrátit indikátor. | Sabrina | F5 | 🔒 |
 | 6 | Kontrast: neaktivní filtr 40 % → 60 %, kategorie `soft` → tmavší? (SPEC 9.3) | my + Sabrina | F2 | |
 | 7 | Popis série („O sérii") — byl ve wireframu CMS, v UI 02A se nezobrazuje. Vynechat? | my | F3 | návrh: vynechat |
@@ -194,6 +194,8 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 23. 9. | `dominantColor` = průměr kanálů, ne sharp `dominant` | SPEC 8.4 chce průměrnou barvu; `dominant` u tmavých fotek spadne na černou a je jako placeholder k ničemu |
 | 23. 9. | `sharp` jen jako devDependency seed skriptu, hlídá CI | pravidlo 10 chrání produkční server, ne build-time fixture; hlídá to stroj, ne paměť |
 | 23. 9. | `captionGap` (12) oddělen od `captionHeight` (42) v `GridConfig` | čísla z DESIGN.md jdou do konfigurace 1:1 |
+| 23. 9. | Web je **jednojazyčný anglicky**, vícejazyčnost se nedělá | klientka |
+| 23. 9. | Portrét do Information je v F2 placeholder, reálný přijde v F5 | klientka ho zatím nemá |
 
 ---
 

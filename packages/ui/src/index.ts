@@ -1,3 +1,4 @@
+export * from './Filter.tsx';
 export * from './Footer.tsx';
 export * from './Header.tsx';
 export * from './OffsetGrid.tsx';

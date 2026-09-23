@@ -87,8 +87,9 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
   - `Client :` — název klienta, druhý řádek (např. „Marlow" / „Marlow Cosmetics")
   - `Credits :` — řádky `Role · Jméno`
 - **Plocha pro fotku je 620 × 740** (při výšce okna 1024). Při nižším okně se plocha zmenšuje v poměru 620:740 tak, aby se název, fotka i meta vešly bez scrollu. **[návrh]**
-- **Fotka na výšku** (poměr blízký 620:740, rozdíl do ~8 %): `cover` — mírný ořez je v designu schválený
-- **Fotka na šířku / výrazně jiný poměr:** `contain`, vycentrovaná v ploše. Název, meta a šipky zůstávají na stejném místě (UI 05B)
+- **Fotka se nikdy neořezává** — **[rozhodnuto 23. 9. 2026, mění původní zadání]**. Zobrazí se celá ve vlastním poměru stran, vycentrovaná v ploše 620 × 740. Název, meta a šipky zůstávají na stejném místě bez ohledu na tvar fotky (UI 05B).
+  - Původně tu stálo, že fotka s poměrem blízkým 620:740 (do ~8 %) se ořízne přes `cover`, protože „mírný ořez je v designu schválený". Zrušeno na přání klienta: přizpůsobovat fotku ploše — ořezem ani výplní — je nežádoucí.
+  - Element se velikostně řídí fotkou, ne plochou. Dřívější implementace roztahovala `<img>` na celou plochu a fotku do ní vkládala, čímž po stranách prosvítal placeholderový `dominantColor` jako tmavé pruhy.
 - Tablet (810): stejné okno jako desktop. Bílá plocha má šířku `min(800px, 100vw − 48px)`, obsahový sloupec 620 px zůstává — na 810 px vyjde bílá plocha 762 px a kolem sloupce 71 px. Samostatný návrh není potřeba.
 
 ### 4.2 Carousel

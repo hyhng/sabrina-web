@@ -202,6 +202,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 23. 9. | Ve F3 postavit **živý náhled mřížky** na obrazovce Pořadí (SPEC 8.5 jako `[návrh]`) | dělá z přeskládávání skutečný nástroj na layout — klientka vidí dopad hned a nepotřebuje ruční pozicování |
 | 23. 9. | Strop first-load JS přepsán ze 150 kB na **≤ 25 kB vlastního kódu / ≤ 195 kB celkem** | podlaha Next 16 + React 19 je 168,9 kB, původní cíl nešel splnit ani s prázdnou stránkou; hlídat má smysl to, co ovlivníme |
 | 23. 9. | Přeskládání mřížky animováno **CSS přechody, ne `motion`** | dlaždice jsou pozicované přes `calc()` nad CSS proměnnými, takže je to animovatelné zadarmo — 0,2 kB místo ~38 kB. `motion` se rozhodne až u přechodu dlaždice → detail |
+| 23. 9. | **Fotka v detailu se nikdy neořezává**, ruší `cover` u poměrů blízkých 620:740 (SPEC 4.1) | klient; přizpůsobovat fotku ploše je nežádoucí. Znát to bude až na reálných fotkách v F5 — portrét 2:3 se dřív ořízl o ~8 %, teď se ukáže celý |
 
 ---
 

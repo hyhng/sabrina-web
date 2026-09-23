@@ -45,60 +45,66 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
       onClick={onClose}
     >
       <div
-        className="mx-auto my-[35px] w-[800px] max-w-[calc(100vw-48px)] bg-paper px-[90px] pt-[48px] pb-[61px]"
+        className="mx-auto my-[35px] w-[min(800px,100vw-48px)] bg-paper pt-[48px] pb-[61px]"
         onClick={(event) => {
           event.stopPropagation();
         }}
       >
-        <div className="flex items-start justify-between text-[18px] leading-[1.5]">
-          <h1 id="detail-title" className="font-medium text-ink">
-            {project.title}
-          </h1>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="cursor-pointer text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
-          >
-            ✕
-          </button>
-        </div>
+        {/*
+          The column is 620 and centres itself, so the padding falls out of the
+          plate width: 90 either side at 1440, 71 at 810 (docs/SPEC.md 4.1).
+        */}
+        <div className="mx-auto w-[620px] max-w-[calc(100%-48px)]">
+          <div className="flex items-start justify-between text-[18px] leading-[1.5]">
+            <h1 id="detail-title" className="font-medium text-ink">
+              {project.title}
+            </h1>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="cursor-pointer text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
+            >
+              ✕
+            </button>
+          </div>
 
-        <div className="mt-[21px] flex h-[740px] w-full items-center justify-center">
-          <Photo
-            photo={photo}
-            imgBase={imgBase}
-            sizes="620px"
-            eager
-            alt={photo.alt ?? `${project.title} — photo 1`}
-            className={
-              fit === 'cover'
-                ? 'h-full w-full object-cover'
-                : 'max-h-full max-w-full object-contain'
-            }
-          />
-        </div>
+          <div className="detail-photo-area mt-[21px] flex items-center justify-center">
+            <Photo
+              photo={photo}
+              imgBase={imgBase}
+              sizes="620px"
+              eager
+              alt={photo.alt ?? `${project.title} — photo 1`}
+              className={
+                fit === 'cover'
+                  ? 'h-full w-full object-cover'
+                  : 'max-h-full max-w-full object-contain'
+              }
+            />
+          </div>
 
-        <div className="mt-[26px] flex items-start text-[12.5px] leading-[1.5]">
-          {project.client === undefined ? null : (
-            <div className="min-w-px flex-1">
-              <p className="text-muted">Client :</p>
-              <p className="font-medium text-ink">{project.client}</p>
-              {project.clientLine2 === undefined ? null : (
-                <p className="text-ink">{project.clientLine2}</p>
-              )}
-            </div>
-          )}
-          {project.credits.length === 0 ? null : (
-            <div className="min-w-px flex-1">
-              <p className="text-muted">Credits :</p>
-              {project.credits.map((credit) => (
-                <p key={`${credit.role}-${credit.name}`} className="text-ink">
-                  {credit.role} · {credit.name}
-                </p>
-              ))}
-            </div>
-          )}
+          <div className="mt-[26px] flex items-start text-[12.5px] leading-[1.5]">
+            {project.client === undefined ? null : (
+              <div className="min-w-px flex-1">
+                <p className="text-muted">Client :</p>
+                <p className="font-medium text-ink">{project.client}</p>
+                {project.clientLine2 === undefined ? null : (
+                  <p className="text-ink">{project.clientLine2}</p>
+                )}
+              </div>
+            )}
+            {project.credits.length === 0 ? null : (
+              <div className="min-w-px flex-1">
+                <p className="text-muted">Credits :</p>
+                {project.credits.map((credit) => (
+                  <p key={`${credit.role}-${credit.name}`} className="text-ink">
+                    {credit.role} · {credit.name}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

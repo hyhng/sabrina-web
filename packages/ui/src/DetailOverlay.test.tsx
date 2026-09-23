@@ -85,6 +85,13 @@ describe('DetailOverlay', () => {
     expect(render({ ...commercial, credits: [] })).not.toContain('Credits :');
   });
 
+  it('holds the column at 620 and lets the plate padding fall out of it', () => {
+    // 90 either side at 1440, 71 at 810 (docs/SPEC.md 4.1) — without either
+    // number being written down.
+    expect(html).toContain('w-[min(800px,100vw-48px)]');
+    expect(html).toContain('mx-auto w-[620px] max-w-[calc(100%-48px)]');
+  });
+
   it('loads the detail photo eagerly — it is what the visitor came for', () => {
     expect(html).toContain('loading="eager"');
     expect(html).toContain('sizes="620px"');
@@ -107,9 +114,12 @@ describe('DetailOverlay — how the photo sits in the area', () => {
     expect(html).not.toContain('object-contain');
   });
 
-  it('keeps the area itself at 740 either way, so nothing else moves', () => {
+  it('keeps the same area either way, so nothing else moves', () => {
     for (const photo of [landscape, areaShaped]) {
-      expect(render({ ...commercial, cover: photo, photos: [photo] })).toContain('h-[740px]');
+      // Sized by .detail-photo-area, which scales with the window height.
+      expect(render({ ...commercial, cover: photo, photos: [photo] })).toContain(
+        'detail-photo-area',
+      );
     }
   });
 });

@@ -141,3 +141,25 @@
     }
   }
 }
+
+/**
+ * Detail photo area — paired with DetailOverlay.tsx in packages/ui.
+ *
+ * 620 × 740 in a 1024-tall window, shrinking in that same ratio on shorter
+ * ones so the title, photo and meta still fit without scrolling
+ * (docs/SPEC.md 4.1). 284px is everything else on the plate: the 35px top
+ * margin, 48px of padding, the 27px title line, the 21px and 26px gaps, the
+ * 57px meta block, 61px of padding and the 10px the artboard leaves at the
+ * bottom.
+ *
+ * dvh rather than vh so a mobile browser's collapsing toolbar does not push
+ * the meta out of view.
+ */
+@layer components {
+  .detail-photo-area {
+    --detail-photo-height: min(740px, calc(100dvh - 284px));
+    height: var(--detail-photo-height);
+    width: min(100%, calc(var(--detail-photo-height) * 620 / 740));
+    margin-inline: auto;
+  }
+}

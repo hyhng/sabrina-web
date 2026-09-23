@@ -171,6 +171,8 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 7 | Popis série („O sérii") — byl ve wireframu CMS, v UI 02A se nezobrazuje. Vynechat? | my | F3 | návrh: vynechat |
 | 8 | Publikovat ručně tlačítkem, nebo automaticky po uložení? | my | F3 | návrh: ručně |
 | 9 | Favicon a OG obrázek webu | my | F5 | |
+| 10 | **Kam se zařadí nově publikovaný projekt?** Zadání říká na konec (SPEC 8.5, TECH 6), ale očekávání je „nejnovější nahoru". Na konec = stabilní rozvržení, ale klientka musí každý nový projekt ručně protáhnout nahoru. Na začátek = sedí samo, ale algoritmus přerovná celou mřížku (ověřeno: 9 z 9 projektů změní pozici). Návrh: **na začátek**. | Sabrina | **F3** (hook po publikaci) | |
+| 11 | **Má jít připíchnout projekt do konkrétního sloupce?** Klientka dnes určuje pořadí, ne pozici (SPEC 3.2), a přes pořadí má nepřímou kontrolu. Připíchnutí by šlo jen na desktopu (třetí sloupec jinde neexistuje) a rozbilo by se při výměně fotky za jiný poměr stran. Návrh: **odložit, rozhodnout až na reálném obsahu** — přidat pole do prázdné DB je nic, do plné je migrace. | my + Sabrina | F5, dopad na **F3** (schéma) | návrh: odložit |
 
 ---
 
@@ -196,6 +198,8 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 23. 9. | `captionGap` (12) oddělen od `captionHeight` (42) v `GridConfig` | čísla z DESIGN.md jdou do konfigurace 1:1 |
 | 23. 9. | Web je **jednojazyčný anglicky**, vícejazyčnost se nedělá | klientka |
 | 23. 9. | Portrét do Information je v F2 placeholder, reálný přijde v F5 | klientka ho zatím nemá |
+| 23. 9. | Tablet a mobil se řídí **algoritmem**, ne artboardy UI 06 / UI 12 | oba jsou skládané ručně a algoritmu neodpovídají (Portraits a Fog prohozené, Marlow před Silence). Stejný případ jako už přijaté UI 04B. S reálným obsahem se ruční rozvržení neudrží — jiné poměry stran, jiný počet projektů |
+| 23. 9. | Ve F3 postavit **živý náhled mřížky** na obrazovce Pořadí (SPEC 8.5 jako `[návrh]`) | dělá z přeskládávání skutečný nástroj na layout — klientka vidí dopad hned a nepotřebuje ruční pozicování |
 
 ---
 

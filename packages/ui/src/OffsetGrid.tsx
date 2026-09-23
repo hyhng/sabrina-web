@@ -4,8 +4,8 @@ import {
   GRID_TABLET,
   placeTiles,
   type GridBreakpoint,
-  type Project,
-} from '@sabrina/shared';
+} from '@sabrina/shared/grid';
+import type { Project } from '@sabrina/shared/schema';
 import type { CSSProperties } from 'react';
 
 import { Tile } from './Tile.tsx';

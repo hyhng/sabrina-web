@@ -1,4 +1,4 @@
-import type { Settings } from '@sabrina/shared';
+import type { Settings } from '@sabrina/shared/schema';
 
 /**
  * Site footer (Figma UI 04 node 154:10, UI 12 node 161:647, UI 06 node 154:381).

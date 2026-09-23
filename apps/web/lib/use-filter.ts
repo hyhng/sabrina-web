@@ -1,6 +1,6 @@
 'use client';
 
-import { filterUrl, readFilter, type FilterValue } from '@sabrina/shared';
+import { filterUrl, readFilter, type FilterValue } from '@sabrina/shared/filter';
 import { useSyncExternalStore } from 'react';
 
 /**

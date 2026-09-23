@@ -1,4 +1,5 @@
-import { photoSrc, photoSrcSet, type Photo as PhotoData } from '@sabrina/shared';
+import { photoSrc, photoSrcSet } from '@sabrina/shared/photo-url';
+import type { Photo as PhotoData } from '@sabrina/shared/schema';
 
 /**
  * A photo (docs/TECH.md 4.2).

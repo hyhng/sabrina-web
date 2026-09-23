@@ -5,7 +5,12 @@
   "description": "Content schema, grid layout algorithm and photo URL helpers",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./categories": "./src/categories.ts",
+    "./filter": "./src/filter.ts",
+    "./grid": "./src/grid.ts",
+    "./photo-url": "./src/photo-url.ts",
+    "./schema": "./src/schema.ts"
   },
   "dependencies": {
     "zod": "^4.6.5"

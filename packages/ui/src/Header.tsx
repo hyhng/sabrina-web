@@ -1,4 +1,4 @@
-import type { Settings } from '@sabrina/shared';
+import type { Settings } from '@sabrina/shared/schema';
 import type { ReactNode } from 'react';
 
 /**

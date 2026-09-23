@@ -1,6 +1,7 @@
 'use client';
 
-import { filterProjects, type Project } from '@sabrina/shared';
+import { filterProjects } from '@sabrina/shared/filter';
+import type { Project } from '@sabrina/shared/schema';
 import { OffsetGrid } from '@sabrina/ui';
 
 import { useFilter } from '../../lib/use-filter.ts';

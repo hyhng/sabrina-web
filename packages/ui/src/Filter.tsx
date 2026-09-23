@@ -1,6 +1,6 @@
 'use client';
 
-import { FILTER_LABELS, FILTER_VALUES, type FilterValue } from '@sabrina/shared';
+import { FILTER_LABELS, FILTER_VALUES, type FilterValue } from '@sabrina/shared/filter';
 
 /**
  * Category filter (Figma UI 04 node 154:61, UI 06 node 154:323).

@@ -1,4 +1,5 @@
-import { CATEGORY_LABELS, type Project } from '@sabrina/shared';
+import { CATEGORY_LABELS } from '@sabrina/shared/categories';
+import type { Project } from '@sabrina/shared/schema';
 
 import { Photo } from './Photo.tsx';
 

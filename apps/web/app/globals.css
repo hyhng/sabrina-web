@@ -79,6 +79,35 @@
     --c: var(--c-m);
     --a: var(--a-m);
     --b: var(--b-m);
+    /*
+     * Filtering re-lays out the grid; the tiles slide rather than jump
+     * (docs/SPEC.md 3.4). top and left are calc() over custom properties, so
+     * changing the properties is enough — no animation library involved.
+     */
+    transition:
+      top 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      left 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 260ms ease;
+  }
+
+  /* Filtered out: fades in place, keeps its position, stops being reachable. */
+  .offset-grid__item[data-hidden='true'] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .offset-grid__canvas {
+    transition: height 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* docs/SPEC.md 4.5: every transition becomes a short fade. */
+  @media (prefers-reduced-motion: reduce) {
+    .offset-grid__item {
+      transition: opacity 120ms ease;
+    }
+    .offset-grid__canvas {
+      transition: none;
+    }
   }
 
   @media (min-width: 600px) {

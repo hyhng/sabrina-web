@@ -15,6 +15,12 @@ export interface SeedProject {
   category: Category;
   client?: string;
   clientLine2?: string;
+  /**
+   * Extra photos in the series, as file names in the source directory. A
+   * couple of projects carry several so the carousel, its arrows and the swipe
+   * have something to act on; most real series will be longer than this.
+   */
+  extraPhotos?: string[];
 }
 
 export const SEED_PROJECTS: SeedProject[] = [
@@ -23,6 +29,7 @@ export const SEED_PROJECTS: SeedProject[] = [
     title: 'Wool — SS26 Campaign',
     slug: 'wool-ss26-campaign',
     category: 'commercial',
+    extraPhotos: ['extra-1.png', 'extra-2.png', 'extra-4.png'],
   },
   {
     node: '154:47',
@@ -49,5 +56,6 @@ export const SEED_PROJECTS: SeedProject[] = [
     // The one client pair docs/SPEC.md 4.1 names as an example.
     client: 'Marlow',
     clientLine2: 'Marlow Cosmetics',
+    extraPhotos: ['extra-3.png', 'extra-5.png'],
   },
 ];

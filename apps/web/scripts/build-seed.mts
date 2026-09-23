@@ -31,7 +31,8 @@ function hex(r: number, g: number, b: number): string {
   return `#${[r, g, b].map((c) => c.toString(16).padStart(2, '0')).join('')}`;
 }
 
-async function buildPhoto(slug: string, sourceFile: string): Promise<Photo> {
+async function buildPhoto(id: string, sourceFile: string): Promise<Photo> {
+  const slug = id;
   const image = sharp(sourceFile);
   const { width, height } = await image.metadata();
   if (width === undefined || height === undefined) {
@@ -71,7 +72,7 @@ async function buildPhoto(slug: string, sourceFile: string): Promise<Photo> {
     aspectRatio: width / height,
     widths: [...widths],
     dominantColor: hex(Math.round(red.mean), Math.round(green.mean), Math.round(blue.mean)),
-    originalFilename: `${slug}.png`,
+    originalFilename: path.basename(sourceFile),
     bytesOriginal: (await sharp(sourceFile).toBuffer()).byteLength,
     bytesWebp,
   };
@@ -88,6 +89,10 @@ async function main(): Promise<void> {
   const projects = [];
   for (const project of SEED_PROJECTS) {
     const photo = await buildPhoto(project.slug, path.join(source, `${project.slug}.png`));
+    const extras = [];
+    for (const [index, file] of (project.extraPhotos ?? []).entries()) {
+      extras.push(await buildPhoto(`${project.slug}-${index + 2}`, path.join(source, file)));
+    }
     projects.push({
       title: project.title,
       slug: project.slug,
@@ -96,13 +101,14 @@ async function main(): Promise<void> {
       ...(project.clientLine2 === undefined ? {} : { clientLine2: project.clientLine2 }),
       // True for every project — she took the photographs.
       credits: [{ role: 'Photography', name: 'Sabrina Kulhankova' }],
-      photos: [photo],
+      photos: [photo, ...extras],
       cover: photo,
       status: 'published' as const,
     });
     console.log(
       `${project.slug.padEnd(26)} ${photo.width}x${photo.height}  ` +
-        `${photo.widths.join('/')}  ${photo.dominantColor}`,
+        `${photo.widths.join('/')}  ${photo.dominantColor}` +
+        (extras.length > 0 ? `  +${extras.length} dalsi` : ''),
     );
   }
 

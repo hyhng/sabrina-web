@@ -22,6 +22,39 @@
             "originalFilename": "wool-ss26-campaign.png",
             "bytesOriginal": 3202253,
             "bytesWebp": 156726
+          },
+          {
+            "id": "wool-ss26-campaign-2",
+            "width": 576,
+            "height": 724,
+            "aspectRatio": 0.7955801104972375,
+            "widths": [400],
+            "dominantColor": "#838079",
+            "originalFilename": "extra-1.png",
+            "bytesOriginal": 545771,
+            "bytesWebp": 16698
+          },
+          {
+            "id": "wool-ss26-campaign-3",
+            "width": 682,
+            "height": 862,
+            "aspectRatio": 0.7911832946635731,
+            "widths": [400],
+            "dominantColor": "#2a2b27",
+            "originalFilename": "extra-2.png",
+            "bytesOriginal": 991624,
+            "bytesWebp": 24008
+          },
+          {
+            "id": "wool-ss26-campaign-4",
+            "width": 1212,
+            "height": 714,
+            "aspectRatio": 1.6974789915966386,
+            "widths": [400, 800, 1200],
+            "dominantColor": "#363526",
+            "originalFilename": "extra-4.png",
+            "bytesOriginal": 1140572,
+            "bytesWebp": 20176
           }
         ],
         "cover": {
@@ -312,6 +345,28 @@
             "originalFilename": "marlow-portrait.png",
             "bytesOriginal": 2578726,
             "bytesWebp": 152380
+          },
+          {
+            "id": "marlow-portrait-2",
+            "width": 594,
+            "height": 748,
+            "aspectRatio": 0.7941176470588235,
+            "widths": [400],
+            "dominantColor": "#5d4d3a",
+            "originalFilename": "extra-3.png",
+            "bytesOriginal": 572494,
+            "bytesWebp": 12284
+          },
+          {
+            "id": "marlow-portrait-3",
+            "width": 1528,
+            "height": 864,
+            "aspectRatio": 1.7685185185185186,
+            "widths": [400, 800, 1200],
+            "dominantColor": "#8a8a85",
+            "originalFilename": "extra-5.png",
+            "bytesOriginal": 3008615,
+            "bytesWebp": 70198
           }
         ],
         "cover": {

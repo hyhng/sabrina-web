@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Components live outside this app, so Tailwind has to be pointed at them. */
+@source '../../../packages/ui/src';
+
 /**
  * Design tokens — docs/DESIGN.md → Barvy, Grid → Mezi breakpointy.
  * One place for every value, so a contrast change is a one-line change.

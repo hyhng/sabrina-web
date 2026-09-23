@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A newer push to the same branch makes an in-flight run pointless.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # CLAUDE.md rule 10: photos are processed in the browser, never on the
+      # server. sharp is allowed only as a devDependency of the seed script
+      # (docs/PHASES.md F1), so it must never become a runtime dependency and
+      # must never be imported by application code.
+      - name: sharp stays out of the runtime
+        run: |
+          set -euo pipefail
+          node --input-type=module -e '
+            import { readFileSync, existsSync } from "node:fs";
+            const packages = ["apps/web", "apps/cms", "packages/shared", "packages/ui"];
+            const offenders = packages.filter((dir) => {
+              const file = `${dir}/package.json`;
+              if (!existsSync(file)) return false;
+              return "sharp" in (JSON.parse(readFileSync(file, "utf8")).dependencies ?? {});
+            });
+            if (offenders.length > 0) {
+              console.error(`sharp is a runtime dependency of: ${offenders.join(", ")}`);
+              process.exit(1);
+            }
+          '
+          if grep -rnE "(from|require\()\s*['\"]sharp['\"]" apps/web/app apps/web/lib packages; then
+            echo "application code must not import sharp"
+            exit 1
+          fi
+
+      - run: pnpm lint
+      - run: pnpm format
+      - run: pnpm typecheck
+      - run: pnpm test
+
+      # Builds against the seed fixture, the same way Cloudflare Pages will.
+      - run: pnpm build:web
+        env:
+          CONTENT_SOURCE: seed
+          NEXT_PUBLIC_IMG_BASE: /seed
+          NEXT_PUBLIC_SITE_URL: https://example.com

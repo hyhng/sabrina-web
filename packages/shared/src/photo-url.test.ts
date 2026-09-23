@@ -8,7 +8,7 @@ import {
   photoSrcSet,
   photoUrl,
   WEBP_WIDTHS,
-} from './photo-url';
+} from './photo-url.ts';
 
 const IMG = 'https://img.example.com';
 const photo = { id: 'abc123', widths: [400, 1200, 800], originalFilename: 'Wool_SS26.JPG' };

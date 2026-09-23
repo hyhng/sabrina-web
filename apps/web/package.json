@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "seed": "node scripts/build-seed.mts"
   },
   "dependencies": {
+    "@sabrina/shared": "workspace:*",
     "next": "16.3.6",
     "react": "19.3.0",
     "react-dom": "19.3.0"
@@ -18,6 +20,7 @@
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "sharp": "^0.35.4",
     "tailwindcss": "4.3.3"
   }
 }

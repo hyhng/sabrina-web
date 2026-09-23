@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { type GridConfig, layoutColumns, tileHeight } from './grid';
+import { type GridConfig, layoutColumns, tileHeight } from './grid.ts';
 
 /**
  * Figma UI 04 — Grid 3 sloupce · Desktop (node 154:3), read 23. 9. 2026.

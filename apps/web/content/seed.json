@@ -1,0 +1,340 @@
+{
+  "homepage": {
+    "projects": [
+      {
+        "title": "Wool — SS26 Campaign",
+        "slug": "wool-ss26-campaign",
+        "category": "commercial",
+        "credits": [
+          {
+            "role": "Photography",
+            "name": "Sabrina Kulhankova"
+          }
+        ],
+        "photos": [
+          {
+            "id": "wool-ss26-campaign",
+            "width": 1604,
+            "height": 2140,
+            "aspectRatio": 0.7495327102803738,
+            "widths": [400, 800, 1200, 1600],
+            "dominantColor": "#2c2d29",
+            "originalFilename": "wool-ss26-campaign.png",
+            "bytesOriginal": 3202253,
+            "bytesWebp": 156726
+          }
+        ],
+        "cover": {
+          "id": "wool-ss26-campaign",
+          "width": 1604,
+          "height": 2140,
+          "aspectRatio": 0.7495327102803738,
+          "widths": [400, 800, 1200, 1600],
+          "dominantColor": "#2c2d29",
+          "originalFilename": "wool-ss26-campaign.png",
+          "bytesOriginal": 3202253,
+          "bytesWebp": 156726
+        },
+        "status": "published"
+      },
+      {
+        "title": "Summer in the Mountains",
+        "slug": "summer-in-the-mountains",
+        "category": "art",
+        "credits": [
+          {
+            "role": "Photography",
+            "name": "Sabrina Kulhankova"
+          }
+        ],
+        "photos": [
+          {
+            "id": "summer-in-the-mountains",
+            "width": 1604,
+            "height": 2140,
+            "aspectRatio": 0.7495327102803738,
+            "widths": [400, 800, 1200, 1600],
+            "dominantColor": "#7c735f",
+            "originalFilename": "summer-in-the-mountains.png",
+            "bytesOriginal": 2638046,
+            "bytesWebp": 149050
+          }
+        ],
+        "cover": {
+          "id": "summer-in-the-mountains",
+          "width": 1604,
+          "height": 2140,
+          "aspectRatio": 0.7495327102803738,
+          "widths": [400, 800, 1200, 1600],
+          "dominantColor": "#7c735f",
+          "originalFilename": "summer-in-the-mountains.png",
+          "bytesOriginal": 2638046,
+          "bytesWebp": 149050
+        },
+        "status": "published"
+      },
+      {
+        "title": "Soda — Outdoor",
+        "slug": "soda-outdoor",
+        "category": "commercial",
+        "credits": [
+          {
+            "role": "Photography",
+            "name": "Sabrina Kulhankova"
+          }
+        ],
+        "photos": [
+          {
+            "id": "soda-outdoor",
+            "width": 1604,
+            "height": 1068,
+            "aspectRatio": 1.5018726591760299,
+            "widths": [400, 800, 1200, 1600],
+            "dominantColor": "#91918b",
+            "originalFilename": "soda-outdoor.png",
+            "bytesOriginal": 3633927,
+            "bytesWebp": 103654
+          }
+        ],
+        "cover": {
+          "id": "soda-outdoor",
+          "width": 1604,
+          "height": 1068,
+          "aspectRatio": 1.5018726591760299,
+          "widths": [400, 800, 1200, 1600],
+          "dominantColor": "#91918b",
+          "originalFilename": "soda-outdoor.png",
+          "bytesOriginal": 3633927,
+          "bytesWebp": 103654
+        },
+        "status": "published"
+      },
+      {
+        "title": "Portraits — Business Weekly",
+        "slug": "portraits-business-weekly",
+        "category": "commercial",
+        "credits": [
+          {
+            "role": "Photography",
+            "name": "Sabrina Kulhankova"
+          }
+        ],
+        "photos": [
+          {
+            "id": "portraits-business-weekly",
+            "width": 1604,
+            "height": 2004,
+            "aspectRatio": 0.8003992015968064,
+            "widths": [400, 800, 1200, 1600],
+            "dominantColor": "#5a5046",
+            "originalFilename": "portraits-business-weekly.png",
+            "bytesOriginal": 2574523,
+            "bytesWebp": 109186
+          }
+        ],
+        "cover": {
+          "id": "portraits-business-weekly",
+          "width": 1604,
+          "height": 2004,
+          "aspectRatio": 0.8003992015968064,
+          "widths": [400, 800, 1200, 1600],
+          "dominantColor": "#5a5046",
+          "originalFilename": "portraits-business-weekly.png",
+          "bytesOriginal": 2574523,
+          "bytesWebp": 109186
+        },
+        "status": "published"
+      },
+      {
+        "title": "Fog",
+        "slug": "fog",
+        "category": "art",
+        "credits": [
+          {
+            "role": "Photography",
+            "name": "Sabrina Kulhankova"
+          }
+        ],
+        "photos": [
+          {
+            "id": "fog",
+            "width": 1604,
+            "height": 2140,
+            "aspectRatio": 0.7495327102803738,
+            "widths": [400, 800, 1200, 1600],
+            "dominantColor": "#1c2020",
+            "originalFilename": "fog.png",
+            "bytesOriginal": 1527812,
+            "bytesWebp": 82228
+          }
+        ],
+        "cover": {
+          "id": "fog",
+          "width": 1604,
+          "height": 2140,
+          "aspectRatio": 0.7495327102803738,
+          "widths": [400, 800, 1200, 1600],
+          "dominantColor": "#1c2020",
+          "originalFilename": "fog.png",
+          "bytesOriginal": 1527812,
+          "bytesWebp": 82228
+        },
+        "status": "published"
+      },
+      {
+        "title": "Hotel — Interiors",
+        "slug": "hotel-interiors",
+        "category": "commercial",
+        "credits": [
+          {
+            "role": "Photography",
+            "name": "Sabrina Kulhankova"
+          }
+        ],
+        "photos": [
+          {
+            "id": "hotel-interiors",
+            "width": 1604,
+            "height": 1068,
+            "aspectRatio": 1.5018726591760299,
+            "widths": [400, 800, 1200, 1600],
+            "dominantColor": "#343326",
+            "originalFilename": "hotel-interiors.png",
+            "bytesOriginal": 1769050,
+            "bytesWebp": 28316
+          }
+        ],
+        "cover": {
+          "id": "hotel-interiors",
+          "width": 1604,
+          "height": 1068,
+          "aspectRatio": 1.5018726591760299,
+          "widths": [400, 800, 1200, 1600],
+          "dominantColor": "#343326",
+          "originalFilename": "hotel-interiors.png",
+          "bytesOriginal": 1769050,
+          "bytesWebp": 28316
+        },
+        "status": "published"
+      },
+      {
+        "title": "Silence",
+        "slug": "silence",
+        "category": "art",
+        "credits": [
+          {
+            "role": "Photography",
+            "name": "Sabrina Kulhankova"
+          }
+        ],
+        "photos": [
+          {
+            "id": "silence",
+            "width": 1604,
+            "height": 2140,
+            "aspectRatio": 0.7495327102803738,
+            "widths": [400, 800, 1200, 1600],
+            "dominantColor": "#181817",
+            "originalFilename": "silence.png",
+            "bytesOriginal": 1129719,
+            "bytesWebp": 52006
+          }
+        ],
+        "cover": {
+          "id": "silence",
+          "width": 1604,
+          "height": 2140,
+          "aspectRatio": 0.7495327102803738,
+          "widths": [400, 800, 1200, 1600],
+          "dominantColor": "#181817",
+          "originalFilename": "silence.png",
+          "bytesOriginal": 1129719,
+          "bytesWebp": 52006
+        },
+        "status": "published"
+      },
+      {
+        "title": "Mirrors",
+        "slug": "mirrors",
+        "category": "commercial",
+        "credits": [
+          {
+            "role": "Photography",
+            "name": "Sabrina Kulhankova"
+          }
+        ],
+        "photos": [
+          {
+            "id": "mirrors",
+            "width": 1604,
+            "height": 2004,
+            "aspectRatio": 0.8003992015968064,
+            "widths": [400, 800, 1200, 1600],
+            "dominantColor": "#100c07",
+            "originalFilename": "mirrors.png",
+            "bytesOriginal": 1773612,
+            "bytesWebp": 87262
+          }
+        ],
+        "cover": {
+          "id": "mirrors",
+          "width": 1604,
+          "height": 2004,
+          "aspectRatio": 0.8003992015968064,
+          "widths": [400, 800, 1200, 1600],
+          "dominantColor": "#100c07",
+          "originalFilename": "mirrors.png",
+          "bytesOriginal": 1773612,
+          "bytesWebp": 87262
+        },
+        "status": "published"
+      },
+      {
+        "title": "Marlow × Portrait",
+        "slug": "marlow-portrait",
+        "category": "commercial",
+        "client": "Marlow",
+        "clientLine2": "Marlow Cosmetics",
+        "credits": [
+          {
+            "role": "Photography",
+            "name": "Sabrina Kulhankova"
+          }
+        ],
+        "photos": [
+          {
+            "id": "marlow-portrait",
+            "width": 1604,
+            "height": 2140,
+            "aspectRatio": 0.7495327102803738,
+            "widths": [400, 800, 1200, 1600],
+            "dominantColor": "#372f2b",
+            "originalFilename": "marlow-portrait.png",
+            "bytesOriginal": 2578726,
+            "bytesWebp": 152380
+          }
+        ],
+        "cover": {
+          "id": "marlow-portrait",
+          "width": 1604,
+          "height": 2140,
+          "aspectRatio": 0.7495327102803738,
+          "widths": [400, 800, 1200, 1600],
+          "dominantColor": "#372f2b",
+          "originalFilename": "marlow-portrait.png",
+          "bytesOriginal": 2578726,
+          "bytesWebp": 152380
+        },
+        "status": "published"
+      }
+    ]
+  },
+  "settings": {
+    "bio": "Placeholder biography. The client writes the real one in the CMS.",
+    "location": "Based in Prague.",
+    "email": "sabrina.kulhankova@gmail.com",
+    "instagramHandle": "@sabrinakulhankova.photography",
+    "instagramUrl": "https://www.instagram.com/sabrinakulhankova.photography/",
+    "seoDescription": "Sabrina Kulhankova — photographer based in Prague."
+  }
+}

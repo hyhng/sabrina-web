@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CATEGORIES, projectSchema, settingsSchema } from './index';
+import { CATEGORIES, projectSchema, settingsSchema } from './index.ts';
 
 const photo = {
   id: 'p1',

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { CATEGORIES } from './categories';
+import { CATEGORIES } from './categories.ts';
 
 /**
  * Canonical content schema (docs/SPEC.md 10). The Payload collections must

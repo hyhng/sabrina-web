@@ -1,4 +1,4 @@
-import type { Photo } from './schema';
+import type { Photo } from './schema.ts';
 
 /**
  * R2 keys and public URLs for photos (docs/TECH.md 4.2).

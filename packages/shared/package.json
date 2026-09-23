@@ -7,7 +7,6 @@
   "exports": {
     ".": "./src/index.ts",
     "./categories": "./src/categories.ts",
-    "./detail": "./src/detail.ts",
     "./filter": "./src/filter.ts",
     "./grid": "./src/grid.ts",
     "./photo-url": "./src/photo-url.ts",

@@ -1,9 +1,9 @@
 'use client';
 
-import { photoFit } from '@sabrina/shared/detail';
 import type { Project } from '@sabrina/shared/schema';
+import { useEffect } from 'react';
 
-import { Photo } from './Photo.tsx';
+import { Carousel } from './Carousel.tsx';
 
 /**
  * Project detail (Figma UI 05 node 154:71).
@@ -33,8 +33,22 @@ export interface DetailOverlayProps {
 }
 
 export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps) {
-  const photo = project.cover;
-  const fit = photoFit(photo.aspectRatio);
+  // Open on the cover, so the detail starts on the photo the tile showed.
+  const coverIndex = Math.max(
+    0,
+    project.photos.findIndex((photo) => photo.id === project.cover.id),
+  );
+
+  // Esc closes, alongside ✕, the backdrop and Back (docs/SPEC.md 4.5).
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') onClose();
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [onClose]);
 
   return (
     <div
@@ -69,20 +83,12 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
             </button>
           </div>
 
-          <div className="detail-photo-area mt-[21px] flex items-center justify-center">
-            <Photo
-              photo={photo}
-              imgBase={imgBase}
-              sizes="620px"
-              eager
-              alt={photo.alt ?? `${project.title} — photo 1`}
-              className={
-                fit === 'cover'
-                  ? 'h-full w-full object-cover'
-                  : 'max-h-full max-w-full object-contain'
-              }
-            />
-          </div>
+          <Carousel
+            photos={project.photos}
+            imgBase={imgBase}
+            title={project.title}
+            startIndex={coverIndex}
+          />
 
           <div className="mt-[26px] flex items-start text-[12.5px] leading-[1.5]">
             {project.client === undefined ? null : (

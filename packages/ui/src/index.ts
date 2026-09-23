@@ -1,3 +1,5 @@
+export * from './ArrowButton.tsx';
+export * from './Carousel.tsx';
 export * from './DetailOverlay.tsx';
 export * from './Filter.tsx';
 export * from './Footer.tsx';

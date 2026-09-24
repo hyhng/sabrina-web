@@ -9,7 +9,7 @@ import {
   type GridPlacement,
 } from '@sabrina/shared/grid';
 import type { Project } from '@sabrina/shared/schema';
-import { useRef, type CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 
 import { Tile } from './Tile.tsx';
 
@@ -27,10 +27,14 @@ import { Tile } from './Tile.tsx';
  * `cqw` rather than `%`: a percentage in `top` would resolve against the
  * container's height, which is silently wrong.
  *
- * Filtering out a tile does not unmount it — it fades in place while the rest
- * slide, which needs it to stay put. Its last position is remembered so it
- * does not drift away mid-fade when switching straight from one category to
- * another. The movement itself is a CSS transition, no animation library.
+ * Filtering out a tile does not unmount it — it fades while the rest slide.
+ * A hidden tile is placed where the unfiltered layout would put it, which is
+ * exactly where it already is when coming from All, so it fades on the spot.
+ * Switching straight from one category to another lets it drift as it goes,
+ * which reads as the tile leaving. Remembering its last position instead would
+ * mean reading and writing a ref during render — unsafe once React renders
+ * speculatively, and caught by react-hooks/refs. The movement is a CSS
+ * transition either way; no animation library.
  */
 
 const BREAKPOINTS: { key: string; config: GridBreakpoint }[] = [
@@ -75,8 +79,6 @@ export function OffsetGrid({
   eagerCount = 4,
   onOpen,
 }: OffsetGridProps) {
-  const remembered = useRef(new Map<string, TileVars>());
-
   const isVisible = (project: Project) =>
     visibleSlugs === undefined || visibleSlugs.has(project.slug);
   const shown = projects.filter(isVisible);
@@ -87,8 +89,8 @@ export function OffsetGrid({
     ...b,
     placement: placeTiles(toItems(shown), b.config),
   }));
-  /** Fallback for a tile hidden before it was ever shown — it is invisible anyway. */
-  const fallback = BREAKPOINTS.map((b) => ({
+  /** Where a hidden tile sits: the layout as if nothing were filtered. */
+  const unfiltered = BREAKPOINTS.map((b) => ({
     ...b,
     placement: placeTiles(toItems(projects), b.config),
   }));
@@ -108,13 +110,8 @@ export function OffsetGrid({
           const position = positionOf.get(project.slug);
           const hidden = position === undefined;
 
-          let vars: TileVars;
-          if (position === undefined) {
-            vars = remembered.current.get(project.slug) ?? tileVars(fallback, index);
-          } else {
-            vars = tileVars(layouts, position);
-            remembered.current.set(project.slug, vars);
-          }
+          const vars =
+            position === undefined ? tileVars(unfiltered, index) : tileVars(layouts, position);
 
           return (
             <div

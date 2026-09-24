@@ -86,7 +86,9 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 - Uvnitř sloupec **620 px**: nahoře **název projektu** vlevo a **✕** vpravo, pod tím **fotka**, pod ní **meta** ve dvou sloupcích:
   - `Client :` — název klienta, druhý řádek (např. „Marlow" / „Marlow Cosmetics")
   - `Credits :` — řádky `Role · Jméno`
-- **Plocha pro fotku je 620 × 740** (při výšce okna 1024). Při nižším okně se plocha zmenšuje v poměru 620:740 tak, aby se název, fotka i meta vešly bez scrollu. **[návrh]**
+- **Fotka je přes celou šířku obsahového sloupce (620)**, výška dopadne podle jejího poměru stran — **[rozhodnuto 24. 9. 2026, mění původní zadání]**. Levá a pravá hrana fotky tak lícují s názvem nad ní a meta pod ní.
+  - Původně tu stálo, že plocha je pevných 620 × 740 a při nižším okně se zmenšuje, aby se vše vešlo bez scrollu. Zrušeno: pevná plocha znamenala, že fotka na výšku byla užší než text kolem, což bylo vidět jako nezarovnanost.
+  - **Důsledek:** u vysokých fotek může detail na nižším okně scrollovat. Přijato vědomě — zarovnání má přednost.
 - **Fotka se nikdy neořezává** — **[rozhodnuto 23. 9. 2026, mění původní zadání]**. Zobrazí se celá ve vlastním poměru stran, vycentrovaná v ploše 620 × 740. Název, meta a šipky zůstávají na stejném místě bez ohledu na tvar fotky (UI 05B).
   - Původně tu stálo, že fotka s poměrem blízkým 620:740 (do ~8 %) se ořízne přes `cover`, protože „mírný ořez je v designu schválený". Zrušeno na přání klienta: přizpůsobovat fotku ploše — ořezem ani výplní — je nežádoucí.
   - Element se velikostně řídí fotkou, ne plochou. Dřívější implementace roztahovala `<img>` na celou plochu a fotku do ní vkládala, čímž po stranách prosvítal placeholderový `dominantColor` jako tmavé pruhy.
@@ -105,8 +107,8 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 
 - Kulaté tlačítko **40 px**, `#9E9E9E` / 55 % krytí + jemný `backdrop-filter: blur`
 - Bílý chevron **7 × 14 px**, tah 1,5 px, zakulacené konce
-- Na fotce, **16 px** od levého / pravého okraje fotky, svisle uprostřed fotky
-- Chevron opticky posunutý o **1,5 px** proti směru šipky
+- Na fotce, **zarovnané s okrajem** fotky (a tedy i sloupce), svisle uprostřed fotky — **[změněno 24. 9. 2026]**, původně 16 px od okraje
+- Chevron **přesně ve středu** kruhu — **[změněno 24. 9. 2026]**, původně opticky posunutý o 1,5 px proti směru šipky
 - **Skryté**, objeví se při hoveru nad fotkou (fade ~200 ms). Při fokusu z klávesnice viditelné vždy.
 - Klávesy **← →** listují, **Esc** zavírá
 - Na dotykových zařízeních (`(hover: none)`) se nezobrazují — ovládá se **swipe**

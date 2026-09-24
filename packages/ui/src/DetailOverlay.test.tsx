@@ -98,35 +98,44 @@ describe('DetailOverlay', () => {
   });
 });
 
-describe('DetailOverlay — how the photo sits in the area', () => {
+describe('DetailOverlay — how the photo sits in the column', () => {
   const landscape = { ...cover, id: 'soda', width: 1604, height: 1068, aspectRatio: 1604 / 1068 };
   const areaShaped = { ...cover, id: 'fit', width: 620, height: 740, aspectRatio: 620 / 740 };
 
-  it('never crops or stretches — the box follows the photo', () => {
+  /** The box the photos are stacked in. */
+  const box = (html: string) =>
+    /<div class="group\/photo relative w-full"[^>]*style="([^"]*)"/.exec(html)?.[1] ?? '';
+
+  it('spans the full width of the column, so it lines up with the text', () => {
     for (const photo of [landscape, areaShaped, cover]) {
       const html = render({ ...commercial, cover: photo, photos: [photo] });
-      expect(html).toContain('h-auto max-h-full w-auto max-w-full');
-      expect(html).not.toContain('object-cover');
+      expect(html).toContain('group/photo relative w-full');
+    }
+  });
+
+  it('takes its height from the photo, never the other way round', () => {
+    expect(box(render({ ...commercial, cover: landscape, photos: [landscape] }))).toContain(
+      'aspect-ratio:1604 / 1068',
+    );
+    expect(box(render({ ...commercial, cover: areaShaped, photos: [areaShaped] }))).toContain(
+      'aspect-ratio:620 / 740',
+    );
+  });
+
+  it('never crops', () => {
+    for (const photo of [landscape, areaShaped, cover]) {
+      const html = render({ ...commercial, cover: photo, photos: [photo] });
+      const imgClass = /<img[^>]*class="([^"]*)"/.exec(html)?.[1] ?? '';
+      expect(imgClass.split(/\s+/)).not.toContain('object-cover');
     }
   });
 
   it('leaves no gutter for the placeholder colour to show in', () => {
-    // The element used to be stretched to the area with the image fitted
-    // inside, which painted dominantColor down both sides of the picture.
+    // The box carries the photo's own ratio, so contain fits it exactly and
+    // dominantColor never shows as bars either side.
     const html = render({ ...commercial, cover: landscape, photos: [landscape] });
-    const imgClass = /<img[^>]*class="([^"]*)"/.exec(html)?.[1] ?? '';
-    expect(imgClass.split(/\s+/)).toEqual(['h-auto', 'max-h-full', 'w-auto', 'max-w-full']);
-    // Nothing forces the element to the area's width or height any more.
-    expect(imgClass.split(/\s+/)).not.toContain('w-full');
-    expect(imgClass.split(/\s+/)).not.toContain('h-full');
-  });
-
-  it('keeps the same area either way, so the title, meta and arrows hold still', () => {
-    for (const photo of [landscape, areaShaped]) {
-      expect(render({ ...commercial, cover: photo, photos: [photo] })).toContain(
-        'detail-photo-area',
-      );
-    }
+    expect(box(html)).toContain('aspect-ratio:1604 / 1068');
+    expect(html).toContain('h-full w-full object-contain');
   });
 });
 

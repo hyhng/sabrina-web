@@ -203,6 +203,9 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 23. 9. | Strop first-load JS přepsán ze 150 kB na **≤ 25 kB vlastního kódu / ≤ 195 kB celkem** | podlaha Next 16 + React 19 je 168,9 kB, původní cíl nešel splnit ani s prázdnou stránkou; hlídat má smysl to, co ovlivníme |
 | 23. 9. | Přeskládání mřížky animováno **CSS přechody, ne `motion`** | dlaždice jsou pozicované přes `calc()` nad CSS proměnnými, takže je to animovatelné zadarmo — 0,2 kB místo ~38 kB. `motion` se rozhodne až u přechodu dlaždice → detail |
 | 23. 9. | **Fotka v detailu se nikdy neořezává**, ruší `cover` u poměrů blízkých 620:740 (SPEC 4.1) | klient; přizpůsobovat fotku ploše je nežádoucí. Znát to bude až na reálných fotkách v F5 — portrét 2:3 se dřív ořízl o ~8 %, teď se ukáže celý |
+| 24. 9. | **Fotka v detailu vyplní šířku sloupce**, ruší pevnou plochu 620 × 740 (SPEC 4.1) | klient; pevná plocha dělala z fotky na výšku užší blok než okolní text a bylo to vidět. Cena: vysoká fotka může na nižším okně scrollovat |
+| 24. 9. | **Šipky zarovnané s okrajem fotky, chevron ve středu kruhu** (SPEC 4.3) | klient; původních 16 px odsazení a 1,5px optický posun narušovaly zarovnání |
+| 24. 9. | Přidán `eslint-plugin-react-hooks` | odhalil čtení a zápis `ref` během renderu v `OffsetGrid` — s concurrent renderingem tiše nespolehlivé a nic jiného by si toho nevšimlo |
 
 ---
 

@@ -21,6 +21,11 @@ import { Photo } from './Photo.tsx';
  * preloads ±1, and it is also what makes the crossfade possible: the next
  * photo is already decoded and sitting underneath at zero opacity.
  *
+ * The photo spans the full width of the content column, so its left and right
+ * edges line up with the title above it and the meta below. The height simply
+ * follows the photo's own proportion — the box is never fixed and the picture
+ * is never cropped or padded to fit one.
+ *
  * On a touch screen the arrows are hidden and the gesture is a swipe
  * (docs/SPEC.md 4.4). [návrh] 48px before a drag counts as one — far enough
  * not to fire while scrolling the page, close enough not to feel stubborn.
@@ -56,6 +61,7 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
   const swipeFrom = useRef<number | null>(null);
 
   const last = photos.length - 1;
+  const current = photos[index] ?? photos[0];
   const goBack = () => {
     setIndex((current) => Math.max(0, current - 1));
   };
@@ -78,7 +84,11 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
 
   return (
     <div
-      className="detail-photo-area group/photo relative"
+      className="group/photo relative w-full"
+      /* The box takes the current photo's shape, so nothing is letterboxed. */
+      style={
+        current === undefined ? undefined : { aspectRatio: `${current.width} / ${current.height}` }
+      }
       onTouchStart={(event) => {
         swipeFrom.current = event.touches[0]?.clientX ?? null;
       }}
@@ -115,7 +125,7 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
                * colour showing in the gutters, which read as deliberate bars
                * around the picture.
                */
-              className="h-auto max-h-full w-auto max-w-full"
+              className="h-full w-full object-contain"
             />
           </div>
         );
@@ -125,14 +135,14 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
         <ArrowButton
           direction="previous"
           onClick={goBack}
-          className="absolute left-[16px] top-1/2 -translate-y-1/2"
+          className="absolute left-0 top-1/2 -translate-y-1/2"
         />
       ) : null}
       {canGoForward ? (
         <ArrowButton
           direction="next"
           onClick={goForward}
-          className="absolute right-[16px] top-1/2 -translate-y-1/2"
+          className="absolute right-0 top-1/2 -translate-y-1/2"
         />
       ) : null}
     </div>

@@ -10,8 +10,9 @@
  * render inside an <img>. The blur has to be a CSS backdrop-filter on the
  * button, so the circle belongs to the button and only the chevron is vector.
  *
- * The chevron is nudged 1.5px against the way it points: its visual weight
- * sits on the open side, so dead centre reads as off centre.
+ * The chevron sits dead centre in the circle. SPEC 4.3 asked for a 1.5px
+ * optical nudge against the way it points; the client looked at it and wanted
+ * it centred, so the nudge is gone.
  *
  * Visibility is CSS — see .detail-arrow in the app's stylesheet. Hidden until
  * the photo is hovered, always shown on keyboard focus, never shown where
@@ -44,7 +45,6 @@ export function ArrowButton({ direction, onClick, className = '' }: ArrowButtonP
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          transform={direction === 'previous' ? 'translate(1.5 0)' : 'translate(-1.5 0)'}
         />
       </svg>
     </button>

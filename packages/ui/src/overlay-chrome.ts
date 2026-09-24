@@ -72,7 +72,13 @@ export function trapFocus(node: HTMLElement): () => void {
         (element) => element.getClientRects().length > 0,
       );
 
-    (reachable()[0] ?? node).focus();
+    /*
+     * The dialog itself, not its first control. Focusing the ✕ draws a focus
+     * ring around it the moment the overlay opens, which a mouse visitor has
+     * not asked for. The container carries tabindex="-1", so a screen reader
+     * still announces the dialog and Tab still walks into it.
+     */
+    node.focus();
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key !== 'Tab') return;

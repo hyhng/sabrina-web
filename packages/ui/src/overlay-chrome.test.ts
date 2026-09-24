@@ -48,10 +48,11 @@ describe('trapFocus', () => {
     return document.querySelector<HTMLElement>('#dialog') as HTMLElement;
   }
 
-  it('moves focus into the overlay when it opens', () => {
+  it('moves focus to the dialog itself, not its first control', () => {
+    // Focusing the ✕ would ring it the moment the overlay opens.
     overlay();
     const release = trapFocus(document.querySelector('#dialog') as HTMLElement);
-    expect(document.activeElement?.id).toBe('close');
+    expect(document.activeElement?.id).toBe('dialog');
     release();
   });
 
@@ -62,7 +63,7 @@ describe('trapFocus', () => {
     expect(document.activeElement?.id).toBe('opener');
 
     const release = trapFocus(document.querySelector('#dialog') as HTMLElement);
-    expect(document.activeElement?.id).toBe('close');
+    expect(document.activeElement?.id).toBe('dialog');
 
     release();
     // A keyboard visitor carries on from the tile, not the top of the page.

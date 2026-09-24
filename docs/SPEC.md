@@ -126,10 +126,11 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 
 ### 4.5 Otevření a zavření
 
-- **Přechod z dlaždice [rozhodnuto — nápad klientky]:** fotka dlaždice plynule vyroste do pozice fotky v detailu, pak se dokreslí plocha a texty.
-  - **Implementace: nativní View Transitions API**, ne `motion` — **[změněno 24. 9. 2026]**. Fotka nese na obou koncích stejný `view-transition-name` a prohlížeč přechod dopočítá sám. `motion` by přidalo ~38 kB gzip do rozpočtu, který povoluje 25 kB vlastního kódu celkem; tohle nestojí nic. Prohlížeč bez podpory detail prostě otevře.
-  - **Pozor na kolizi jmen:** jedno jméno smí v dokumentu nést jen jeden prvek. Dlaždice otevřeného projektu se ho proto vzdává ve prospěch fotky v detailu. Při duplicitě prohlížeč přechod *tiše přeskočí* — hlídá to test.
-  - **Zbývá:** odjetí okolních dlaždic zatím **není** — ostatní obsah se jen prolne. Doladit při vizuální kontrole.
+- **Přechod z dlaždice: žádný** — detail se otevře rovnou — **[změněno 24. 9. 2026]**.
+  - Původně tu stál morf fotky z dlaždice do detailu jako **nápad klientky**. Byl postavený na nativních View Transitions a odstraněn, protože působil sekaně. Příčina je nejspíš v tom, že View Transitions snímkují celou stránku včetně mřížky s devíti velkými fotkami; zúžit efekt jen na fotku by šlo, ale rozhodlo se pro odstranění.
+  - **Byl to nápad klientky — stojí za to potvrdit s ní**, že se ruší.
+  - Implementace je v historii gitu (commit `24bf762`), vrácení je otázka jednoho revertu.
+
 - **Přímý příchod na `/work/[slug]/`:** bez přechodu, detail je rovnou otevřený.
 - **Zavření:** ✕, Esc, klik na vybledlé pozadí mimo bílou plochu, tlačítko Zpět v prohlížeči. Pokud je dlaždice projektu v aktuálním filtru, fotka se vrátí zpět do ní (obrácený přechod); jinak fade.
 - `prefers-reduced-motion`: všechny přechody nahradit krátkým fade.

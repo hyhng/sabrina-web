@@ -88,8 +88,8 @@ describe('DetailOverlay', () => {
   it('holds the column at 620 and lets the plate padding fall out of it', () => {
     // 90 either side at 1440, 71 at 810 (docs/SPEC.md 4.1) — without either
     // number being written down.
-    expect(html).toContain('w-[min(800px,100vw-48px)]');
-    expect(html).toContain('mx-auto w-[620px] max-w-[calc(100%-48px)]');
+    expect(html).toContain('detail:w-[min(800px,100vw-48px)]');
+    expect(html).toContain('detail:w-[620px] detail:max-w-[calc(100%-48px)]');
   });
 
   it('loads the detail photo eagerly — it is what the visitor came for', () => {
@@ -127,5 +127,31 @@ describe('DetailOverlay — how the photo sits in the area', () => {
         'detail-photo-area',
       );
     }
+  });
+});
+
+describe('DetailOverlay — mobile (UI 09)', () => {
+  const html = render(commercial);
+
+  it('is a page of its own below 768, and an overlay above it', () => {
+    // Paper by default, the veil only from the detail breakpoint up.
+    expect(html).toContain('bg-paper detail:bg-paper/88');
+    // Fills the viewport on mobile, so there is no backdrop left to click.
+    expect(html).toContain('min-h-full');
+    expect(html).toContain('detail:min-h-0');
+  });
+
+  it('uses the mobile type sizes and grows them from 768', () => {
+    expect(html).toContain('text-[15px] text-ink detail:text-[18px]');
+    expect(html).toContain('text-[17px]');
+  });
+
+  it('stacks the meta on mobile and lines it up from 768', () => {
+    expect(html).toContain('flex flex-col gap-[16px]');
+    expect(html).toContain('detail:flex-row');
+  });
+
+  it('lets the photo run full width on mobile and into the column from 768', () => {
+    expect(html).toContain('detail:mx-auto detail:mt-[21px] detail:w-[620px]');
   });
 });

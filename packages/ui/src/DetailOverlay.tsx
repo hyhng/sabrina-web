@@ -6,26 +6,27 @@ import { useEffect } from 'react';
 import { Carousel } from './Carousel.tsx';
 
 /**
- * Project detail (Figma UI 05 node 154:71).
+ * Project detail (Figma UI 05 node 154:71, UI 09 node 161:278).
  *
- * The homepage stays behind at 12% — a veil of paper over it, not a dimming
- * of the grid — and a plate 800px wide carries a 620px content column: title
- * and ✕, the photo, then the meta in two columns.
+ * From 768 up it is an overlay: the homepage showing through at 12% behind a
+ * veil, a plate 800px wide, and a 620px column carrying the title and ✕, the
+ * photo, and the meta in two columns.
  *
- * The plate is paper, not white. DESIGN.md calls it "bílá plocha" and lists
- * white for it, but node 154:170 is #faf9f6. Figma wins on pixel values
- * (CLAUDE.md), and it reads correctly: the plate is there to mask the ghost
- * of the grid behind the text, not to be a white card.
+ * Below that it is a page of its own — full screen on paper, no ghost of the
+ * grid behind it, a top bar, the photo full-bleed, and the meta stacked
+ * underneath (docs/SPEC.md 4.4). The plate fills the viewport there, so there
+ * is no backdrop left to click and the gesture is a swipe instead of arrows.
  *
- * A photo shaped roughly like the area fills it and takes the small crop the
- * design signs off on; anything further off — a landscape frame above all — is
- * fitted inside and centred, with the title, meta and arrows staying put
- * (Figma UI 05B).
- *
- * The area is a fixed 620 × 740 here, matching a 1024-tall window. Scaling it
- * to shorter windows, the carousel, the arrows and the mobile layout are the
- * next tasks in docs/PHASES.md F2.
+ * The plate is paper, not white. DESIGN.md calls it "bílá plocha" and its
+ * colour table lists white, but node 154:170 is #faf9f6 and Figma wins on
+ * pixel values (CLAUDE.md). It reads right too: the plate is there to mask the
+ * ghost of the grid behind the text, not to be a white card.
  */
+
+/** The 620 column on desktop; plain 16px gutters on mobile. */
+const COLUMN =
+  'px-[16px] detail:mx-auto detail:w-[620px] detail:max-w-[calc(100%-48px)] detail:px-0';
+
 export interface DetailOverlayProps {
   project: Project;
   imgBase: string;
@@ -55,62 +56,68 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
       role="dialog"
       aria-modal="true"
       aria-labelledby="detail-title"
-      className="fixed inset-0 z-50 overflow-y-auto bg-paper/88"
+      className="fixed inset-0 z-50 overflow-y-auto bg-paper detail:bg-paper/88"
       onClick={onClose}
     >
       <div
-        className="mx-auto my-[35px] w-[min(800px,100vw-48px)] bg-paper pt-[48px] pb-[61px]"
+        className="min-h-full bg-paper detail:mx-auto detail:my-[35px] detail:min-h-0 detail:w-[min(800px,100vw-48px)] detail:pt-[48px] detail:pb-[61px]"
         onClick={(event) => {
           event.stopPropagation();
         }}
       >
-        {/*
-          The column is 620 and centres itself, so the padding falls out of the
-          plate width: 90 either side at 1440, 71 at 810 (docs/SPEC.md 4.1).
-        */}
-        <div className="mx-auto w-[620px] max-w-[calc(100%-48px)]">
-          <div className="flex items-start justify-between text-[18px] leading-[1.5]">
-            <h1 id="detail-title" className="font-medium text-ink">
-              {project.title}
-            </h1>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close"
-              className="cursor-pointer text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
-            >
-              ✕
-            </button>
-          </div>
+        <div
+          className={`${COLUMN} flex items-center justify-between pt-[20px] pb-[16px] detail:items-start detail:pt-0 detail:pb-0`}
+        >
+          <h1
+            id="detail-title"
+            className="font-medium text-[15px] text-ink detail:text-[18px] detail:leading-[1.5]"
+          >
+            {project.title}
+          </h1>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="cursor-pointer text-[17px] text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink detail:text-[18px] detail:leading-[1.5]"
+          >
+            ✕
+          </button>
+        </div>
 
+        {/* Full-bleed on mobile, inside the column from 768 up. */}
+        <div className="detail:mx-auto detail:mt-[21px] detail:w-[620px] detail:max-w-[calc(100%-48px)]">
           <Carousel
             photos={project.photos}
             imgBase={imgBase}
             title={project.title}
             startIndex={coverIndex}
           />
+        </div>
 
-          <div className="mt-[26px] flex items-start text-[12.5px] leading-[1.5]">
-            {project.client === undefined ? null : (
-              <div className="min-w-px flex-1">
-                <p className="text-muted">Client :</p>
-                <p className="font-medium text-ink">{project.client}</p>
-                {project.clientLine2 === undefined ? null : (
-                  <p className="text-ink">{project.clientLine2}</p>
-                )}
-              </div>
-            )}
-            {project.credits.length === 0 ? null : (
-              <div className="min-w-px flex-1">
-                <p className="text-muted">Credits :</p>
-                {project.credits.map((credit) => (
-                  <p key={`${credit.role}-${credit.name}`} className="text-ink">
-                    {credit.role} · {credit.name}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
+        <div
+          className={`${COLUMN} flex flex-col gap-[16px] pt-[20px] pb-[40px] text-[13px] text-ink detail:mt-[26px] detail:flex-row detail:items-start detail:gap-0 detail:pt-0 detail:pb-0 detail:text-[12.5px] detail:leading-[1.5]`}
+        >
+          {project.client === undefined ? null : (
+            <div className="flex flex-col gap-[2px] detail:min-w-px detail:flex-1 detail:gap-0">
+              <p className="text-[12.5px] opacity-50 detail:text-muted detail:opacity-100">
+                Client :
+              </p>
+              <p className="font-medium">{project.client}</p>
+              {project.clientLine2 === undefined ? null : <p>{project.clientLine2}</p>}
+            </div>
+          )}
+          {project.credits.length === 0 ? null : (
+            <div className="flex flex-col gap-[2px] detail:min-w-px detail:flex-1 detail:gap-0">
+              <p className="text-[12.5px] opacity-50 detail:text-muted detail:opacity-100">
+                Credits :
+              </p>
+              {project.credits.map((credit) => (
+                <p key={`${credit.role}-${credit.name}`}>
+                  {credit.role} · {credit.name}
+                </p>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

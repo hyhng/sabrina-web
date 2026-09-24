@@ -68,18 +68,18 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 **Cíl:** celý veřejný web podle Figmy, nasazený na preview URL (`*.pages.dev`), aby ho klientka viděla s placeholder obsahem.
 
 **Grid**
-- [ ] `Photo` (srcset, aspect-ratio, dominantColor, fade-in)
-- [ ] `Tile` (fotka + popiska, hover)
-- [ ] `OffsetGrid` — 3 / 2 / 2 sloupce podle breakpointu, bez posunu po načtení
-- [ ] Header a patička — desktop / tablet / mobil (UI 04, 12, 06)
-- [ ] Filtr — stav v URL, animované přeskládání
+- [~] `Photo` (srcset, aspect-ratio, dominantColor) — **fade-in vynechán**: přes JS by při selhání hydratace zůstaly fotky neviditelné; zatím jen podkladová barva, vrátit se k tomu bezpečně
+- [x] `Tile` (fotka + popiska, hover)
+- [x] `OffsetGrid` — 3 / 2 / 2 sloupce podle breakpointu, bez posunu po načtení
+- [x] Header a patička — desktop / tablet / mobil (UI 04, 12, 06)
+- [x] Filtr — stav v URL, animované přeskládání
 
 **Detail**
-- [ ] Routing overlayů: `/work/[slug]/`, `pushState`, zavření, Zpět (TECH 4.1)
-- [ ] `DetailOverlay` desktop — bílá plocha, vybledlé pozadí, meta (UI 05)
-- [ ] Fotka na šířku — `contain` (UI 05B)
-- [ ] Škálování plochy fotky podle výšky okna
-- [ ] `Carousel` + `ArrowButton` — hover, klávesy, bez protáčení, přednačítání
+- [x] Routing overlayů: `/work/[slug]/`, `pushState`, zavření, Zpět (TECH 4.1)
+- [x] `DetailOverlay` desktop — bílá plocha, vybledlé pozadí, meta (UI 05)
+- [x] Fotka na šířku — vejde se celá, **bez ořezu** (UI 05B, viz Rozhodnutí 23. 9.)
+- [x] Škálování plochy fotky podle výšky okna
+- [x] `Carousel` + `ArrowButton` — hover, klávesy, bez protáčení, přednačítání
 - [ ] Mobilní detail — swipe (UI 09)
 - [ ] Přechod dlaždice → detail (sdílený layout, sousedé uhnou) a zpět
 - [ ] Focus trap, scroll lock, návrat fokusu, `prefers-reduced-motion`

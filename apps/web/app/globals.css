@@ -143,23 +143,37 @@
 }
 
 /**
- * Detail photo area — paired with DetailOverlay.tsx in packages/ui.
+ * Detail photo area — paired with Carousel.tsx in packages/ui.
  *
- * 620 × 740 in a 1024-tall window, shrinking in that same ratio on shorter
- * ones so the title, photo and meta still fit without scrolling
- * (docs/SPEC.md 4.1). 284px is everything else on the plate: the 35px top
- * margin, 48px of padding, the 27px title line, the 21px and 26px gaps, the
- * 57px meta block, 61px of padding and the 10px the artboard leaves at the
- * bottom.
+ * Mobile (UI 09): a full-bleed band in the artboard's 390:465 proportion, so
+ * it scales with the device instead of being pinned to one phone's width.
  *
- * dvh rather than vh so a mobile browser's collapsing toolbar does not push
- * the meta out of view.
+ * From 768 up (UI 05): 620 × 740 in a 1024-tall window, shrinking in that
+ * ratio on shorter ones so the title, photo and meta still fit without
+ * scrolling (docs/SPEC.md 4.1). 284px is everything else on the plate — the
+ * 35px top margin, 48px padding, the 27px title line, the 21px and 26px gaps,
+ * the 57px meta block, 61px padding and the 10px the artboard leaves below.
+ *
+ * dvh rather than vh so a collapsing mobile toolbar does not push the meta out
+ * of view.
+ *
+ * Either way the area is a fixed box and the photo sits inside it at its own
+ * size. That is what keeps the title, meta and arrows still while paging
+ * through a series of mixed shapes, without cropping anything.
  */
 @layer components {
   .detail-photo-area {
-    --detail-photo-height: min(740px, calc(100dvh - 284px));
-    height: var(--detail-photo-height);
-    width: min(100%, calc(var(--detail-photo-height) * 620 / 740));
-    margin-inline: auto;
+    width: 100%;
+    aspect-ratio: 390 / 465;
+  }
+
+  @media (min-width: 768px) {
+    .detail-photo-area {
+      --detail-photo-height: min(740px, calc(100dvh - 284px));
+      height: var(--detail-photo-height);
+      width: min(100%, calc(var(--detail-photo-height) * 620 / 740));
+      aspect-ratio: auto;
+      margin-inline: auto;
+    }
   }
 }

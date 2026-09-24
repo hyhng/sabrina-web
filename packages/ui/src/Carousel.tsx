@@ -17,14 +17,18 @@ import { Photo } from './Photo.tsx';
  * arrow on the last, which without a counter is the only signal that the
  * series has ended.
  *
- * Only the current photo and its two neighbours are mounted. That is what
- * preloads ±1, and it is also what makes the crossfade possible: the next
- * photo is already decoded and sitting underneath at zero opacity.
- *
  * The photo spans the full width of the content column, so its left and right
- * edges line up with the title above it and the meta below. The height simply
- * follows the photo's own proportion — the box is never fixed and the picture
- * is never cropped or padded to fit one.
+ * edges line up with the title above it and the meta below, and its height
+ * follows its own proportion. Nothing is ever cropped or padded.
+ *
+ * The box around it is as tall as the tallest photo in the series would be at
+ * that width — the smallest aspect ratio, worked out from the data. It is
+ * therefore the same height for every photo, so the arrows sit still while
+ * paging and a shorter frame is simply centred in it.
+ *
+ * Photos slide rather than crossfade: each sits one box-width to the left or
+ * right of the one on screen and the whole row shifts. Only the current photo
+ * and its neighbours exist, so that is also what preloads ±1.
  *
  * On a touch screen the arrows are hidden and the gesture is a swipe
  * (docs/SPEC.md 4.4). [návrh] 48px before a drag counts as one — far enough
@@ -61,7 +65,8 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
   const swipeFrom = useRef<number | null>(null);
 
   const last = photos.length - 1;
-  const current = photos[index] ?? photos[0];
+  /** The tallest frame at a given width is the one with the smallest ratio. */
+  const tallest = Math.min(...photos.map((photo) => photo.aspectRatio));
   const goBack = () => {
     setIndex((current) => Math.max(0, current - 1));
   };
@@ -84,11 +89,9 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
 
   return (
     <div
-      className="group/photo relative w-full"
-      /* The box takes the current photo's shape, so nothing is letterboxed. */
-      style={
-        current === undefined ? undefined : { aspectRatio: `${current.width} / ${current.height}` }
-      }
+      className="group/photo relative w-full overflow-hidden"
+      /* One height for the whole series, so nothing shifts while paging. */
+      style={{ aspectRatio: String(tallest) }}
       onTouchStart={(event) => {
         swipeFrom.current = event.touches[0]?.clientX ?? null;
       }}
@@ -107,8 +110,8 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
         return (
           <div
             key={photo.id}
-            className="absolute inset-0 flex items-center justify-center transition-opacity duration-[250ms] motion-reduce:duration-[120ms]"
-            style={{ opacity: current ? 1 : 0 }}
+            className="absolute inset-0 flex items-center justify-center transition-transform duration-[380ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none"
+            style={{ transform: `translateX(${String((position - index) * 100)}%)` }}
             aria-hidden={current ? undefined : true}
             inert={!current}
           >
@@ -125,7 +128,7 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
                * colour showing in the gutters, which read as deliberate bars
                * around the picture.
                */
-              className="h-full w-full object-contain"
+              className="h-auto max-h-full w-full"
             />
           </div>
         );

@@ -102,9 +102,9 @@ describe('DetailOverlay — how the photo sits in the column', () => {
   const landscape = { ...cover, id: 'soda', width: 1604, height: 1068, aspectRatio: 1604 / 1068 };
   const areaShaped = { ...cover, id: 'fit', width: 620, height: 740, aspectRatio: 620 / 740 };
 
-  /** The box the photos are stacked in. */
+  /** The box the photos slide inside. */
   const box = (html: string) =>
-    /<div class="group\/photo relative w-full"[^>]*style="([^"]*)"/.exec(html)?.[1] ?? '';
+    /<div class="group\/photo[^"]*"[^>]*style="([^"]*)"/.exec(html)?.[1] ?? '';
 
   it('spans the full width of the column, so it lines up with the text', () => {
     for (const photo of [landscape, areaShaped, cover]) {
@@ -113,13 +113,20 @@ describe('DetailOverlay — how the photo sits in the column', () => {
     }
   });
 
-  it('takes its height from the photo, never the other way round', () => {
-    expect(box(render({ ...commercial, cover: landscape, photos: [landscape] }))).toContain(
-      'aspect-ratio:1604 / 1068',
-    );
-    expect(box(render({ ...commercial, cover: areaShaped, photos: [areaShaped] }))).toContain(
-      'aspect-ratio:620 / 740',
-    );
+  it('is as tall as the tallest frame in the series, so nothing shifts', () => {
+    // The tallest frame at a given width is the one with the smallest ratio.
+    const series = [areaShaped, landscape, cover];
+    const html = render({ ...commercial, cover: areaShaped, photos: series });
+    const smallest = Math.min(...series.map((photo) => photo.aspectRatio));
+    expect(box(html)).toContain(`aspect-ratio:${String(smallest)}`);
+  });
+
+  it('keeps that height whichever photo of the series is showing', () => {
+    const series = [cover, landscape];
+    const onFirst = box(render({ ...commercial, cover, photos: series }));
+    const onSecond = box(render({ ...commercial, cover: landscape, photos: series }));
+    // Otherwise the arrows, centred on the box, would jump between photos.
+    expect(onFirst).toBe(onSecond);
   });
 
   it('never crops', () => {
@@ -131,11 +138,22 @@ describe('DetailOverlay — how the photo sits in the column', () => {
   });
 
   it('leaves no gutter for the placeholder colour to show in', () => {
-    // The box carries the photo's own ratio, so contain fits it exactly and
-    // dominantColor never shows as bars either side.
+    // The photo is sized by width with its height left to follow, so the
+    // element is exactly the picture and dominantColor has nowhere to show.
     const html = render({ ...commercial, cover: landscape, photos: [landscape] });
-    expect(box(html)).toContain('aspect-ratio:1604 / 1068');
-    expect(html).toContain('h-full w-full object-contain');
+    const imgClass = /<img[^>]*class="([^"]*)"/.exec(html)?.[1] ?? '';
+    expect(imgClass.split(/\s+/)).toEqual(['h-auto', 'max-h-full', 'w-full']);
+  });
+
+  it('slides between photos rather than crossfading', () => {
+    const html = render({ ...commercial, cover, photos: [cover, landscape] });
+    expect(html).toContain('transition-transform');
+    expect(html).toContain('translateX(0%)');
+    expect(html).toContain('translateX(100%)');
+    // The photos themselves no longer fade; only the arrows do, on hover.
+    const slides = [...html.matchAll(/<div class="absolute inset-0[^"]*"/g)].map(([tag]) => tag);
+    expect(slides).toHaveLength(2);
+    for (const slide of slides) expect(slide).not.toContain('transition-opacity');
   });
 });
 

@@ -90,7 +90,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [x] Meta tagy, OG, sitemap, robots, JSON-LD
 - [ ] Cloudflare Pages napojené na repo → preview URL
 - [ ] Vizuální kontrola všech artboardů Finál v2 proti Figmě
-- [ ] Playwright: otevřít detail z gridu, listovat, zavřít Zpět; přímý příchod na `/work/…`; filtr
+- [x] Playwright: otevřít detail z gridu, listovat, zavřít Zpět; přímý příchod na `/work/…`; filtr
 
 **Hotovo když:** každý artboard z `DESIGN.md → Mapa` má odpovídající stav na preview URL, Lighthouse mobil ≥ 95 výkon / 100 přístupnost (kromě otevřeného kontrastu), klientka dostala odkaz.
 

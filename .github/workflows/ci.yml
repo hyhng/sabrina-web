@@ -61,3 +61,21 @@ jobs:
           CONTENT_SOURCE: seed
           NEXT_PUBLIC_IMG_BASE: /seed
           NEXT_PUBLIC_SITE_URL: https://example.com
+
+      # End-to-end against the built export, served as Cloudflare Pages will:
+      # real clicks, the Back button, the page behind an overlay holding still.
+      # Chromium only — the cross-browser pass in SPEC 9.4 belongs to F5.
+      - run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm test:e2e
+        env:
+          CONTENT_SOURCE: seed
+          NEXT_PUBLIC_IMG_BASE: /seed
+          NEXT_PUBLIC_SITE_URL: https://example.com
+
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

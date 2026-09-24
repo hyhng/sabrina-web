@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "seed": "node scripts/build-seed.mts"
+    "seed": "node scripts/build-seed.mts",
+    "serve": "node scripts/serve-out.mts"
   },
   "dependencies": {
     "@sabrina/shared": "workspace:*",

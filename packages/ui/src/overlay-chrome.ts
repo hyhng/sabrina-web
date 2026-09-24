@@ -38,6 +38,7 @@ export function lockScroll(): () => void {
       body.style.top = previous.top;
       body.style.width = previous.width;
       body.style.paddingRight = previous.paddingRight;
+
       window.scrollTo(0, scrollY);
     };
   }

@@ -10,16 +10,18 @@
   "type": "module",
   "scripts": {
     "dev:web": "pnpm --filter web dev",
-    "dev:cms": "echo \"CMS is built in F3 — see docs/PHASES.md\"",
+    "dev:cms": "echo \"CMS is built in F3 \u2014 see docs/PHASES.md\"",
     "build:web": "pnpm --filter web build",
     "lint": "eslint .",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "typecheck": "tsc -p tsconfig.json && pnpm -r --if-present typecheck",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "pnpm build:web && playwright test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
     "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",

@@ -80,14 +80,14 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [x] Fotka na šířku — vejde se celá, **bez ořezu** (UI 05B, viz Rozhodnutí 23. 9.)
 - [x] Škálování plochy fotky podle výšky okna
 - [x] `Carousel` + `ArrowButton` — hover, klávesy, bez protáčení, přednačítání
-- [ ] Mobilní detail — swipe (UI 09)
-- [ ] Přechod dlaždice → detail (sdílený layout, sousedé uhnou) a zpět
-- [ ] Focus trap, scroll lock, návrat fokusu, `prefers-reduced-motion`
+- [x] Mobilní detail — swipe (UI 09)
+- [~] Přechod dlaždice → detail a zpět — fotka morfuje přes View Transitions; **odjetí sousedních dlaždic zatím není**
+- [x] Focus trap, scroll lock, návrat fokusu, `prefers-reduced-motion`
 
 **Ostatní**
-- [ ] Information desktop + mobil (UI 07, 08)
-- [ ] 404 (UI 10, 11)
-- [ ] Meta tagy, OG, sitemap, robots, JSON-LD
+- [x] Information desktop + mobil (UI 07, 08)
+- [x] 404 (UI 10, 11)
+- [x] Meta tagy, OG, sitemap, robots, JSON-LD
 - [ ] Cloudflare Pages napojené na repo → preview URL
 - [ ] Vizuální kontrola všech artboardů Finál v2 proti Figmě
 - [ ] Playwright: otevřít detail z gridu, listovat, zavřít Zpět; přímý příchod na `/work/…`; filtr
@@ -207,6 +207,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 24. 9. | **Šipky zarovnané s okrajem fotky, chevron ve středu kruhu** (SPEC 4.3) | klient; původních 16 px odsazení a 1,5px optický posun narušovaly zarovnání |
 | 24. 9. | **Plocha detailu má velikost podle okna, ne podle fotky** (SPEC 4.1) | klient s referencí `lydiebonhomme.com`; když výšku určovala fotka, plocha při listování série poskakovala. Takhle jde mít zarovnanou fotku na celou šířku *i* stabilní plochu |
 | 24. 9. | **Plocha fotky je vysoká jako nejvyšší fotka série**; přechod je **slide**, ne crossfade (SPEC 4.2) | klient; šipka centrovaná na fotku skákala, když série střídala výšku a šířku |
+| 24. 9. | Přechod dlaždice → detail přes **nativní View Transitions**, ne `motion` (SPEC 4.5, TECH 2) | stejný efekt za 0 kB místo ~38 kB; `motion` tím v projektu zatím není potřeba vůbec |
 | 24. 9. | Přidán `eslint-plugin-react-hooks` | odhalil čtení a zápis `ref` během renderu v `OffsetGrid` — s concurrent renderingem tiše nespolehlivé a nic jiného by si toho nevšimlo |
 
 ---

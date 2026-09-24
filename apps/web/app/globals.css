@@ -141,3 +141,35 @@
     }
   }
 }
+
+/**
+ * Tile → detail (docs/SPEC.md 4.5).
+ *
+ * The photo carries a shared view-transition-name at both ends, so the browser
+ * morphs it from the tile into the detail and back. Everything else — the
+ * veil, the plate, the text — crosses over underneath it.
+ *
+ * Done natively rather than with motion, which TECH.md 2 names: it is the same
+ * effect for none of the 38 kB. A browser without view transitions simply
+ * opens the detail, which is what happened before this existed.
+ */
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+::view-transition-group(*) {
+  animation-duration: 380ms;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* docs/SPEC.md 4.5: no movement for anyone who has asked for none. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

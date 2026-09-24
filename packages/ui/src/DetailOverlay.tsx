@@ -39,9 +39,16 @@ export interface DetailOverlayProps {
   project: Project;
   imgBase: string;
   onClose: () => void;
+  /** Shared transition name tying the detail photo back to its tile. */
+  viewTransitionName?: string;
 }
 
-export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps) {
+export function DetailOverlay({
+  project,
+  imgBase,
+  onClose,
+  viewTransitionName,
+}: DetailOverlayProps) {
   const dialog = useRef<HTMLDivElement>(null);
   useScrollLock();
   useFocusTrap(dialog);
@@ -105,6 +112,7 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
             imgBase={imgBase}
             title={project.title}
             startIndex={coverIndex}
+            viewTransitionName={viewTransitionName}
           />
         </div>
 

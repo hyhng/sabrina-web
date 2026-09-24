@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 
 import { setFilter, useFilter } from '../../lib/use-filter.ts';
 import { closeOverlay, overlayFromPath, pushPath, usePath } from '../../lib/use-route.ts';
+import { photoTransitionName, withViewTransition } from '../../lib/view-transition.ts';
 
 /**
  * The whole site. Every URL renders this same tree with a different starting
@@ -51,8 +52,18 @@ export function Site({ projects, settings, imgBase, initialPath }: SiteProps) {
           visibleSlugs={visibleSlugs}
           imgBase={imgBase}
           onOpen={(project) => {
-            pushPath(`/work/${project.slug}/`);
+            withViewTransition(() => {
+              pushPath(`/work/${project.slug}/`);
+            });
           }}
+          /*
+           * The tile drops its name while its own detail is open, because two
+           * elements cannot share one — and it is the detail's photo that
+           * carries it then (docs/SPEC.md 4.5).
+           */
+          transitionNameFor={(project) =>
+            open?.slug === project.slug ? undefined : photoTransitionName(project.slug)
+          }
         />
       </main>
       <Footer
@@ -62,7 +73,14 @@ export function Site({ projects, settings, imgBase, initialPath }: SiteProps) {
         }}
       />
       {open === undefined ? null : (
-        <DetailOverlay project={open} imgBase={imgBase} onClose={closeOverlay} />
+        <DetailOverlay
+          project={open}
+          imgBase={imgBase}
+          onClose={() => {
+            withViewTransition(closeOverlay);
+          }}
+          viewTransitionName={photoTransitionName(open.slug)}
+        />
       )}
       {overlay.kind === 'information' ? (
         <InfoOverlay settings={settings} imgBase={imgBase} onClose={closeOverlay} />

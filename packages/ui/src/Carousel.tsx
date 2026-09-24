@@ -58,9 +58,17 @@ export interface CarouselProps {
   title: string;
   /** Where to open — the cover, so the detail starts on the tile's photo. */
   startIndex?: number;
+  /** Shared transition name, carried by whichever photo is showing. */
+  viewTransitionName?: string;
 }
 
-export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselProps) {
+export function Carousel({
+  photos,
+  imgBase,
+  title,
+  startIndex = 0,
+  viewTransitionName,
+}: CarouselProps) {
   const [index, setIndex] = useState(startIndex);
   const swipeFrom = useRef<number | null>(null);
 
@@ -121,6 +129,7 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
               sizes="620px"
               eager
               alt={photo.alt ?? `${title} — photo ${position + 1}`}
+              viewTransitionName={current ? viewTransitionName : undefined}
               /*
                * The box takes the photo's own proportions, bounded by the
                * area — never the other way round. Stretching the element to

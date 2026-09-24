@@ -23,6 +23,11 @@ export interface TileProps {
   /** The LCP photo. One per page. */
   priority?: boolean;
   /**
+   * Ties this tile's photo to the detail's, so it morphs open. Dropped while
+   * that project's detail is showing — two elements cannot share a name.
+   */
+  viewTransitionName?: string;
+  /**
    * Open the detail without navigating. The href stays real, so the link is
    * crawlable and middle-click still opens a tab; only a plain left click is
    * intercepted (docs/TECH.md 4.1).
@@ -30,7 +35,14 @@ export interface TileProps {
   onOpen?: (project: Project) => void;
 }
 
-export function Tile({ project, imgBase, eager = false, priority = false, onOpen }: TileProps) {
+export function Tile({
+  project,
+  imgBase,
+  eager = false,
+  priority = false,
+  onOpen,
+  viewTransitionName,
+}: TileProps) {
   return (
     <a
       href={`/work/${project.slug}/`}
@@ -51,6 +63,7 @@ export function Tile({ project, imgBase, eager = false, priority = false, onOpen
         eager={eager}
         priority={priority}
         alt={project.cover.alt ?? `${project.title} — cover`}
+        viewTransitionName={viewTransitionName}
         className="w-full object-cover"
       />
       <span className="flex flex-col gap-[3px] leading-[1.4]">

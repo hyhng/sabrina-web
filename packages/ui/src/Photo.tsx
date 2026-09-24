@@ -40,6 +40,11 @@ export interface PhotoProps {
   className?: string;
   /** Falls back to the pattern in docs/SPEC.md 9.3 when the CMS has no alt. */
   alt?: string;
+  /**
+   * Ties this photo to the same photo elsewhere, so the browser morphs between
+   * them. Only one element may carry a given name at a time.
+   */
+  viewTransitionName?: string;
 }
 
 export function Photo({
@@ -50,6 +55,7 @@ export function Photo({
   priority = false,
   className,
   alt,
+  viewTransitionName,
 }: PhotoProps) {
   return (
     <img
@@ -66,6 +72,7 @@ export function Photo({
       style={{
         aspectRatio: `${photo.width} / ${photo.height}`,
         backgroundColor: photo.dominantColor,
+        viewTransitionName,
       }}
     />
   );

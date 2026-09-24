@@ -70,6 +70,8 @@ export interface OffsetGridProps {
   eagerCount?: number;
   /** Open a project without navigating. */
   onOpen?: (project: Project) => void;
+  /** Shared transition name for a tile's photo, or undefined for none. */
+  transitionNameFor?: (project: Project) => string | undefined;
 }
 
 export function OffsetGrid({
@@ -78,6 +80,7 @@ export function OffsetGrid({
   visibleSlugs,
   eagerCount = 4,
   onOpen,
+  transitionNameFor,
 }: OffsetGridProps) {
   const isVisible = (project: Project) =>
     visibleSlugs === undefined || visibleSlugs.has(project.slug);
@@ -127,6 +130,7 @@ export function OffsetGrid({
                 eager={!hidden && (position ?? 0) < eagerCount}
                 priority={position === 0}
                 onOpen={onOpen}
+                viewTransitionName={transitionNameFor?.(project)}
               />
             </div>
           );

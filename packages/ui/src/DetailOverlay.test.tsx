@@ -135,7 +135,9 @@ describe('DetailOverlay — mobile (UI 09)', () => {
 
   it('is a page of its own below 768, and an overlay above it', () => {
     // Paper by default, the veil only from the detail breakpoint up.
-    expect(html).toContain('bg-paper detail:bg-paper/88');
+    const dialogClass = /role="dialog"[^>]*class="([^"]*)"/.exec(html)?.[1] ?? '';
+    expect(dialogClass.split(/\s+/)).toContain('bg-paper');
+    expect(dialogClass.split(/\s+/)).toContain('detail:bg-paper/88');
     // Fills the viewport on mobile, so there is no backdrop left to click.
     expect(html).toContain('min-h-full');
     expect(html).toContain('detail:min-h-0');

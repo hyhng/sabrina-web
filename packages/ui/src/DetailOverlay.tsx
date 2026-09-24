@@ -1,9 +1,10 @@
 'use client';
 
 import type { Project } from '@sabrina/shared/schema';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Carousel } from './Carousel.tsx';
+import { useFocusTrap, useScrollLock } from './overlay-chrome.ts';
 
 /**
  * Project detail (Figma UI 05 node 154:71, UI 09 node 161:278).
@@ -34,6 +35,10 @@ export interface DetailOverlayProps {
 }
 
 export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps) {
+  const dialog = useRef<HTMLDivElement>(null);
+  useScrollLock();
+  useFocusTrap(dialog);
+
   // Open on the cover, so the detail starts on the photo the tile showed.
   const coverIndex = Math.max(
     0,
@@ -53,10 +58,12 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
 
   return (
     <div
+      ref={dialog}
       role="dialog"
       aria-modal="true"
       aria-labelledby="detail-title"
-      className="fixed inset-0 z-50 overflow-y-auto bg-paper detail:bg-paper/88"
+      tabIndex={-1}
+      className="fixed inset-0 z-50 overflow-y-auto bg-paper outline-none detail:bg-paper/88"
       onClick={onClose}
     >
       <div

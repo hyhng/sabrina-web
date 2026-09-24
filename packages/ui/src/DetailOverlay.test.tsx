@@ -166,3 +166,36 @@ describe('DetailOverlay — mobile (UI 09)', () => {
     expect(html).toContain('detail:mx-auto detail:mt-[21px] detail:w-[620px]');
   });
 });
+
+describe('DetailOverlay — the plate holds its size', () => {
+  const tall = { ...cover, id: 'tall', width: 1000, height: 2000, aspectRatio: 0.5 };
+  const wide = { ...cover, id: 'wide', width: 2000, height: 1000, aspectRatio: 2 };
+
+  const plateClass = (html: string) =>
+    (/<div class="(min-h-full bg-paper[^"]*)"/.exec(html)?.[1] ?? '').split(/\s+/);
+
+  it('is sized by the window, not by the photo', () => {
+    // Otherwise the plate jumps every time a series moves from a portrait to
+    // a landscape. Same pattern as the reference the client gave.
+    for (const photo of [tall, wide]) {
+      const classes = plateClass(render({ ...commercial, cover: photo, photos: [photo] }));
+      expect(classes).toContain('detail:h-[calc(100dvh-70px)]');
+      expect(classes).toContain('detail:w-[min(800px,100vw-48px)]');
+    }
+  });
+
+  it('comes out identical whatever shape the photo is', () => {
+    expect(plateClass(render({ ...commercial, cover: tall, photos: [tall] }))).toEqual(
+      plateClass(render({ ...commercial, cover: wide, photos: [wide] })),
+    );
+  });
+
+  it('scrolls inside itself, so a tall photo does not grow it', () => {
+    const classes = plateClass(render({ ...commercial, cover: tall, photos: [tall] }));
+    expect(classes).toContain('detail:overflow-y-auto');
+    // The layer behind it does not scroll as well.
+    expect(render({ ...commercial, cover: tall, photos: [tall] })).toContain(
+      'detail:overflow-hidden',
+    );
+  });
+});

@@ -82,7 +82,9 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 
 ### 4.1 Desktop a tablet (≥ 768 px)
 
-- Homepage v pozadí **vybledlá**, přes ni **bílá plocha 800 px** vycentrovaná vodorovně
+- Homepage v pozadí **vybledlá**, přes ni **plocha 800 px** vycentrovaná vodorovně
+  - **Plocha má velikost podle okna, ne podle obsahu** — **[rozhodnuto 24. 9. 2026]**: výška `100dvh` mínus okraje, obsah se roluje uvnitř ní. Když výšku určovala fotka, plocha při listování série poskakovala mezi vysokou a nízkou. Vzor: `lydiebonhomme.com` (Cargo), kde je panel `position: fixed` s `max-height: 100dvh`.
+  - Plocha je ve Figmě `#faf9f6` (paper), ne bílá, přestože ji DESIGN.md jmenuje „bílá" — node `154:170`.
 - Uvnitř sloupec **620 px**: nahoře **název projektu** vlevo a **✕** vpravo, pod tím **fotka**, pod ní **meta** ve dvou sloupcích:
   - `Client :` — název klienta, druhý řádek (např. „Marlow" / „Marlow Cosmetics")
   - `Credits :` — řádky `Role · Jméno`

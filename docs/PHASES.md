@@ -205,6 +205,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 23. 9. | **Fotka v detailu se nikdy neořezává**, ruší `cover` u poměrů blízkých 620:740 (SPEC 4.1) | klient; přizpůsobovat fotku ploše je nežádoucí. Znát to bude až na reálných fotkách v F5 — portrét 2:3 se dřív ořízl o ~8 %, teď se ukáže celý |
 | 24. 9. | **Fotka v detailu vyplní šířku sloupce**, ruší pevnou plochu 620 × 740 (SPEC 4.1) | klient; pevná plocha dělala z fotky na výšku užší blok než okolní text a bylo to vidět. Cena: vysoká fotka může na nižším okně scrollovat |
 | 24. 9. | **Šipky zarovnané s okrajem fotky, chevron ve středu kruhu** (SPEC 4.3) | klient; původních 16 px odsazení a 1,5px optický posun narušovaly zarovnání |
+| 24. 9. | **Plocha detailu má velikost podle okna, ne podle fotky** (SPEC 4.1) | klient s referencí `lydiebonhomme.com`; když výšku určovala fotka, plocha při listování série poskakovala. Takhle jde mít zarovnanou fotku na celou šířku *i* stabilní plochu |
 | 24. 9. | Přidán `eslint-plugin-react-hooks` | odhalil čtení a zápis `ref` během renderu v `OffsetGrid` — s concurrent renderingem tiše nespolehlivé a nic jiného by si toho nevšimlo |
 
 ---

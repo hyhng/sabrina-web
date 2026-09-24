@@ -1,5 +1,5 @@
 import type { Settings } from '@sabrina/shared/schema';
-import type { ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 
 /**
  * Site header (Figma UI 04 node 154:4, UI 12 node 161:584, UI 06 node 154:320).
@@ -21,11 +21,22 @@ export interface HeaderProps {
   settings: Settings;
   /** The category filter. Sits in the middle on desktop, below otherwise. */
   filter?: ReactNode;
+  /** Open Information without navigating (docs/TECH.md 4.1). */
+  onOpenInformation?: () => void;
 }
 
 const NAME = 'Sabrina Kulhankova';
 
-export function Header({ settings, filter }: HeaderProps) {
+export function Header({ settings, filter, onOpenInformation }: HeaderProps) {
+  const openInformation =
+    onOpenInformation === undefined
+      ? undefined
+      : (event: MouseEvent) => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          onOpenInformation();
+        };
+
   return (
     <header className="relative">
       <div className="flex items-center justify-between px-[16px] pt-[20px] pb-[12px] tablet:px-[24px] tablet:pt-[26px] tablet:pb-[14px] desktop:px-[34px] desktop:py-[30px]">
@@ -41,7 +52,9 @@ export function Header({ settings, filter }: HeaderProps) {
           aria-label="Contact"
           className="flex shrink-0 items-start gap-[24px] text-[13px] text-ink tablet:text-[14px] desktop:gap-[28px] desktop:text-[15px] desktop:leading-[1.4]"
         >
-          <a href="/information/">Information</a>
+          <a href="/information/" onClick={openInformation}>
+            Information
+          </a>
           <a href={`mailto:${settings.email}`} className="hidden desktop:inline">
             {settings.email}
           </a>

@@ -4,6 +4,7 @@ export * from './DetailOverlay.tsx';
 export * from './Filter.tsx';
 export * from './Footer.tsx';
 export * from './Header.tsx';
+export * from './InfoOverlay.tsx';
 export * from './OffsetGrid.tsx';
 export * from './overlay-chrome.ts';
 export * from './Photo.tsx';

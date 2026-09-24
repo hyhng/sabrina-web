@@ -1,4 +1,5 @@
 import type { Settings } from '@sabrina/shared/schema';
+import type { MouseEvent } from 'react';
 
 /**
  * Site footer (Figma UI 04 node 154:10, UI 12 node 161:647, UI 06 node 154:381).
@@ -11,9 +12,20 @@ import type { Settings } from '@sabrina/shared/schema';
  */
 export interface FooterProps {
   settings: Settings;
+  /** Open Information without navigating (docs/TECH.md 4.1). */
+  onOpenInformation?: () => void;
 }
 
-export function Footer({ settings }: FooterProps) {
+export function Footer({ settings, onOpenInformation }: FooterProps) {
+  const openInformation =
+    onOpenInformation === undefined
+      ? undefined
+      : (event: MouseEvent) => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          onOpenInformation();
+        };
+
   const year = new Date().getFullYear();
 
   return (
@@ -25,7 +37,7 @@ export function Footer({ settings }: FooterProps) {
       <div className="order-1 flex flex-col gap-[12px] tablet:order-2 tablet:flex-row tablet:gap-[20px] desktop:gap-[24px]">
         {/* display:contents from tablet up, so the three links share one row. */}
         <div className="flex gap-[20px] tablet:contents">
-          <a href="/information/" className="tablet:order-1">
+          <a href="/information/" className="tablet:order-1" onClick={openInformation}>
             Information
           </a>
           <a

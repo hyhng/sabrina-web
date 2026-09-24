@@ -112,10 +112,21 @@ async function main(): Promise<void> {
     );
   }
 
+  // Placeholder until the client uploads her own (docs/PHASES.md, F5).
+  const portrait = await buildPhoto('portrait', path.join(source, 'portrait.png'));
+
   const content = contentSchema.parse({
     homepage: { projects },
     settings: {
-      bio: 'Placeholder biography. The client writes the real one in the CMS.',
+      portrait,
+      // The copy sitting in Figma UI 07 (node 161:105) — still placeholder,
+      // but closer to the real length than a single sentence, which matters
+      // because the desktop overlay is not supposed to scroll.
+      bio: [
+        'Sabrina Kulhankova is a photographer based in Prague, working with both analog and digital formats.',
+        'She has photographed model test shoots for agencies including Elite Prague and Scout Model Agency, and her work has been featured in publications such as Vogue and Merde Magazine.',
+        'Alongside her editorial practice, she also works on selected commercial and commissioned projects.',
+      ].join('\n\n'),
       location: 'Based in Prague.',
       email: 'sabrina.kulhankova@gmail.com',
       instagramHandle: '@sabrinakulhankova.photography',

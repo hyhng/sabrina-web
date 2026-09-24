@@ -385,7 +385,18 @@
     ]
   },
   "settings": {
-    "bio": "Placeholder biography. The client writes the real one in the CMS.",
+    "portrait": {
+      "id": "portrait",
+      "width": 586,
+      "height": 744,
+      "aspectRatio": 0.7876344086021505,
+      "widths": [400],
+      "dominantColor": "#0f0c07",
+      "originalFilename": "portrait.png",
+      "bytesOriginal": 526947,
+      "bytesWebp": 12974
+    },
+    "bio": "Sabrina Kulhankova is a photographer based in Prague, working with both analog and digital formats.\n\nShe has photographed model test shoots for agencies including Elite Prague and Scout Model Agency, and her work has been featured in publications such as Vogue and Merde Magazine.\n\nAlongside her editorial practice, she also works on selected commercial and commissioned projects.",
     "location": "Based in Prague.",
     "email": "sabrina.kulhankova@gmail.com",
     "instagramHandle": "@sabrinakulhankova.photography",

@@ -2,7 +2,7 @@
 
 import { filterProjects } from '@sabrina/shared/filter';
 import type { Project, Settings } from '@sabrina/shared/schema';
-import { DetailOverlay, Filter, Footer, Header, OffsetGrid } from '@sabrina/ui';
+import { DetailOverlay, Filter, Footer, Header, InfoOverlay, OffsetGrid } from '@sabrina/ui';
 import { useMemo } from 'react';
 
 import { setFilter, useFilter } from '../../lib/use-filter.ts';
@@ -38,7 +38,13 @@ export function Site({ projects, settings, imgBase, initialPath }: SiteProps) {
 
   return (
     <>
-      <Header settings={settings} filter={<Filter value={filter} onChange={setFilter} />} />
+      <Header
+        settings={settings}
+        filter={<Filter value={filter} onChange={setFilter} />}
+        onOpenInformation={() => {
+          pushPath('/information/');
+        }}
+      />
       <main>
         <OffsetGrid
           projects={projects}
@@ -49,10 +55,18 @@ export function Site({ projects, settings, imgBase, initialPath }: SiteProps) {
           }}
         />
       </main>
-      <Footer settings={settings} />
+      <Footer
+        settings={settings}
+        onOpenInformation={() => {
+          pushPath('/information/');
+        }}
+      />
       {open === undefined ? null : (
         <DetailOverlay project={open} imgBase={imgBase} onClose={closeOverlay} />
       )}
+      {overlay.kind === 'information' ? (
+        <InfoOverlay settings={settings} imgBase={imgBase} onClose={closeOverlay} />
+      ) : null}
     </>
   );
 }

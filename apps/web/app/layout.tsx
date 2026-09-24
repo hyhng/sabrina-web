@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Lora } from 'next/font/google';
 import type { ReactNode } from 'react';
 
+import { SITE_NAME, SITE_URL } from '../lib/site.ts';
 import './globals.css';
 
 /**
@@ -20,7 +21,17 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: 'Sabrina Kulhankova',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    // "Fog — Sabrina Kulhankova" (docs/SPEC.md 9.2).
+    template: `%s — ${SITE_NAME}`,
+  },
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    locale: 'en',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

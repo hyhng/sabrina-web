@@ -68,7 +68,8 @@ describe('users', () => {
   it('is an auth collection with registration closed', () => {
     expect(users?.auth).toBeTruthy();
     expect(users?.access?.create?.({ req: {} } as never)).toBe(false);
-    // Payload still allows the very first user through its own screen.
+    // The client's own account still gets in: Payload's create-first-user
+    // operation runs with overrideAccess and does not consult this.
   });
 
   it('cannot be deleted away, locking her out of her own site', () => {

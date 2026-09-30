@@ -4,9 +4,9 @@ import type { CollectionConfig } from 'payload';
  * One user: the client (docs/TECH.md 6). No roles, because there is nobody to
  * distinguish her from.
  *
- * Registration is off. Payload still lets the very first user be created
- * through its own create-first-user screen while the collection is empty,
- * which is how she gets in; after that, nobody new.
+ * Registration is off. Payload's create-first-user runs with
+ * overrideAccess, so the client still gets her account; after that, the
+ * refusal here is what closes the door.
  */
 export const Users: CollectionConfig = {
   slug: 'users',

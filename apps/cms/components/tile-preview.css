@@ -1,0 +1,55 @@
+/**
+ * Styles for the tile preview only.
+ *
+ * Tailwind's preflight is deliberately left out. It resets margins, list
+ * styles and form controls across the whole document, which would take
+ * Payload's admin with it — and CLAUDE.md rule 9 says the admin is not ours
+ * to restyle. Importing the theme and the utilities without it gives the
+ * preview what it needs and touches nothing else.
+ */
+@layer theme, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* Tile lives in packages/ui, where Tailwind would not look on its own. */
+@source '../../../packages/ui/src';
+
+@theme {
+  --color-paper: #faf9f6;
+  --color-ink: #14130f;
+  --color-muted: #78746b;
+  --color-soft: #a19c91;
+  --color-line: #e2dfd7;
+
+  --breakpoint-*: initial;
+  --breakpoint-tablet: 600px;
+  --breakpoint-detail: 768px;
+  --breakpoint-desktop: 1024px;
+}
+
+/* The frame around the preview, in Payload's own spacing not Tailwind's. */
+.tile-preview {
+  margin-block: 1.5rem;
+}
+
+.tile-preview__label {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-bottom: 0.5rem;
+}
+
+.tile-preview__empty {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  max-width: 34em;
+  line-height: 1.5;
+}
+
+/* 401px is the column width the desktop grid gives a tile. */
+.tile-preview__frame {
+  width: 401px;
+  max-width: 100%;
+  background: var(--color-paper);
+  padding: 16px;
+  font-family: Lora, Georgia, serif;
+}

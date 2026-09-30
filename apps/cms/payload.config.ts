@@ -34,6 +34,8 @@ export default buildConfig({
     meta: {
       titleSuffix: '— Sabrina Kulhankova',
     },
+    // Where component paths like '/components/TilePreview' resolve from.
+    importMap: { baseDir: dirname },
   },
 
   collections: [Projects, Photos, Users],

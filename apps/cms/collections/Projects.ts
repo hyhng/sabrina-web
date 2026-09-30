@@ -142,5 +142,15 @@ export const Projects: CollectionConfig = {
         return ids.includes(value) ? true : 'Titulní fotka musí být jedna z fotek projektu.';
       },
     },
+    {
+      // docs/SPEC.md 8.3: the tile as the site will draw it, beside the fields
+      // that decide it. The same component the grid uses, not an impression.
+      name: 'tilePreview',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: { Field: '/components/TilePreview#TilePreview' },
+      },
+    },
   ],
 };

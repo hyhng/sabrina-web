@@ -38,8 +38,14 @@ describe('variantWidths', () => {
     expect(Math.max(...variantWidths(1000))).toBeLessThanOrEqual(1000);
   });
 
-  it('gives nothing back for a photo smaller than the smallest variant', () => {
-    expect(variantWidths(320)).toEqual([]);
+  it('serves a tiny photo at its own width rather than not at all', () => {
+    // [návrh] docs/SPEC.md 8.4 is silent below 400 px. An empty list would
+    // leave the site with no file to point at, and publishing is allowed with
+    // the low-resolution warning.
+    expect(variantWidths(320)).toEqual([320]);
+    expect(variantWidths(399)).toEqual([399]);
+    // Still never wider than the original.
+    expect(Math.max(...variantWidths(320))).toBeLessThanOrEqual(320);
   });
 });
 

@@ -30,9 +30,16 @@ export function acceptFile(type: string): Accepted {
 /**
  * Which variants to make. Never wider than the original — enlarging a photo
  * only makes a bigger file out of the same detail.
+ *
+ * A photo narrower than the narrowest variant gets one at its own width.
+ * [návrh] docs/SPEC.md 8.4 does not say what happens below 400 px, and the
+ * alternatives are worse: no variant at all leaves the site with nothing to
+ * serve, and refusing the upload contradicts "publikovat jde i s varováním".
+ * The low-resolution warning already says it will look bad.
  */
 export function variantWidths(originalWidth: number): number[] {
-  return WEBP_WIDTHS.filter((width) => width <= originalWidth);
+  const fitting = WEBP_WIDTHS.filter((width) => width <= originalWidth);
+  return fitting.length > 0 ? fitting : [Math.max(1, Math.round(originalWidth))];
 }
 
 /**

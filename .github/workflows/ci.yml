@@ -12,7 +12,9 @@ concurrency:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest moves to Ubuntu 26 on 19 October 2026, and a runner
+    # changing under a handover is not a surprise worth having.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
 

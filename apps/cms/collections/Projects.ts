@@ -47,100 +47,122 @@ export const Projects: CollectionConfig = {
   },
   fields: [
     {
-      name: 'title',
-      type: 'text',
-      required: true,
-      label: 'Název',
-    },
-    {
-      name: 'slug',
-      type: 'text',
-      required: true,
-      unique: true,
-      index: true,
-      label: 'Adresa',
-      admin: {
-        description:
-          'Vygeneruje se z názvu. Po prvním publikování se zamkne, aby odkazy nezmizely.',
-      },
-      // Read-only in the admin once locked; the hook enforces it on the way in.
-      access: {
-        update: ({ data }) => !isLocked(data, undefined),
-      },
-    },
-    {
-      name: 'slugLocked',
-      type: 'checkbox',
-      defaultValue: false,
-      admin: { hidden: true },
-    },
-    {
-      name: 'category',
-      type: 'select',
-      required: true,
-      label: 'Kategorie',
-      options: CATEGORIES.map((value) => ({ value, label: CATEGORY_LABELS[value] })),
-    },
-    {
-      type: 'row',
-      fields: [
-        { name: 'year', type: 'number', label: 'Rok' },
-        { name: 'client', type: 'text', label: 'Klient' },
-        { name: 'clientLine2', type: 'text', label: 'Klient — druhý řádek' },
-      ],
-    },
-    {
-      name: 'credits',
-      type: 'array',
-      label: 'Kredity',
-      labels: { singular: 'Kredit', plural: 'Kredity' },
-      fields: [
+      // docs/SPEC.md 8.2: metadata is filled in while the photos upload,
+      // so the two live on separate tabs rather than one long form.
+      type: 'tabs',
+      tabs: [
         {
-          type: 'row',
+          label: 'Podrobnosti',
           fields: [
-            { name: 'role', type: 'text', required: true, label: 'Role' },
-            { name: 'name', type: 'text', required: true, label: 'Jméno' },
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              label: 'Název',
+            },
+            {
+              name: 'slug',
+              type: 'text',
+              required: true,
+              unique: true,
+              index: true,
+              label: 'Adresa',
+              admin: {
+                description:
+                  'Vygeneruje se z názvu. Po prvním publikování se zamkne, aby odkazy nezmizely.',
+              },
+              // Read-only in the admin once locked; the hook enforces it on the way in.
+              access: {
+                update: ({ data }) => !isLocked(data, undefined),
+              },
+            },
+            {
+              name: 'slugLocked',
+              type: 'checkbox',
+              defaultValue: false,
+              admin: { hidden: true },
+            },
+            {
+              name: 'category',
+              type: 'select',
+              required: true,
+              label: 'Kategorie',
+              options: CATEGORIES.map((value) => ({ value, label: CATEGORY_LABELS[value] })),
+            },
+            {
+              type: 'row',
+              fields: [
+                { name: 'year', type: 'number', label: 'Rok' },
+                { name: 'client', type: 'text', label: 'Klient' },
+                { name: 'clientLine2', type: 'text', label: 'Klient — druhý řádek' },
+              ],
+            },
+            {
+              name: 'credits',
+              type: 'array',
+              label: 'Kredity',
+              labels: { singular: 'Kredit', plural: 'Kredity' },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'role', type: 'text', required: true, label: 'Role' },
+                    { name: 'name', type: 'text', required: true, label: 'Jméno' },
+                  ],
+                },
+              ],
+              admin: { description: 'Zobrazí se jako „Photography · Sabrina Kulhankova".' },
+            },
+          ],
+        },
+        {
+          label: 'Fotky',
+          description: 'Pořadí tažením. Titulní fotka se vybírá z těchhle.',
+          fields: [
+            {
+              name: 'photos',
+              type: 'relationship',
+              relationTo: 'photos',
+              hasMany: true,
+              label: 'Fotky',
+              admin: {
+                description: 'Pořadí tažením. V detailu se fotky listují přesně v tomhle pořadí.',
+              },
+            },
+            {
+              name: 'cover',
+              type: 'relationship',
+              relationTo: 'photos',
+              label: 'Titulní fotka',
+              admin: {
+                description: 'Ta, která se ukáže v mřížce. Vybírá se z fotek tohohle projektu.',
+              },
+              // Only this project's photos; see cover-options.ts.
+              filterOptions: ({ siblingData }) =>
+                coverOptions((siblingData as { photos?: unknown }).photos),
+              /*
+               * docs/SPEC.md 10: the cover must be one of the project's own photos.
+               * Not `required`, because a draft is allowed to be half-finished — the
+               * publish button is what refuses, with "Chybí titulní fotka"
+               * (docs/SPEC.md 8.8).
+               */
+              validate: (value: unknown, { siblingData }: { siblingData: unknown }) => {
+                if (value === null || value === undefined || value === '') return true;
+                const photos = (siblingData as { photos?: unknown }).photos;
+                if (!Array.isArray(photos)) return true;
+                const ids = photos.map((photo) =>
+                  typeof photo === 'object' && photo !== null && 'id' in photo
+                    ? (photo as { id: unknown }).id
+                    : photo,
+                );
+                return ids.includes(value)
+                  ? true
+                  : 'Titulní fotka musí být jedna z fotek projektu.';
+              },
+            },
           ],
         },
       ],
-      admin: { description: 'Zobrazí se jako „Photography · Sabrina Kulhankova".' },
-    },
-    {
-      name: 'photos',
-      type: 'relationship',
-      relationTo: 'photos',
-      hasMany: true,
-      label: 'Fotky',
-      admin: {
-        description: 'Pořadí tažením. V detailu se fotky listují přesně v tomhle pořadí.',
-      },
-    },
-    {
-      name: 'cover',
-      type: 'relationship',
-      relationTo: 'photos',
-      label: 'Titulní fotka',
-      admin: { description: 'Ta, která se ukáže v mřížce. Vybírá se z fotek tohohle projektu.' },
-      // Only this project's photos; see cover-options.ts.
-      filterOptions: ({ siblingData }) =>
-        coverOptions((siblingData as { photos?: unknown }).photos),
-      /*
-       * docs/SPEC.md 10: the cover must be one of the project's own photos.
-       * Not `required`, because a draft is allowed to be half-finished — the
-       * publish button is what refuses, with "Chybí titulní fotka"
-       * (docs/SPEC.md 8.8).
-       */
-      validate: (value: unknown, { siblingData }: { siblingData: unknown }) => {
-        if (value === null || value === undefined || value === '') return true;
-        const photos = (siblingData as { photos?: unknown }).photos;
-        if (!Array.isArray(photos)) return true;
-        const ids = photos.map((photo) =>
-          typeof photo === 'object' && photo !== null && 'id' in photo
-            ? (photo as { id: unknown }).id
-            : photo,
-        );
-        return ids.includes(value) ? true : 'Titulní fotka musí být jedna z fotek projektu.';
-      },
     },
     {
       // docs/SPEC.md 8.3: the tile as the site will draw it, beside the fields

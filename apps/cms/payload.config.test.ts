@@ -10,6 +10,31 @@ import configPromise from './payload.config.ts';
  */
 const config = await configPromise;
 
+/** Field names anywhere in a tree of tabs, rows and collapsibles. */
+function fieldNames(fields: unknown): string[] {
+  if (!Array.isArray(fields)) return [];
+  return fields.flatMap((field) => {
+    const node = field as { name?: string; fields?: unknown; tabs?: { fields?: unknown }[] };
+    if (typeof node.name === 'string') return [node.name];
+    if (Array.isArray(node.tabs)) return node.tabs.flatMap((tab) => fieldNames(tab.fields));
+    return fieldNames(node.fields);
+  });
+}
+
+/** The first field with this name, however deeply nested. */
+function fieldNamed(fields: unknown, name: string): Record<string, unknown> | undefined {
+  if (!Array.isArray(fields)) return undefined;
+  for (const field of fields) {
+    const node = field as { name?: string; fields?: unknown; tabs?: { fields?: unknown }[] };
+    if (node.name === name) return node as Record<string, unknown>;
+    const nested = Array.isArray(node.tabs)
+      ? node.tabs.map((tab) => fieldNamed(tab.fields, name)).find((f) => f !== undefined)
+      : fieldNamed(node.fields, name);
+    if (nested !== undefined) return nested;
+  }
+  return undefined;
+}
+
 const collection = (slug: string) => config.collections.find((entry) => entry.slug === slug);
 
 describe('payload config', () => {
@@ -40,8 +65,8 @@ describe('projects', () => {
   });
 
   it('takes its categories from packages/shared, not a second list', () => {
-    const field = projects?.fields.find((f) => 'name' in f && f.name === 'category');
-    const options = (field as { options: { value: string }[] }).options;
+    const field = fieldNamed(projects?.fields, 'category');
+    const options = field?.['options'] as { value: string }[];
     expect(options.map((option) => option.value)).toEqual([...CATEGORIES]);
   });
 
@@ -107,5 +132,29 @@ describe('globals', () => {
     for (const forbidden of ['theme', 'color', 'font', 'layout']) {
       expect(names.some((name) => name.toLowerCase().includes(forbidden))).toBe(false);
     }
+  });
+});
+
+describe('the project editor', () => {
+  const projects = collection('projects');
+  const tabs = projects?.fields.find((field) => field.type === 'tabs') as
+    { tabs: { label: string; fields: unknown }[] } | undefined;
+
+  it('separates the details from the photos', () => {
+    // docs/SPEC.md 8.2: metadata gets filled in while the photos upload, so
+    // the two are not one long form.
+    expect(tabs?.tabs.map((tab) => tab.label)).toEqual(['Podrobnosti', 'Fotky']);
+  });
+
+  it('puts the photos and the cover together, away from the rest', () => {
+    const [details, photos] = tabs?.tabs ?? [];
+    expect(fieldNames(photos?.fields)).toEqual(['photos', 'cover']);
+    expect(fieldNames(details?.fields)).toContain('title');
+    expect(fieldNames(details?.fields)).not.toContain('photos');
+  });
+
+  it('keeps the tile preview out of the tabs, beside them', () => {
+    const outside = projects?.fields.filter((field) => field.type !== 'tabs');
+    expect(fieldNames(outside)).toContain('tilePreview');
   });
 });

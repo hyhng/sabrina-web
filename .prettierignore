@@ -9,5 +9,7 @@ pnpm-lock.yaml
 CLAUDE.md
 docs/
 
-# Written by `payload generate:types`; formatting it only invites churn.
+# Written by `payload generate:types` and `generate:importmap`; formatting
+# them only invites churn.
 apps/cms/payload-types.ts
+apps/cms/app/(payload)/admin/importMap.js

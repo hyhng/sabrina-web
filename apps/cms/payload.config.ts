@@ -5,6 +5,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildConfig } from 'payload';
 
+import { Photos } from './collections/Photos.ts';
+import { Projects } from './collections/Projects.ts';
+import { Users } from './collections/Users.ts';
+
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
@@ -30,7 +34,7 @@ export default buildConfig({
     },
   },
 
-  collections: [],
+  collections: [Projects, Photos, Users],
   globals: [],
 
   db: postgresAdapter({

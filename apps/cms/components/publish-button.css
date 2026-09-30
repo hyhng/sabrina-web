@@ -1,0 +1,16 @@
+/**
+ * The Publikovat button in the navigation. Payload's own tokens and spacing —
+ * the admin is not ours to restyle (CLAUDE.md rule 9).
+ */
+.publish {
+  margin: 1.25rem 0 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--theme-elevation-100);
+}
+
+.publish__when {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--theme-elevation-500);
+}

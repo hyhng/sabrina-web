@@ -92,10 +92,12 @@ export interface Config {
   globals: {
     homepage: Homepage;
     settings: Setting;
+    publish: Publish;
   };
   globalsSelect: {
     homepage: HomepageSelect<false> | HomepageSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
+    publish: PublishSelect<false> | PublishSelect<true>;
   };
   locale: null;
   widgets: {
@@ -457,6 +459,16 @@ export interface Setting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "publish".
+ */
+export interface Publish {
+  id: number;
+  lastPublishedAt?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "homepage_select".
  */
 export interface HomepageSelect<T extends boolean = true> {
@@ -478,6 +490,16 @@ export interface SettingsSelect<T extends boolean = true> {
   instagramUrl?: T;
   seoDescription?: T;
   ogImage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "publish_select".
+ */
+export interface PublishSelect<T extends boolean = true> {
+  lastPublishedAt?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

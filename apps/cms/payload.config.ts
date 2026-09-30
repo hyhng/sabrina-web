@@ -6,9 +6,11 @@ import { fileURLToPath } from 'node:url';
 import { buildConfig } from 'payload';
 
 import { Photos } from './collections/Photos.ts';
+import { publishEndpoint } from './endpoints/publish.ts';
 import { Projects } from './collections/Projects.ts';
 import { Users } from './collections/Users.ts';
 import { Homepage } from './globals/Homepage.ts';
+import { Publish } from './globals/Publish.ts';
 import { Settings } from './globals/Settings.ts';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -36,10 +38,19 @@ export default buildConfig({
     },
     // Where component paths like '/components/TilePreview' resolve from.
     importMap: { baseDir: dirname },
+    /*
+     * docs/SPEC.md 8.7: the site is static, so saving is not publishing. The
+     * button belongs in the navigation because it is the last step of every
+     * session, whichever screen she finishes on.
+     */
+    components: { afterNavLinks: ['/components/PublishButton#PublishButton'] },
   },
 
   collections: [Projects, Photos, Users],
-  globals: [Homepage, Settings],
+  globals: [Homepage, Settings, Publish],
+
+  // POST /api/publish — asks Cloudflare to rebuild the site.
+  endpoints: [publishEndpoint],
 
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URI ?? '' },

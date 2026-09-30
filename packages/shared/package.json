@@ -11,7 +11,8 @@
     "./grid": "./src/grid.ts",
     "./photo-url": "./src/photo-url.ts",
     "./schema": "./src/schema.ts",
-    "./slug": "./src/slug.ts"
+    "./slug": "./src/slug.ts",
+    "./upload": "./src/upload.ts"
   },
   "dependencies": {
     "zod": "^4.6.5"

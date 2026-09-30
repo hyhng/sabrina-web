@@ -108,10 +108,10 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [x] Slug — generování a zamčení po publikaci
 - [ ] Nahrávání fotek v prohlížeči: Worker, WebP + `@jsquash/webp` fallback, presign, přímý PUT do R2 (TECH 5)
 - [ ] Tabulka nahrávání: před → po, stavy, varování nízkého rozlišení
-- [ ] Řazení fotek v projektu, výběr titulní fotky
-- [ ] Obrazovka Pořadí na homepage, automatické přidání nového projektu na konec
+- [x] Řazení fotek v projektu, výběr titulní fotky
+- [~] Obrazovka Pořadí na homepage **s živým náhledem mřížky** — hotovo; automatické zařazení nového projektu čeká na otevřenou otázku 10
 - [ ] Nastavení webu (portrét, bio s počítadlem, kontakt, SEO)
-- [ ] Náhled dlaždice v editoru (`Tile` z `packages/ui`)
+- [x] Náhled dlaždice v editoru (`Tile` z `packages/ui`)
 - [ ] Flow Nový projekt (dialog jen s názvem → Fotky)
 - [ ] Prázdné stavy a chybové hlášky (SPEC 8.8)
 - [ ] Mazání fotky maže i R2 objekty

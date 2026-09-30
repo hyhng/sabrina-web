@@ -53,3 +53,29 @@
   padding: 16px;
   font-family: Lora, Georgia, serif;
 }
+
+/* Grid preview on the ordering screen — a twelfth of the real thing. */
+.order-preview {
+  display: flex;
+  gap: 7px;
+  width: 111px;
+  align-items: flex-start;
+}
+
+.order-preview__column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.order-preview__tile {
+  width: 100%;
+}
+
+.order-preview__tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

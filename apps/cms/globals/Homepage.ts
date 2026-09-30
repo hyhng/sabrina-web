@@ -26,5 +26,15 @@ export const Homepage: GlobalConfig = {
           'Tažením změň pořadí. Pozice v mřížce se dopočítá sama — každý další projekt jde do nejkratšího sloupce.',
       },
     },
+    {
+      // docs/SPEC.md 8.5: ordering is otherwise blind — she sets a sequence
+      // and the algorithm decides the positions. This shows the result.
+      name: 'gridPreview',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: { Field: '/components/OrderPreview#OrderPreview' },
+      },
+    },
   ],
 };

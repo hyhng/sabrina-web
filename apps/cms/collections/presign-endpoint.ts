@@ -3,7 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import type { Endpoint, PayloadRequest } from 'payload';
 
 import { isMissing, missingMessage, r2Client, readR2Config } from '../lib/r2.ts';
-import { PRESIGN_TTL_SECONDS, sign } from '../lib/presign.ts';
+import { CACHE_CONTROL, PRESIGN_TTL_SECONDS, sign } from '../lib/presign.ts';
 
 /**
  * `POST /api/photos/presign` — signed PUT URLs for one photo's files
@@ -59,10 +59,17 @@ export const presignEndpoint: Endpoint = {
     });
 
     const client = r2Client(config);
-    const signed = await sign(row, (key) =>
-      getSignedUrl(client, new PutObjectCommand({ Bucket: config.bucket, Key: key }), {
-        expiresIn: PRESIGN_TTL_SECONDS,
-      }),
+    const signed = await sign(row, (target) =>
+      getSignedUrl(
+        client,
+        new PutObjectCommand({
+          Bucket: config.bucket,
+          Key: target.key,
+          ContentType: target.contentType,
+          CacheControl: CACHE_CONTROL,
+        }),
+        { expiresIn: PRESIGN_TTL_SECONDS },
+      ),
     );
 
     return Response.json({ targets: signed, expiresIn: PRESIGN_TTL_SECONDS });

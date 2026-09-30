@@ -41,6 +41,12 @@ describe('accept', () => {
     const items = accept([jpeg('a.jpg'), jpeg('a.jpg')]);
     expect(items[0]?.id).not.toBe(items[1]?.id);
   });
+
+  it('does not reuse the first drop\u2019s ids on a second drop', () => {
+    const first = accept([jpeg('a.jpg'), jpeg('b.jpg')]);
+    const second = accept([jpeg('a.jpg')], first.length);
+    expect(second[0]?.id).not.toBe(first[0]?.id);
+  });
 });
 
 describe('readyToStart', () => {

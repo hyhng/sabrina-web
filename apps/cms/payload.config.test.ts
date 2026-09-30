@@ -163,7 +163,8 @@ describe('the project editor', () => {
 
   it('puts the photos and the cover together, away from the rest', () => {
     const [details, photos] = tabs?.tabs ?? [];
-    expect(fieldNames(photos?.fields)).toEqual(['photos', 'cover']);
+    // Uploading comes before ordering, so the drop zone sits above the list.
+    expect(fieldNames(photos?.fields)).toEqual(['upload', 'photos', 'cover']);
     expect(fieldNames(details?.fields)).toContain('title');
     expect(fieldNames(details?.fields)).not.toContain('photos');
   });

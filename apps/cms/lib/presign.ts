@@ -14,6 +14,14 @@ import { originalKey, photoKey } from '@sabrina/shared/photo-url';
 
 export const PRESIGN_TTL_SECONDS = 600;
 
+/**
+ * Files in R2 are immutable — a new photo means a new id — so they are cached
+ * for a year and never revalidated (docs/TECH.md 4.2). This is set on the
+ * object at upload time because there is no later chance: nothing rewrites
+ * these files afterwards.
+ */
+export const CACHE_CONTROL = 'public, max-age=31536000, immutable';
+
 /** More than the five widths plus the original would mean something is wrong. */
 export const MAX_TARGETS = 8;
 
@@ -21,6 +29,12 @@ export type Target = {
   readonly key: string;
   /** The variant this is for, or 'original'. Echoed back so the client can match. */
   readonly of: number | 'original';
+  /**
+   * Signed into the URL, so the browser has to send exactly this — which is
+   * also how img.<doména> ends up serving the file as an image rather than as
+   * a download.
+   */
+  readonly contentType: string;
 };
 
 export type Signed = Target & { readonly url: string };
@@ -43,17 +57,23 @@ export function targets(row: PhotoRow): Target[] {
 
   const variants = widths
     .filter((width): width is number => typeof width === 'number' && Number.isFinite(width))
-    .map((width) => ({ key: photoKey(id, width), of: width }));
+    .map((width) => ({ key: photoKey(id, width), of: width, contentType: 'image/webp' }));
 
-  return [...variants, { key: originalKey(id, filename), of: 'original' as const }];
+  const key = originalKey(id, filename);
+  return [...variants, { key, of: 'original' as const, contentType: originalContentType(key) }];
 }
 
-export type Signer = (key: string) => Promise<string>;
+/** From the key, which was built here — never from what the browser claimed. */
+function originalContentType(key: string): string {
+  return key.endsWith('.png') ? 'image/png' : 'image/jpeg';
+}
+
+export type Signer = (target: Target) => Promise<string>;
 
 export async function sign(row: PhotoRow, signer: Signer): Promise<Signed[]> {
   const list = targets(row);
   if (list.length > MAX_TARGETS) {
     throw new Error(`Fotka žádá o ${String(list.length)} souborů, což je moc.`);
   }
-  return Promise.all(list.map(async (target) => ({ ...target, url: await signer(target.key) })));
+  return Promise.all(list.map(async (target) => ({ ...target, url: await signer(target) })));
 }

@@ -127,6 +127,13 @@ export const Projects: CollectionConfig = {
           description: 'Pořadí tažením. Titulní fotka se vybírá z těchhle.',
           fields: [
             {
+              // docs/SPEC.md 8.4: drag and drop, converted in her browser.
+              // Above the list, because uploading comes before ordering.
+              name: 'upload',
+              type: 'ui',
+              admin: { components: { Field: '/components/PhotoUpload#PhotoUpload' } },
+            },
+            {
               name: 'photos',
               type: 'relationship',
               relationTo: 'photos',

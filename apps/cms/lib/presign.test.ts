@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { MAX_TARGETS, PRESIGN_TTL_SECONDS, sign, targets } from './presign.ts';
+import { MAX_TARGETS, PRESIGN_TTL_SECONDS, sign, type Target, targets } from './presign.ts';
 
 const row = { id: 17, widths: [400, 800, 1200], originalFilename: 'DSC_0041.JPG' };
 
@@ -36,6 +36,21 @@ describe('targets', () => {
     expect(keys).toEqual(['photos/17/400.webp', 'photos/17/1200.webp', 'originals/17.jpg']);
   });
 
+  it('gives every variant the WebP type, signed into the URL', () => {
+    // Without it R2 would serve the file as a download rather than an image.
+    for (const target of targets(row).filter((t) => t.of !== 'original')) {
+      expect(target.contentType).toBe('image/webp');
+    }
+  });
+
+  it('types the original from the key it built, not from what a caller claimed', () => {
+    expect(targets({ ...row, originalFilename: 'a.PNG' }).at(-1)?.contentType).toBe('image/png');
+    expect(targets({ ...row, originalFilename: 'a.jpeg' }).at(-1)?.contentType).toBe('image/jpeg');
+    expect(targets({ ...row, originalFilename: 'no-extension' }).at(-1)?.contentType).toBe(
+      'image/jpeg',
+    );
+  });
+
   it('keeps the original extension, lowercased', () => {
     expect(targets({ ...row, originalFilename: 'a.PNG' }).at(-1)?.key).toBe('originals/17.png');
     expect(targets({ ...row, originalFilename: 'no-extension' }).at(-1)?.key).toBe(
@@ -46,12 +61,15 @@ describe('targets', () => {
 
 describe('sign', () => {
   it('signs every key and hands the URLs back beside what they are for', async () => {
-    const signer = vi.fn((key: string) => Promise.resolve(`https://r2.example/${key}?sig=x`));
+    const signer = vi.fn((target: Target) =>
+      Promise.resolve(`https://r2.example/${target.key}?sig=x`),
+    );
     const signed = await sign(row, signer);
     expect(signer).toHaveBeenCalledTimes(4);
     expect(signed[0]).toEqual({
       key: 'photos/17/400.webp',
       of: 400,
+      contentType: 'image/webp',
       url: 'https://r2.example/photos/17/400.webp?sig=x',
     });
   });

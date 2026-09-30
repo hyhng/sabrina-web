@@ -2,7 +2,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { describe, expect, it } from 'vitest';
 
-import { PRESIGN_TTL_SECONDS, sign } from './presign.ts';
+import { CACHE_CONTROL, PRESIGN_TTL_SECONDS, sign, type Target } from './presign.ts';
 import { r2Client, readR2Config } from './r2.ts';
 
 /**
@@ -21,35 +21,47 @@ const config = readR2Config({
 if ('missing' in config) throw new Error('the fixture is meant to be complete');
 
 const client = r2Client(config);
-const signer = (key: string) =>
-  getSignedUrl(client, new PutObjectCommand({ Bucket: config.bucket, Key: key }), {
-    expiresIn: PRESIGN_TTL_SECONDS,
-  });
+const signer = (target: Target) =>
+  getSignedUrl(
+    client,
+    new PutObjectCommand({
+      Bucket: config.bucket,
+      Key: target.key,
+      ContentType: target.contentType,
+      CacheControl: CACHE_CONTROL,
+    }),
+    { expiresIn: PRESIGN_TTL_SECONDS },
+  );
+
+const webp = (key: string): Target => ({ key, of: 400, contentType: 'image/webp' });
 
 describe('signing a PUT for R2', () => {
   it('points at the account endpoint with the bucket in the path', async () => {
-    const url = new URL(await signer('photos/17/400.webp'));
+    const url = new URL(await signer(webp('photos/17/400.webp')));
     // forcePathStyle: R2 does not do bucket-as-subdomain.
     expect(url.host).toBe('a1b2c3.r2.cloudflarestorage.com');
     expect(url.pathname).toBe('/sabrina-photos/photos/17/400.webp');
   });
 
   it('expires in ten minutes, signed with SigV4', async () => {
-    const url = new URL(await signer('photos/17/400.webp'));
+    const url = new URL(await signer(webp('photos/17/400.webp')));
     expect(url.searchParams.get('X-Amz-Expires')).toBe(String(PRESIGN_TTL_SECONDS));
     expect(url.searchParams.get('X-Amz-Algorithm')).toBe('AWS4-HMAC-SHA256');
     expect(url.searchParams.get('X-Amz-Signature')).toMatch(/^[0-9a-f]{64}$/);
   });
 
   it('keeps the secret out of the URL', async () => {
-    const url = await signer('photos/17/400.webp');
+    const url = await signer(webp('photos/17/400.webp'));
     expect(url).not.toContain('not-a-real-secret');
     // The key id is public and has to be there; the secret never is.
     expect(url).toContain('AKIAEXAMPLE');
   });
 
   it('signs each key separately — one URL cannot be reused for another file', async () => {
-    const [a, b] = await Promise.all([signer('photos/17/400.webp'), signer('photos/17/800.webp')]);
+    const [a, b] = await Promise.all([
+      signer(webp('photos/17/400.webp')),
+      signer(webp('photos/17/800.webp')),
+    ]);
     expect(new URL(a).searchParams.get('X-Amz-Signature')).not.toBe(
       new URL(b).searchParams.get('X-Amz-Signature'),
     );

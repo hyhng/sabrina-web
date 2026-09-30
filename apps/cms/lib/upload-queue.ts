@@ -41,6 +41,8 @@ export type Item = {
   readonly bytesWebp?: number;
   /** The photo row's id, once the server has it. */
   readonly photoId?: string;
+  /** An object URL for the thumbnail in the table. Whoever made it revokes it. */
+  readonly previewUrl?: string;
   /** Why it was rejected or what broke. */
   readonly message?: string;
 };
@@ -57,13 +59,21 @@ export type Row = {
   readonly warning?: string;
 };
 
-/** A dropped file, in the order she dropped it. Rejected files still get a row. */
-export function accept(files: readonly { name: string; size: number; type: string }[]): Item[] {
+/**
+ * A dropped file, in the order she dropped it. Rejected files still get a row.
+ *
+ * `offset` is how many rows are already in the table, so a second drop cannot
+ * reuse the ids of the first.
+ */
+export function accept(
+  files: readonly { name: string; size: number; type: string }[],
+  offset = 0,
+): Item[] {
   return files.map((file, index) => {
     const verdict = acceptFile(file.type);
     return {
-      // Name and position: two files of the same name in one drop stay apart.
-      id: `${String(index)}-${file.name}`,
+      // Name and position: two files of the same name stay apart.
+      id: `${String(offset + index)}-${file.name}`,
       filename: file.name,
       bytesOriginal: file.size,
       ...(verdict.ok

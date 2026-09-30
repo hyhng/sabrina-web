@@ -106,13 +106,13 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [x] Globály `Homepage`, `Settings`
 - [x] Access control: veřejně jen `published`
 - [x] Slug — generování a zamčení po publikaci
-- [ ] Nahrávání fotek v prohlížeči: Worker, WebP + `@jsquash/webp` fallback, presign, přímý PUT do R2 (TECH 5)
-- [ ] Tabulka nahrávání: před → po, stavy, varování nízkého rozlišení
+- [~] Nahrávání fotek v prohlížeči: Worker, WebP + `@jsquash/webp` fallback, presign, přímý PUT do R2 (TECH 5) — celá cesta hotová a ověřená v prohlížeči (2000px JPEG → 4 varianty + originál, 368 kB → 169 kB, správné klíče a content-type). **Chybí jediné: reálný bucket.** Bez klíčů v `.env` vrací presign 503 a řekne, které chybí. Podpis se dělá lokálně, takže je otestovaný i bez R2; co ověřit s klíči: že R2 URL přijme (CORS na `PUT` z `admin.<doména>`)
+- [x] Tabulka nahrávání: před → po, stavy, varování nízkého rozlišení — náhled · soubor · rozlišení · velikost · stav, tři soubory najednou, odmítnutý formát si nechá řádek s důvodem
 - [x] Řazení fotek v projektu, výběr titulní fotky
 - [~] Obrazovka Pořadí na homepage **s živým náhledem mřížky** — hotovo; automatické zařazení nového projektu čeká na otevřenou otázku 10
 - [x] Nastavení webu (portrét, bio s počítadlem, kontakt, SEO) — počítadlo je vlastní komponenta (`afterInput`), protože Payload u textarey žádné nekreslí, jen odmítne uložení; ověřeno v prohlížeči ve všech třech stavech. Chybí **Vybraní klienti** a **Publikace** — čekají na otevřenou otázku 3
 - [x] Náhled dlaždice v editoru (`Tile` z `packages/ui`)
-- [ ] Flow Nový projekt (dialog jen s názvem → Fotky) — **odloženo záměrně**: smysl flow je dostat ji rychle k nahrávání, a to zatím nefunguje. Stavět dialog, který ji vysype na nefunkční záložku, nemá cenu. Udělat spolu s nahráváním, až budou klíče k R2
+- [ ] Flow Nový projekt (dialog jen s názvem → Fotky) — **odloženo**: nahrávání už funguje, takže důvod odkladu padl. Zbývá ale otevřená otázka 10 (kam se nový projekt zařadí na homepage), a dialog má vzniknout až s ní
 - [x] Prázdné stavy a chybové hlášky (SPEC 8.8) — hlášky u publikace, nahrávání a obou náhledů. Prázdné stavy seznamů řeší Payload sám a česky („Vytvořit nový Projekt"); vlastní komponenta by říkala totéž a šla proti pravidlu 9
 - [ ] Mazání fotky maže i R2 objekty
 - [ ] Nasazení na server: arm64 image, Caddy, `admin.<doména>`
@@ -173,6 +173,16 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 9 | Favicon a OG obrázek webu | my | F5 | |
 | 10 | **Kam se zařadí nově publikovaný projekt?** Zadání říká na konec (SPEC 8.5, TECH 6), ale očekávání je „nejnovější nahoru". Na konec = stabilní rozvržení, ale klientka musí každý nový projekt ručně protáhnout nahoru. Na začátek = sedí samo, ale algoritmus přerovná celou mřížku (ověřeno: 9 z 9 projektů změní pozici). Návrh: **na začátek**. | Sabrina | **F3** (hook po publikaci) | |
 | 11 | **Má jít připíchnout projekt do konkrétního sloupce?** Klientka dnes určuje pořadí, ne pozici (SPEC 3.2), a přes pořadí má nepřímou kontrolu. Připíchnutí by šlo jen na desktopu (třetí sloupec jinde neexistuje) a rozbilo by se při výměně fotky za jiný poměr stran. Návrh: **odložit, rozhodnout až na reálném obsahu** — přidat pole do prázdné DB je nic, do plné je migrace. | my + Sabrina | F5, dopad na **F3** (schéma) | návrh: odložit |
+
+---
+
+## Drobnosti k dořešení
+
+- Po nahrání se fotka v seznamu pod tabulkou ukáže jako „Bez názvu — ID: 5", správný název se objeví
+  až po uložení a otevření projektu. Payload si u relace nedotáhne dokument, který sám nenačetl, a
+  zvenčí se jeho cache popisků naplnit nedá. Není to blokující — názvy i náhledy jsou vidět v tabulce
+  nahrávání nad tím, a řadí se stejně jednou uložené. Kdyby to vadilo, jde to obejít jen přenačtením
+  formuláře, což by zahodilo rozepsaná metadata.
 
 ---
 

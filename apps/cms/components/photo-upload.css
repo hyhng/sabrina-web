@@ -1,0 +1,100 @@
+/**
+ * The drop zone and the upload table.
+ *
+ * Payload's own colour tokens, Payload's own spacing, no Tailwind — this sits
+ * inside their form and is not ours to restyle (CLAUDE.md rule 9). Reading
+ * their --theme-* variables is the supported way to look like part of it.
+ */
+.photo-upload {
+  margin-block: 1rem;
+}
+
+.photo-upload__zone {
+  border: 1px dashed var(--theme-elevation-250);
+  border-radius: 3px;
+  padding: 1.75rem 1rem;
+  text-align: center;
+  color: var(--theme-elevation-600);
+  background: var(--theme-elevation-0);
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.photo-upload__zone--over {
+  border-color: var(--theme-elevation-500);
+  background: var(--theme-elevation-50);
+}
+
+.photo-upload__hint {
+  font-size: 0.8rem;
+  color: var(--theme-elevation-500);
+  margin-top: 0.35rem;
+}
+
+.photo-upload__table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.photo-upload__table th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--theme-elevation-500);
+  padding-bottom: 0.35rem;
+}
+
+.photo-upload__table td,
+.photo-upload__table th {
+  border-bottom: 1px solid var(--theme-elevation-100);
+  padding: 0.4rem 0.6rem 0.4rem 0;
+  vertical-align: middle;
+}
+
+.photo-upload__thumb {
+  width: 56px;
+  height: 38px;
+  object-fit: cover;
+  display: block;
+  background: var(--theme-elevation-100);
+}
+
+.photo-upload__name {
+  /* Long camera filenames should not push the numbers off the screen. */
+  max-width: 18ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.photo-upload__status--done {
+  color: var(--theme-success-600);
+}
+
+.photo-upload__status--failed {
+  color: var(--theme-error-600);
+}
+
+.photo-upload__warning {
+  color: var(--theme-warning-700);
+  font-size: 0.8rem;
+}
+
+.photo-upload__progress {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--theme-elevation-600);
+}
+
+/* The preview column needs a header for the table to make sense to a reader
+   that cannot see it, and none for one that can. */
+.photo-upload__hidden-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

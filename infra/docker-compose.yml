@@ -1,0 +1,25 @@
+# Postgres for local development — `docker compose -f infra/docker-compose.yml up db`.
+#
+# Caddy and the cms image join this file when the admin is deployed to the
+# server (docs/TECH.md 7). Until then the admin runs with `pnpm dev:cms` on the
+# host and only the database lives in a container.
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: payload
+      POSTGRES_PASSWORD: payload
+      POSTGRES_DB: payload
+    ports:
+      - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U payload']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data:

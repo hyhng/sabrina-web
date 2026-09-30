@@ -1,7 +1,8 @@
 import { CATEGORIES, CATEGORY_LABELS } from '@sabrina/shared/categories';
-import type { CollectionConfig } from 'payload';
+import { APIError, type CollectionConfig } from 'payload';
 
 import { coverOptions } from './cover-options.ts';
+import { publishBlocker } from './publish-rules.ts';
 import { isLocked, locksOnPublish, nextSlug } from './slug-rules.ts';
 
 /**
@@ -31,7 +32,13 @@ export const Projects: CollectionConfig = {
       },
     ],
     beforeChange: [
-      ({ data }) => (locksOnPublish(data._status) ? { ...data, slugLocked: true } : data),
+      ({ data }) => {
+        // docs/SPEC.md 8.8: refuse the publish here, while she is looking at
+        // it, rather than letting the site quietly drop the project later.
+        const blocker = publishBlocker(data);
+        if (blocker !== undefined) throw new APIError(blocker, 400);
+        return locksOnPublish(data._status) ? { ...data, slugLocked: true } : data;
+      },
     ],
   },
   admin: {

@@ -113,7 +113,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [ ] Nastavení webu (portrét, bio s počítadlem, kontakt, SEO)
 - [x] Náhled dlaždice v editoru (`Tile` z `packages/ui`)
 - [ ] Flow Nový projekt (dialog jen s názvem → Fotky)
-- [ ] Prázdné stavy a chybové hlášky (SPEC 8.8)
+- [~] Prázdné stavy a chybové hlášky (SPEC 8.8) — hlášky u publikace, nahrávání a náhledů hotové; zbývají prázdné stavy v seznamech
 - [ ] Mazání fotky maže i R2 objekty
 - [ ] Nasazení na server: arm64 image, Caddy, `admin.<doména>`
 - [ ] Zálohy: denní `pg_dump` do R2, retence 30 dní

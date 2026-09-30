@@ -117,7 +117,12 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [x] Mazání fotky maže i R2 objekty — `afterDelete` na `Photos`, klíče ze stejné funkce, jakou podepisuje upload, takže se nemůžou rozejít. Bez klíčů v `.env` (nebo když R2 delete spadne) se řádek smaže a do logu jde varování se **výčtem klíčů** — hook běží až po smazání, takže odmítnout se nedá
 - [ ] Nasazení na server: arm64 image, Caddy, `admin.<doména>`
 - [ ] Zálohy: denní `pg_dump` do R2, retence 30 dní
-- [ ] Test uploadu v **Safari** (WebP fallback) a Chrome
+- [x] Test uploadu v **Safari** (WebP fallback) a Chrome — ověřeno v WebKitu (Playwright, WebKit 26.6) i v Chromiu na stejné fotce 2000 × 2669:
+  - WebKit: `convertToBlob({ type: 'image/webp' })` vrací **`image/png`** — tiše, bez chyby. Kontrola v `browser-image.ts` to zachytí a přepne na `@jsquash/webp`
+  - výsledek je skutečný WebP a stejně velký: **167 kB (WebKit) vs 169 kB (Chromium)** ve čtyřech variantách. Kdyby to propadlo na PNG, byly by to megabajty
+  - stejné `widths`, stejný poměr stran, průměrná barva se liší o jedničku na kanál (jiné dovzorkování canvasu)
+  - WASM cesta je ~3× pomalejší (1,6 s vs 0,5 s), pro jednu fotku bez významu
+  - **Zbývá na reálném Safari** (ne WebKitu z Playwrightu) a na iOS, kde je limit velikosti canvasu — to je v F5 spolu s reálnými fotkami
 
 **Hotovo když:** na `admin.<doména>` jde projít celý flow Nový projekt → fotky → publikovat v Chrome i Safari a v R2 leží WebP varianty.
 
@@ -222,6 +227,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 30. 9. | Lokálně **Colima** místo Docker Desktopu | Docker Desktop vyžaduje heslo správce na symlink do `/usr/local/bin`; Colima dá stejný `docker` i `docker compose` bez něj. Server v F3 zůstává na Dockeru podle TECH 7 |
 | 30. 9. | Záznam fotky vzniká **před** nahráním bajtů, obráceně než v původním TECH 5 | klíč v R2 obsahuje id fotky, a to dává databáze. Zároveň tím endpoint nebere z requestu žádnou cestu — podepsat lze jen to, co už je v záznamu |
 | 30. 9. | Fotka užší než 400 px dostane **jednu variantu ve své šířce** | SPEC 8.4 pod 400 px mlčí; prázdný seznam variant by nechal web bez souboru, na který ukázat, a publikovat se s varováním o rozlišení má dát. **[návrh]** |
+| 30. 9. | Safari fallback ověřen v **WebKitu z Playwrightu**, ne na reálném Safari | WebKit tiše vrací `image/png` — přesně jak TECH 5 předpokládá — a `@jsquash/webp` vyrobí WebP o stejné velikosti (167 vs 169 kB). Reálné Safari a iOS (limit canvasu) zůstává na F5 |
 | 30. 9. | Počítadlo znaků u bia je **vlastní komponenta** (`afterInput`) | Payload u textarey žádné nekreslí, `maxLength` jen odmítne uložení — a to je pozdě, SPEC 8.4 chce vidět délku při psaní |
 | 24. 9. | Přidán `eslint-plugin-react-hooks` | odhalil čtení a zápis `ref` během renderu v `OffsetGrid` — s concurrent renderingem tiše nespolehlivé a nic jiného by si toho nevšimlo |
 

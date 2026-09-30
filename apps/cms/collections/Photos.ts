@@ -1,5 +1,8 @@
+import { DeleteObjectsCommand } from '@aws-sdk/client-s3';
 import type { CollectionConfig } from 'payload';
 
+import { isMissing, r2Client, readR2Config } from '../lib/r2.ts';
+import { orphanWarning, removeObjects } from './delete-objects.ts';
 import { presignEndpoint } from './presign-endpoint.ts';
 
 /**
@@ -22,6 +25,38 @@ export const Photos: CollectionConfig = {
   },
   // POST /api/photos/presign — signed PUT URLs for this photo's files.
   endpoints: [presignEndpoint],
+  hooks: {
+    /*
+     * The bytes go when the row goes (docs/TECH.md 5). By the time this runs
+     * the row is already deleted, so a failure cannot become a refusal — it is
+     * logged instead, and the keys are in the log so they can be swept by hand.
+     */
+    afterDelete: [
+      async ({ doc, req }) => {
+        const config = readR2Config(process.env);
+        const outcome = await removeObjects(
+          doc as { id: string | number; widths: unknown; originalFilename: unknown },
+          isMissing(config)
+            ? undefined
+            : async (keys) => {
+                await r2Client(config).send(
+                  new DeleteObjectsCommand({
+                    Bucket: config.bucket,
+                    Delete: { Objects: keys.map((Key) => ({ Key })) },
+                  }),
+                );
+              },
+          // English: this ends up in the server log, not in front of her.
+          isMissing(config)
+            ? `R2 not configured (${config.missing.join(', ')})`
+            : 'R2 rejected the delete',
+        );
+        if ('left' in outcome) {
+          req.payload.logger.warn(orphanWarning(outcome.left, outcome.reason));
+        }
+      },
+    ],
+  },
   access: {
     read: () => true,
     create: ({ req }) => Boolean(req.user),

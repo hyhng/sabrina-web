@@ -114,7 +114,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [x] Náhled dlaždice v editoru (`Tile` z `packages/ui`)
 - [ ] Flow Nový projekt (dialog jen s názvem → Fotky) — **odloženo**: nahrávání už funguje, takže důvod odkladu padl. Zbývá ale otevřená otázka 10 (kam se nový projekt zařadí na homepage), a dialog má vzniknout až s ní
 - [x] Prázdné stavy a chybové hlášky (SPEC 8.8) — hlášky u publikace, nahrávání a obou náhledů. Prázdné stavy seznamů řeší Payload sám a česky („Vytvořit nový Projekt"); vlastní komponenta by říkala totéž a šla proti pravidlu 9
-- [ ] Mazání fotky maže i R2 objekty
+- [x] Mazání fotky maže i R2 objekty — `afterDelete` na `Photos`, klíče ze stejné funkce, jakou podepisuje upload, takže se nemůžou rozejít. Bez klíčů v `.env` (nebo když R2 delete spadne) se řádek smaže a do logu jde varování se **výčtem klíčů** — hook běží až po smazání, takže odmítnout se nedá
 - [ ] Nasazení na server: arm64 image, Caddy, `admin.<doména>`
 - [ ] Zálohy: denní `pg_dump` do R2, retence 30 dní
 - [ ] Test uploadu v **Safari** (WebP fallback) a Chrome

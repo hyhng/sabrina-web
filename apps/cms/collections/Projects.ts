@@ -1,6 +1,7 @@
 import { CATEGORIES, CATEGORY_LABELS } from '@sabrina/shared/categories';
 import type { CollectionConfig } from 'payload';
 
+import { coverOptions } from './cover-options.ts';
 import { isLocked, locksOnPublish, nextSlug } from './slug-rules.ts';
 
 /**
@@ -110,14 +111,19 @@ export const Projects: CollectionConfig = {
       relationTo: 'photos',
       hasMany: true,
       label: 'Fotky',
-      admin: { description: 'Pořadí tažením. V detailu se listují v tomhle pořadí.' },
+      admin: {
+        description: 'Pořadí tažením. V detailu se fotky listují přesně v tomhle pořadí.',
+      },
     },
     {
       name: 'cover',
       type: 'relationship',
       relationTo: 'photos',
       label: 'Titulní fotka',
-      admin: { description: 'Ta, která se ukáže v mřížce. Musí být jedna z fotek projektu.' },
+      admin: { description: 'Ta, která se ukáže v mřížce. Vybírá se z fotek tohohle projektu.' },
+      // Only this project's photos; see cover-options.ts.
+      filterOptions: ({ siblingData }) =>
+        coverOptions((siblingData as { photos?: unknown }).photos),
       /*
        * docs/SPEC.md 10: the cover must be one of the project's own photos.
        * Not `required`, because a draft is allowed to be half-finished — the

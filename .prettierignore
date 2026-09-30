@@ -8,3 +8,6 @@ pnpm-lock.yaml
 # its tables for no gain. See docs/ and CLAUDE.md.
 CLAUDE.md
 docs/
+
+# Written by `payload generate:types`; formatting it only invites churn.
+apps/cms/payload-types.ts

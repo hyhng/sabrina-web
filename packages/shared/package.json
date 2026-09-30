@@ -10,7 +10,8 @@
     "./filter": "./src/filter.ts",
     "./grid": "./src/grid.ts",
     "./photo-url": "./src/photo-url.ts",
-    "./schema": "./src/schema.ts"
+    "./schema": "./src/schema.ts",
+    "./slug": "./src/slug.ts"
   },
   "dependencies": {
     "zod": "^4.6.5"

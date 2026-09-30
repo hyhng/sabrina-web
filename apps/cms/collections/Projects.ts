@@ -1,6 +1,8 @@
 import { CATEGORIES, CATEGORY_LABELS } from '@sabrina/shared/categories';
 import type { CollectionConfig } from 'payload';
 
+import { isLocked, locksOnPublish, nextSlug } from './slug-rules.ts';
+
 /**
  * A project (docs/SPEC.md 8.3, 10). Draft or published at the project level,
  * never per photo — a half-finished series simply stays a draft.
@@ -17,6 +19,20 @@ export const Projects: CollectionConfig = {
   slug: 'projects',
   labels: { singular: 'Projekt', plural: 'Projekty' },
   versions: { drafts: true },
+  hooks: {
+    // The address follows the title until the project is published, then
+    // freezes (docs/SPEC.md 8.3). The rules live in slug-rules.ts so they can
+    // be tested without a database.
+    beforeValidate: [
+      ({ data, originalDoc }) => {
+        const slug = nextSlug(data, originalDoc);
+        return slug === undefined ? data : { ...data, slug };
+      },
+    ],
+    beforeChange: [
+      ({ data }) => (locksOnPublish(data._status) ? { ...data, slugLocked: true } : data),
+    ],
+  },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'updatedAt'],
@@ -46,6 +62,16 @@ export const Projects: CollectionConfig = {
         description:
           'Vygeneruje se z názvu. Po prvním publikování se zamkne, aby odkazy nezmizely.',
       },
+      // Read-only in the admin once locked; the hook enforces it on the way in.
+      access: {
+        update: ({ data }) => !isLocked(data, undefined),
+      },
+    },
+    {
+      name: 'slugLocked',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: { hidden: true },
     },
     {
       name: 'category',

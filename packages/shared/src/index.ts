@@ -3,3 +3,4 @@ export * from './filter.ts';
 export * from './grid.ts';
 export * from './photo-url.ts';
 export * from './schema.ts';
+export * from './slug.ts';

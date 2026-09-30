@@ -16,7 +16,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | **F0** | Účty a infrastruktura | klientka zakládá účty | 🔒 čeká |
 | **F1** | Základ repa | — | ✅ hotovo |
 | **F2** | Web na seed datech + náhled pro klientku | F1 | ⏳ další |
-| **F3** | CMS | F1, server z F0 | |
+| **F3** | CMS | F1, server z F0 | ⏳ běží |
 | **F4** | Napojení webu na CMS, publikace | F2, F3 | |
 | **F5** | Reálný obsah a doladění | F4, obsah od klientky 🔒 | |
 | **F6** | Spuštění a předání | F5, doména z F0 🔒 | |
@@ -100,12 +100,12 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 
 **Cíl:** klientka umí sama založit projekt, nahrát fotky, seřadit grid a upravit Information.
 
-- [ ] `apps/cms`: Payload 3 + Postgres, `docker compose` pro lokální DB
-- [ ] Čeština jako jazyk adminu
-- [ ] Kolekce `Users` (jeden uživatel), `Projects` (drafts), `Photos`
-- [ ] Globály `Homepage`, `Settings`
-- [ ] Access control: veřejně jen `published`
-- [ ] Slug — generování a zamčení po publikaci
+- [x] `apps/cms`: Payload 3 + Postgres, `docker compose` pro lokální DB
+- [x] Čeština jako jazyk adminu
+- [x] Kolekce `Users` (jeden uživatel), `Projects` (drafts), `Photos`
+- [x] Globály `Homepage`, `Settings`
+- [x] Access control: veřejně jen `published`
+- [x] Slug — generování a zamčení po publikaci
 - [ ] Nahrávání fotek v prohlížeči: Worker, WebP + `@jsquash/webp` fallback, presign, přímý PUT do R2 (TECH 5)
 - [ ] Tabulka nahrávání: před → po, stavy, varování nízkého rozlišení
 - [ ] Řazení fotek v projektu, výběr titulní fotky
@@ -209,6 +209,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 24. 9. | **Plocha fotky je vysoká jako nejvyšší fotka série**; přechod je **slide**, ne crossfade (SPEC 4.2) | klient; šipka centrovaná na fotku skákala, když série střídala výšku a šířku |
 | 24. 9. | Přechod dlaždice → detail přes **nativní View Transitions**, ne `motion` (SPEC 4.5, TECH 2) | stejný efekt za 0 kB místo ~38 kB; `motion` tím v projektu zatím není potřeba vůbec |
 | 24. 9. | **Přechod dlaždice → detail zrušen**, detail se otevírá bez animace (SPEC 4.5) | klient: působilo sekaně. Pozor — byl to původně nápad klientky, potvrdit s ní |
+| 30. 9. | Lokálně **Colima** místo Docker Desktopu | Docker Desktop vyžaduje heslo správce na symlink do `/usr/local/bin`; Colima dá stejný `docker` i `docker compose` bez něj. Server v F3 zůstává na Dockeru podle TECH 7 |
 | 24. 9. | Přidán `eslint-plugin-react-hooks` | odhalil čtení a zápis `ref` během renderu v `OffsetGrid` — s concurrent renderingem tiše nespolehlivé a nic jiného by si toho nevšimlo |
 
 ---

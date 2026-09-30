@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload';
 
+import { presignEndpoint } from './presign-endpoint.ts';
+
 /**
  * A photo's metadata (docs/SPEC.md 10). Not a Payload upload collection —
  * those resize on the server with sharp, and the browser does that instead
@@ -18,6 +20,8 @@ export const Photos: CollectionConfig = {
     // Photos are managed inside a project, not as a list of their own.
     hidden: true,
   },
+  // POST /api/photos/presign — signed PUT URLs for this photo's files.
+  endpoints: [presignEndpoint],
   access: {
     read: () => true,
     create: ({ req }) => Boolean(req.user),

@@ -142,10 +142,19 @@ Vlastní klientská komponenta v Payload adminu (záložka Fotky projektu).
 soubor ─► validace typu (JPEG/PNG) ─► createImageBitmap (EXIF orientace se aplikuje)
       ─► šířka/výška/poměr, průměrná barva
       ─► pro každou šířku ≤ originál: canvas → WebP (quality ~0.82)
-      ─► POST /api/photos/presign  ─► podepsané PUT URL (R2, platnost 10 min)
-      ─► PUT varianty + originál přímo do R2
       ─► POST /api/photos  (záznam: rozměry, widths, dominantColor, velikosti)
+      ─► POST /api/photos/presign { photoId }  ─► podepsané PUT URL (R2, platnost 10 min)
+      ─► PUT varianty + originál přímo do R2
 ```
+
+**Záznam vzniká před bajty**, ne po nich — obráceně, než to bylo původně nakreslené.
+Klíč v R2 je `photos/<id>/<šířka>.webp`, takže bez id fotky se podepsat nedá, a id
+přiděluje databáze. Alternativy jsou horší: uuid klientem by znamenalo přepnout typ
+id celé databáze, a dočasný klíč s pozdějším přejmenováním by přesouval bajty na
+serveru. Vedlejší efekt je bezpečnostní — endpoint si klíče odvodí ze záznamu a
+z requestu nebere nic než `photoId`, takže podepsanou URL nelze vyžádat na
+libovolnou cestu v bucketu. Cena: když PUT spadne, zůstane záznam bez bajtů;
+komponenta ho smaže a fotka se k projektu připojí až po úspěchu.
 
 ⚠️ **Safari neumí z canvasu kódovat WebP** — `toBlob('image/webp')` tiše vrátí PNG. Proto:
 

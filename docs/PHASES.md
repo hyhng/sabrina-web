@@ -210,6 +210,9 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 24. 9. | Přechod dlaždice → detail přes **nativní View Transitions**, ne `motion` (SPEC 4.5, TECH 2) | stejný efekt za 0 kB místo ~38 kB; `motion` tím v projektu zatím není potřeba vůbec |
 | 24. 9. | **Přechod dlaždice → detail zrušen**, detail se otevírá bez animace (SPEC 4.5) | klient: působilo sekaně. Pozor — byl to původně nápad klientky, potvrdit s ní |
 | 30. 9. | Lokálně **Colima** místo Docker Desktopu | Docker Desktop vyžaduje heslo správce na symlink do `/usr/local/bin`; Colima dá stejný `docker` i `docker compose` bez něj. Server v F3 zůstává na Dockeru podle TECH 7 |
+| 30. 9. | Záznam fotky vzniká **před** nahráním bajtů, obráceně než v původním TECH 5 | klíč v R2 obsahuje id fotky, a to dává databáze. Zároveň tím endpoint nebere z requestu žádnou cestu — podepsat lze jen to, co už je v záznamu |
+| 30. 9. | Fotka užší než 400 px dostane **jednu variantu ve své šířce** | SPEC 8.4 pod 400 px mlčí; prázdný seznam variant by nechal web bez souboru, na který ukázat, a publikovat se s varováním o rozlišení má dát. **[návrh]** |
+| 30. 9. | Počítadlo znaků u bia je **vlastní komponenta** (`afterInput`) | Payload u textarey žádné nekreslí, `maxLength` jen odmítne uložení — a to je pozdě, SPEC 8.4 chce vidět délku při psaní |
 | 24. 9. | Přidán `eslint-plugin-react-hooks` | odhalil čtení a zápis `ref` během renderu v `OffsetGrid` — s concurrent renderingem tiše nespolehlivé a nic jiného by si toho nevšimlo |
 
 ---

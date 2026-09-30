@@ -112,8 +112,8 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [~] Obrazovka Pořadí na homepage **s živým náhledem mřížky** — hotovo; automatické zařazení nového projektu čeká na otevřenou otázku 10
 - [ ] Nastavení webu (portrét, bio s počítadlem, kontakt, SEO)
 - [x] Náhled dlaždice v editoru (`Tile` z `packages/ui`)
-- [ ] Flow Nový projekt (dialog jen s názvem → Fotky)
-- [~] Prázdné stavy a chybové hlášky (SPEC 8.8) — hlášky u publikace, nahrávání a náhledů hotové; zbývají prázdné stavy v seznamech
+- [ ] Flow Nový projekt (dialog jen s názvem → Fotky) — **odloženo záměrně**: smysl flow je dostat ji rychle k nahrávání, a to zatím nefunguje. Stavět dialog, který ji vysype na nefunkční záložku, nemá cenu. Udělat spolu s nahráváním, až budou klíče k R2
+- [x] Prázdné stavy a chybové hlášky (SPEC 8.8) — hlášky u publikace, nahrávání a obou náhledů. Prázdné stavy seznamů řeší Payload sám a česky („Vytvořit nový Projekt"); vlastní komponenta by říkala totéž a šla proti pravidlu 9
 - [ ] Mazání fotky maže i R2 objekty
 - [ ] Nasazení na server: arm64 image, Caddy, `admin.<doména>`
 - [ ] Zálohy: denní `pg_dump` do R2, retence 30 dní

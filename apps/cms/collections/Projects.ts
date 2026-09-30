@@ -44,6 +44,8 @@ export const Projects: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'updatedAt'],
+    // docs/SPEC.md 8.2: a dialog that asks for the title and nothing else.
+    components: { beforeListTable: ['/components/NewProject#NewProject'] },
   },
   access: {
     // The public build sees published projects only; the rest needs a login.

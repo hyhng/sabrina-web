@@ -1,0 +1,40 @@
+/**
+ * The „Nový projekt" dialog. Payload's own tokens and spacing — this lives
+ * inside their admin and is not ours to restyle (CLAUDE.md rule 9).
+ */
+.new-project {
+  margin-bottom: 1rem;
+}
+
+.new-project__body {
+  max-width: 34rem;
+}
+
+.new-project__label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+}
+
+.new-project__input {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 3px;
+  background: var(--theme-input-bg, var(--theme-elevation-0));
+  color: var(--theme-elevation-800);
+  font-size: 1rem;
+}
+
+.new-project__hint {
+  margin: 0.6rem 0 1.2rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--theme-elevation-500);
+}
+
+.new-project__error {
+  margin-bottom: 1rem;
+  color: var(--theme-error-600);
+  font-size: 0.85rem;
+}

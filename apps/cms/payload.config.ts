@@ -8,6 +8,8 @@ import { buildConfig } from 'payload';
 import { Photos } from './collections/Photos.ts';
 import { Projects } from './collections/Projects.ts';
 import { Users } from './collections/Users.ts';
+import { Homepage } from './globals/Homepage.ts';
+import { Settings } from './globals/Settings.ts';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -35,7 +37,7 @@ export default buildConfig({
   },
 
   collections: [Projects, Photos, Users],
-  globals: [],
+  globals: [Homepage, Settings],
 
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URI ?? '' },

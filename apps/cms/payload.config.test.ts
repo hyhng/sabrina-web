@@ -75,3 +75,36 @@ describe('users', () => {
     expect(users?.access?.delete?.({ req: { user: { id: 1 } } } as never)).toBe(false);
   });
 });
+
+describe('globals', () => {
+  const global_ = (slug: string) => config.globals.find((entry) => entry.slug === slug);
+
+  it('registers Homepage and Settings', () => {
+    expect(global_('homepage')).toBeDefined();
+    expect(global_('settings')).toBeDefined();
+  });
+
+  it('lets the build read them but only the client change them', () => {
+    for (const slug of ['homepage', 'settings']) {
+      const access = global_(slug)?.access;
+      expect(access?.read?.({ req: {} } as never), slug).toBe(true);
+      expect(access?.update?.({ req: {} } as never), slug).toBe(false);
+      expect(access?.update?.({ req: { user: { id: 1 } } } as never), slug).toBe(true);
+    }
+  });
+
+  it('caps the biography where Information would start to scroll', () => {
+    // docs/SPEC.md 5: the desktop overlay must not scroll.
+    const bio = global_('settings')?.fields.find((f) => 'name' in f && f.name === 'bio');
+    expect((bio as { maxLength: number }).maxLength).toBe(1200);
+  });
+
+  it('offers nothing for the look of the site — that is not hers to change', () => {
+    const names = (global_('settings')?.fields ?? []).flatMap((field) =>
+      'name' in field ? [field.name] : [],
+    );
+    for (const forbidden of ['theme', 'color', 'font', 'layout']) {
+      expect(names.some((name) => name.toLowerCase().includes(forbidden))).toBe(false);
+    }
+  });
+});

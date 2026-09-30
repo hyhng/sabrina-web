@@ -2,10 +2,10 @@
   "name": "web",
   "version": "0.0.0",
   "private": true,
-  "description": "Public site — Next.js static export, deployed to Cloudflare Pages",
+  "description": "Public site \u2014 Next.js static export, deployed to Cloudflare Pages",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/fetch-content.mts && next build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "seed": "node scripts/build-seed.mts",
     "serve": "node scripts/serve-out.mts"

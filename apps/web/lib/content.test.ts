@@ -36,9 +36,22 @@ describe('getContent', () => {
     expect(content.settings.email).toBe('sabrina.kulhankova@gmail.com');
   });
 
-  it('says which phase wires up payload', async () => {
+  /*
+   * The payload branch reads content/payload.json, which scripts/fetch-content.mts
+   * writes on every build and .gitignore keeps out of the repo. So whether it
+   * resolves here depends on whether anyone has built against the CMS on this
+   * machine — either way it must go through the same schema, and either way the
+   * failure has to say what to run. Asserting on the file's absence would be a
+   * test that passes in CI and fails on a developer's machine.
+   */
+  it('validates the payload snapshot, or says how to make one', async () => {
     process.env.CONTENT_SOURCE = 'payload';
-    await expect(getContent()).rejects.toThrow(/F4/);
+    try {
+      const content = await getContent();
+      expect(content.homepage.projects.length).toBeGreaterThan(0);
+    } catch (error) {
+      expect(String(error)).toMatch(/fetch-content/);
+    }
   });
 });
 

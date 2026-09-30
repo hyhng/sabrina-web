@@ -27,13 +27,27 @@ async function readSeed(): Promise<unknown> {
   return module_.default;
 }
 
-function readPayload(): Promise<unknown> {
-  // F4 wires this to GET /api/globals/homepage?depth=2 and
-  // /api/globals/settings?depth=1 on PAYLOAD_PUBLIC_URL. Until then the branch
-  // fails loudly rather than shipping an untested code path.
-  return Promise.reject(
-    new Error('CONTENT_SOURCE=payload is wired up in phase F4 — see docs/PHASES.md'),
-  );
+/**
+ * The CMS is read *before* the build, by scripts/fetch-content.mts, which
+ * writes content/payload.json — so this reads a file exactly as the seed does.
+ *
+ * It is not done with a fetch from here, and the reason is worth keeping: a
+ * static export only prerenders a route whose data is cacheable, and Next's
+ * fetch cache outlives the build. Measured on 30 September — a project renamed
+ * in the admin did not appear in the next build's HTML. The Publikovat button
+ * exists so that a change shows up, so a cached fetch is the one thing this
+ * must not lean on.
+ */
+async function readPayload(): Promise<unknown> {
+  try {
+    const module_ = (await import('../content/payload.json')) as { default: unknown };
+    return module_.default;
+  } catch {
+    throw new Error(
+      'CONTENT_SOURCE=payload needs content/payload.json — run scripts/fetch-content.mts ' +
+        '(pnpm --filter web build does it for you). See docs/PHASES.md F4.',
+    );
+  }
 }
 
 /**

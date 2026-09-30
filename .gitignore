@@ -50,3 +50,9 @@ pnpm-debug.log*
 Thumbs.db
 .idea/
 *.swp
+
+# Local stand-in for the R2 bucket, written by apps/cms/scripts/import-seed.ts.
+apps/web/public/cms/
+
+# Written by apps/web/scripts/fetch-content.mts on every build from the CMS.
+apps/web/content/payload.json

@@ -130,10 +130,10 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 
 ## F4 — Napojení a publikace
 
-- [ ] `CONTENT_SOURCE=payload` v buildu na Cloudflare
+- [~] `CONTENT_SOURCE=payload` v buildu — web se umí postavit z CMS: `scripts/fetch-content.mts` načte oba globály, namapuje je na kanonické schéma a zvaliduje, pak teprve běží `next build`. Ověřeno lokálně: 9 projektů, 36 variant fotek, všechny odkazované soubory existují. **Zbývá pustit to na Cloudflare** — potřebuje účet
 - [ ] Endpoint `/api/publish` → deploy hook, tlačítko „Publikovat web" s časem posledního publikování
-- [ ] Zod validace při buildu — rozbitá data shodí build, stará verze zůstane
-- [ ] Přenést seed obsah do CMS (ať web nezůstane prázdný)
+- [x] Zod validace při buildu — rozbitá data shodí build, stará verze zůstane — validuje se dvakrát: v `fetch-content.mts` (kvůli čitelné chybě) a pak v `getContent()` pro oba zdroje
+- [x] Přenést seed obsah do CMS (ať web nezůstane prázdný) — `apps/cms/scripts/import-seed.ts`, 9 projektů a 15 fotek. Odmítne běžet nad databazí, kde už projekty jsou. Zkopíruje i varianty fotek do `apps/web/public/cms` ve stejném rozložení, jaké bude mít R2 — takže celá cesta jde projet včetně fotek ještě před tím, než bucket existuje
 - [ ] e2e: změna v adminu → Publikovat → změna na webu
 
 **Hotovo když:** klientka změní název projektu, klikne Publikovat a za pár minut ho vidí na webu.
@@ -182,6 +182,8 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 ---
 
 ## Drobnosti k dořešení
+
+- E2E test `detail › closes with Escape` na mobilním profilu jednou spadl a pak 3× za sebou prošel (25/25). Nesouvisí s obsahem — vypadá to na časování stisku Esc. Kdyby se to vracelo, začít tím, že se čeká na dokončení otevíracího přechodu, ne na viditelnost dialogu.
 
 - Po nahrání se fotka v seznamu pod tabulkou ukáže jako „Bez názvu — ID: 5", správný název se objeví
   až po uložení a otevření projektu. Payload si u relace nedotáhne dokument, který sám nenačetl, a

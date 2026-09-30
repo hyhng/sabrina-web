@@ -220,7 +220,7 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
 
 ### 8.6 Nastavení webu — `70:5`
 - Portrét (jedna fotka, stejná konverze)
-- **Bio — prostý text**, odstavce oddělené prázdným řádkem, žádný rich text. Počítadlo znaků s doporučeným maximem, aby se Information na desktopu nescrolloval. **[návrh — limit určit podle Figmy UI 07]**
+- **Bio — prostý text**, odstavce oddělené prázdným řádkem, žádný rich text. Počítadlo znaků pod polem: doporučených **380** (délka textu ve Figmě UI 07), maximum **1200** (nad ním by se Information na desktopu musel rolovat, viz 5). Mezi tím počítadlo varuje a uložit dovolí — délku posoudí ona. Nad 1200 Payload uložení odmítne.
 - Lokalita (`Based in Prague.`), e-mail, Instagram (handle + URL)
 - SEO popis webu, OG obrázek
 - **Žádné nastavení vzhledu**

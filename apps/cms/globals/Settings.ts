@@ -1,12 +1,19 @@
 import type { GlobalConfig } from 'payload';
 
 /**
+ * Where Information would start to scroll on a 1024-tall window, which
+ * docs/SPEC.md 5 forbids. Payload's validation refuses a save past it; the
+ * counter beside the field warns long before that.
+ */
+const BIO_MAX = 1200;
+/** The length of the copy in Figma UI 07 — the shape the page was drawn for. */
+const BIO_RECOMMENDED = 380;
+
+/**
  * Everything on the site that is not a project (docs/SPEC.md 8.6).
  *
  * The biography is plain text — paragraphs separated by a blank line, no rich
- * text. 1200 characters is where Information would start to scroll on a
- * 1024-tall window, which docs/SPEC.md 5 says it must not; the copy in Figma
- * UI 07 is 380, which is the shape the page was drawn for.
+ * text.
  *
  * There is nothing here for the look of the site. That is not hers to change.
  *
@@ -34,10 +41,18 @@ export const Settings: GlobalConfig = {
       name: 'bio',
       type: 'textarea',
       label: 'O mně',
-      maxLength: 1200,
+      maxLength: BIO_MAX,
       admin: {
-        description:
-          'Odstavce odděl prázdným řádkem. Návrh počítá zhruba s 380 znaky; nad 1200 by se sekce musela rolovat.',
+        description: 'Odstavce odděl prázdným řádkem.',
+        // Payload's textarea only refuses the save; the counter is ours.
+        components: {
+          afterInput: [
+            {
+              path: '/components/CharacterCount#CharacterCount',
+              clientProps: { max: BIO_MAX, recommended: BIO_RECOMMENDED },
+            },
+          ],
+        },
       },
     },
     {

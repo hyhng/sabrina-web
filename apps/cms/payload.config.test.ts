@@ -125,6 +125,21 @@ describe('globals', () => {
     expect((bio as { maxLength: number }).maxLength).toBe(1200);
   });
 
+  it('counts the biography beside the field, against the same maximum', () => {
+    /*
+     * docs/SPEC.md 8.4 asks for a counter; Payload's textarea draws none, only
+     * refusing the save. If the cap here and the number in the counter ever
+     * part ways, the counter lies — which is the point of this test.
+     */
+    const bio = global_('settings')?.fields.find((f) => 'name' in f && f.name === 'bio') as
+      { maxLength: number; admin?: { components?: { afterInput?: unknown[] } } } | undefined;
+    const [counter] = bio?.admin?.components?.afterInput ?? [];
+    expect(counter).toMatchObject({
+      path: '/components/CharacterCount#CharacterCount',
+      clientProps: { max: bio?.maxLength, recommended: 380 },
+    });
+  });
+
   it('offers nothing for the look of the site — that is not hers to change', () => {
     const names = (global_('settings')?.fields ?? []).flatMap((field) =>
       'name' in field ? [field.name] : [],

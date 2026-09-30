@@ -1,0 +1,22 @@
+/**
+ * The character counter under a textarea.
+ *
+ * No Tailwind here on purpose — this is one line of text inside Payload's own
+ * form, so it borrows Payload's colour tokens (--theme-*) and sits in Payload's
+ * spacing. Reading their variables is not the same as rewriting their CSS,
+ * which CLAUDE.md rule 9 rules out.
+ */
+.character-count {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-top: 0.25rem;
+  color: var(--theme-elevation-500);
+}
+
+.character-count--warn {
+  color: var(--theme-warning-700);
+}
+
+.character-count--over {
+  color: var(--theme-error-600);
+}

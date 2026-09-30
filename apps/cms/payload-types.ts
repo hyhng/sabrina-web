@@ -434,7 +434,7 @@ export interface Setting {
    */
   portrait?: (number | null) | Photo;
   /**
-   * Odstavce odděl prázdným řádkem. Návrh počítá zhruba s 380 znaky; nad 1200 by se sekce musela rolovat.
+   * Odstavce odděl prázdným řádkem.
    */
   bio?: string | null;
   location?: string | null;

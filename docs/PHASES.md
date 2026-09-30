@@ -110,7 +110,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [ ] Tabulka nahrávání: před → po, stavy, varování nízkého rozlišení
 - [x] Řazení fotek v projektu, výběr titulní fotky
 - [~] Obrazovka Pořadí na homepage **s živým náhledem mřížky** — hotovo; automatické zařazení nového projektu čeká na otevřenou otázku 10
-- [ ] Nastavení webu (portrét, bio s počítadlem, kontakt, SEO)
+- [x] Nastavení webu (portrét, bio s počítadlem, kontakt, SEO) — počítadlo je vlastní komponenta (`afterInput`), protože Payload u textarey žádné nekreslí, jen odmítne uložení; ověřeno v prohlížeči ve všech třech stavech. Chybí **Vybraní klienti** a **Publikace** — čekají na otevřenou otázku 3
 - [x] Náhled dlaždice v editoru (`Tile` z `packages/ui`)
 - [ ] Flow Nový projekt (dialog jen s názvem → Fotky) — **odloženo záměrně**: smysl flow je dostat ji rychle k nahrávání, a to zatím nefunguje. Stavět dialog, který ji vysype na nefunkční záložku, nemá cenu. Udělat spolu s nahráváním, až budou klíče k R2
 - [x] Prázdné stavy a chybové hlášky (SPEC 8.8) — hlášky u publikace, nahrávání a obou náhledů. Prázdné stavy seznamů řeší Payload sám a česky („Vytvořit nový Projekt"); vlastní komponenta by říkala totéž a šla proti pravidlu 9

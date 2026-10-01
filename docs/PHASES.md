@@ -181,7 +181,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 
 ---
 
-## UX poznámky z prvního testu nahrávání (1. 10.) — **k potvrzení, zatím neimplementováno**
+## UX poznámky z prvního testu nahrávání (1. 10.) — **potvrzeno, čeká na implementaci**
 
 První skutečné nahrání: 8 fotek (6 na výšku, 2 na šířku, 1,4–3,4 MB), všechny v R2, koncept uložen se všemi
 fotkami a titulní. Data jsou v pořádku, potíž je v rozhraní.
@@ -201,6 +201,14 @@ fotkami a titulní. Data jsou v pořádku, potíž je v rozhraní.
 nízkého rozlišení, ✕ pro smazání, tažení pro pořadí a viditelné označení titulní (klik na dlaždici ji nastaví).
 Fronta se přesune z komponenty do stavu, který přežije přepnutí záložky, plus upozornění před zavřením okna
 během nahrávání.
+
+**Potvrzeno (1. 10.):**
+- Mřížka je správné řešení. Důležité je **hlavně to, aby na každé dlaždici byl náhled a stav**.
+- **Titulní fotka:** klik na fotku otevře její detail a tam je volba „Nastavit jako titulní" (ne přímé nastavení kliknutím).
+- **Klikatelnost se týká lišty hromadných akcí** v seznamu projektů („Vybráno 9 — Upravit / Publikovat / Zrušit
+  publikování / Odstranit"). Je to vestavěný prvek Payloadu, takže jde o výjimku z pravidla 9 — **čeká na
+  rozhodnutí**, jak (viz níže).
+- Ukázkové projekty se mají smazat (provedeno v lokální databázi).
 
 **Omezení:** pravidlo 9 — vestavěné prvky Payloadu (např. lišta hromadných akcí v seznamu) se nestylují přes CSS.
 Dá se měnit jen to, co je naše vlastní komponenta.

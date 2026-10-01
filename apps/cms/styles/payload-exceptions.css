@@ -1,0 +1,59 @@
+/**
+ * THE ONE PLACE this project styles something of Payload's own.
+ *
+ * CLAUDE.md rule 9 says the admin is changed through components and
+ * configuration, never by overriding its CSS, because Payload 4 drops Sass and
+ * redesigns the admin and overrides would not survive. This file is a knowing,
+ * agreed exception (1 October, docs/PHASES.md) and is kept as small as it can be:
+ *
+ * - it is about one thing — the bar that appears above the project list when rows
+ *   are ticked ("Vybráno 9 — Upravit / Publikovat / Zrušit publikování /
+ *   Odstranit"), whose actions are plain grey text with no border, no padding and
+ *   nothing to say they can be pressed;
+ * - every selector starts with `.list-selection`, which a test enforces, so it
+ *   cannot reach anything else;
+ * - it takes its colours from Payload's own --theme-* variables, so it follows
+ *   light and dark mode with the rest of the admin.
+ *
+ * After every Payload upgrade: open the project list, tick a row, and look.
+ * If Payload renamed the class, the bar goes back to looking like text and nothing
+ * else breaks — which is the point of keeping this narrow.
+ */
+
+.list-selection .list-selection__button {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--theme-elevation-250);
+  border-radius: 3px;
+  background: var(--theme-elevation-50);
+  color: var(--theme-elevation-800);
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.list-selection .list-selection__button:hover {
+  border-color: var(--theme-elevation-500);
+  background: var(--theme-elevation-100);
+}
+
+.list-selection .list-selection__button:focus-visible {
+  outline: 2px solid var(--theme-elevation-800);
+  outline-offset: 2px;
+}
+
+/* Deleting is the one that cannot be undone, so it says so before it is pressed. */
+.list-selection .list-selection__button.delete-documents__toggle {
+  border-color: var(--theme-error-300);
+  color: var(--theme-error-700);
+}
+
+.list-selection .list-selection__button.delete-documents__toggle:hover {
+  border-color: var(--theme-error-500);
+  background: var(--theme-error-100);
+}
+
+/* Room between the buttons; Payload packs them against each other. */
+.list-selection .list-selection__actions {
+  gap: 0.5rem;
+}

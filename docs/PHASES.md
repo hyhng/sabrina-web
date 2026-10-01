@@ -183,7 +183,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 
 ## Drobnosti k dořešení
 
-- E2E test `detail › closes with Escape` na mobilním profilu jednou spadl a pak 3× za sebou prošel (25/25). Nesouvisí s obsahem — vypadá to na časování stisku Esc. Kdyby se to vracelo, začít tím, že se čeká na dokončení otevíracího přechodu, ne na viditelnost dialogu.
+- ~~E2E test `detail › closes with Escape` jednou spadl~~ — **vyřešeno.** Byl to závod testu s hydratací: detail je předgenerovaný, takže dialog je na obrazovce dřív, než se připojí obsluha kláves. Změřeno zablokováním klientských chunků: dialog vidět, Esc nic nedělá. Oba testy, které mačkají klávesu hned po `goto`, teď čekají na zámek scrollování — ten nastavuje stejná komponenta. 90 opakování na 8 workerech zelených.
 
 - Po nahrání se fotka v seznamu pod tabulkou ukáže jako „Bez názvu — ID: 5", správný název se objeví
   až po uložení a otevření projektu. Payload si u relace nedotáhne dokument, který sám nenačetl, a

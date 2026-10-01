@@ -1,4 +1,21 @@
-import { expect, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
+
+/**
+ * Waits until the overlay's own JavaScript is running.
+ *
+ * The detail is prerendered, so the dialog is on screen before React hydrates —
+ * which means a key press can land in a window where no handler is attached yet
+ * and nothing happens. Measured: with the client chunks blocked, the dialog is
+ * visible and Escape does nothing. That window is what made "closes with
+ * Escape" fail once in about five runs on a loaded machine.
+ *
+ * The scroll lock is the signal, because the effect that sets it mounts with the
+ * same component that attaches the key handler.
+ */
+async function overlayIsLive(page: Page): Promise<void> {
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.locator('body')).toHaveCSS('position', 'fixed');
+}
 
 test.describe('project detail', () => {
   test('opens from a tile and closes with Back', async ({ page }) => {
@@ -24,6 +41,7 @@ test.describe('project detail', () => {
 
   test('closes with Escape', async ({ page }) => {
     await page.goto('/work/fog/');
+    await overlayIsLive(page);
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog')).toBeHidden();
   });
@@ -102,6 +120,7 @@ test.describe('carousel', () => {
 
   test('pages with the arrow keys', async ({ page }) => {
     await page.goto('/work/wool-ss26-campaign/');
+    await overlayIsLive(page);
     const dialog = page.getByRole('dialog');
     await page.keyboard.press('ArrowRight');
     await expect(dialog.getByRole('button', { name: 'Previous photo' })).toHaveCount(1);

@@ -43,8 +43,20 @@ export function resolveSiteUrl(env: SiteEnv): string {
         env.NEXT_PUBLIC_SITE_URL === undefined
           ? 'the variable is not set at all'
           : `it is set to ${JSON.stringify(env.NEXT_PUBLIC_SITE_URL)}`;
+      /*
+       * Names only, never values: enough to tell "Pages passes nothing to the
+       * build" from "it passes some, under a name that is slightly off" (a
+       * trailing space, a lookalike character). Quoted so a stray space shows.
+       */
+      const visible =
+        Object.keys(env)
+          .filter((name) => /^(NEXT_|CF_|CONTENT_|NODE_|PAYLOAD_)/.test(name))
+          .sort()
+          .map((name) => JSON.stringify(name))
+          .join(', ') || 'none';
       throw new Error(
         `NEXT_PUBLIC_SITE_URL is missing or still example.com on the production build (${seen}). ` +
+          `Build sees these variables: ${visible}. Node ${process.version}. ` +
           'Set it in Cloudflare Pages → Settings → Variables and secrets → Production, ' +
           'e.g. https://sabrinakulhankova.photography, then start a new deployment.',
       );

@@ -47,6 +47,29 @@ describe('resolveSiteUrl', () => {
     ).toThrow(/set to "https:\/\/example\.com"/);
   });
 
+  it('lists the names it can see — never the values — so a near-miss name shows', () => {
+    const env = {
+      CF_PAGES_BRANCH: 'main',
+      'NEXT_PUBLIC_SITE_URL ': 'https://value-canary.invalid',
+      NODE_VERSION: '24.13.1',
+      UNRELATED_SECRET: 'hunter2',
+    };
+    let message = '';
+    try {
+      resolveSiteUrl(env);
+    } catch (error) {
+      message = (error as Error).message;
+    }
+    // The trailing space in the name is exactly what this is meant to expose.
+    expect(message).toContain('"NEXT_PUBLIC_SITE_URL "');
+    expect(message).toContain('"NODE_VERSION"');
+    expect(message).not.toContain('24.13.1');
+    expect(message).not.toContain('value-canary');
+    // Unrelated variables are neither listed nor leaked.
+    expect(message).not.toContain('UNRELATED_SECRET');
+    expect(message).not.toContain('hunter2');
+  });
+
   it('says where to fix it, in words the person reading the build log can act on', () => {
     expect(() => resolveSiteUrl({ CF_PAGES_BRANCH: 'main' })).toThrow(/Variables and secrets/);
   });

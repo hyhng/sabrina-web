@@ -167,7 +167,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 
 | # | Otázka | Kdo | Blokuje | Stav |
 |---|---|---|---|---|
-| 1 | Jaká doména? | Sabrina | F0, F6 | doménu má; konkrétní název potřebný až pro F0/F6 |
+| 1 | ~~Jaká doména?~~ | Sabrina | | ✅ **`sabrinakulhankova.photography`** (1. 10.) — registrovaná přímo u Cloudflaru, platná do 10. 6. 2027, takže se nic nepřepisuje u registrátora |
 | 2 | Kategorie Commercial / Art — sedí? Změna je levná. | Sabrina | F5 | 🔒 |
 | 3 | Chce v Information „Vybraní klienti" a „Publikace"? Jde o seznamy jmen, ne o projekty — mění `Settings`. | Sabrina | **F3** (schéma) | 🔒 poslední otevřená blokující F3 |
 | 4 | ~~Vícejazyčnost~~ | — | — | ✅ **ne, web je jen anglicky** (23. 9.) |
@@ -231,6 +231,10 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 | 30. 9. | Fotka užší než 400 px dostane **jednu variantu ve své šířce** | SPEC 8.4 pod 400 px mlčí; prázdný seznam variant by nechal web bez souboru, na který ukázat, a publikovat se s varováním o rozlišení má dát. **[návrh]** |
 | 30. 9. | Nový projekt se otevře na záložce Fotky zápisem do **Payloadových preferencí** | SPEC 8.2 to chce, a Payload si aktivní záložku drží jen v preferencích, ne v URL. Sází to na interní klíče (`_index-0`, `tabs-0`) a na to, že jsou taby první pole kolekce — když se to změní, klientka přistane na Podrobnostech a klikne. Ztratitelná sázka |
 | 30. 9. | Obsah z CMS se načte **skriptem před buildem** do `content/payload.json`, ne fetchem v buildu | statický export prerenderuje jen route s cacheovatelnými daty, a Nextův fetch cache přežije build — změřeno: přejmenovaný projekt se v dalším buildu neobjevil. Tlačítko Publikovat existuje právě proto, aby se změna objevila, takže na cache se spoléhat nesmí |
+| 1. 10. | Doména je **`sabrinakulhankova.photography`** na Cloudflaru, ne `sabrinakulhankovaphotography.com` u iFastNetu | ta druhá čístě žila v rozbitém portálu („Expired“ u domény zaplacené do 2027) a nameservery šly na Canvu. Nová sedí na Instagram `@sabrinakulhankova.photography` a nemá žádné přepisování. Stará + hosting za 29,99 $ ročně čeká na rozhodnutí Sabriny |
+| 1. 10. | Cloudflare Pages: **root directory prázdný**, build `pnpm --filter web build`, výstup `apps/web/out` (TECH 7 říká root `apps/web`) | monorepo — pnpm potřebuje vidět celé repo kvůli sdíleným balíčkům. Ověřeno: build z čistého klonu prošel |
+| 1. 10. | Produkční build **odmítne doběhnout bez `NEXT_PUBLIC_SITE_URL`** (větev `main` na Pages) | první živé nasazení mělo sitemap, robots.txt i JSON-LD na `example.com` a nic nevarovalo. Lokálně a na preview se dál jen varuje |
+| 1. 10. | `public/_headers`: `/_next/static/*` na `immutable`, rok | výchozí Pages je `max-age=0, must-revalidate` i pro soubory s hashem v názvu |
 | 30. 9. | Safari fallback ověřen v **WebKitu z Playwrightu**, ne na reálném Safari | WebKit tiše vrací `image/png` — přesně jak TECH 5 předpokládá — a `@jsquash/webp` vyrobí WebP o stejné velikosti (167 vs 169 kB). Reálné Safari a iOS (limit canvasu) zůstává na F5 |
 | 30. 9. | Počítadlo znaků u bia je **vlastní komponenta** (`afterInput`) | Payload u textarey žádné nekreslí, `maxLength` jen odmítne uložení — a to je pozdě, SPEC 8.4 chce vidět délku při psaní |
 | 24. 9. | Přidán `eslint-plugin-react-hooks` | odhalil čtení a zápis `ref` během renderu v `OffsetGrid` — s concurrent renderingem tiše nespolehlivé a nic jiného by si toho nevšimlo |

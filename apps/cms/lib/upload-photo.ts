@@ -25,7 +25,7 @@ export type PhotoMeta = {
 export type Api = {
   createPhoto: (meta: PhotoMeta) => Promise<string>;
   presign: (photoId: string) => Promise<Signed[]>;
-  put: (url: string, body: Blob, contentType: string) => Promise<void>;
+  put: (url: string, body: Blob, headers: Record<string, string>) => Promise<void>;
   /** Only ever called to clean up after ourselves. */
   deletePhoto: (photoId: string) => Promise<void>;
 };
@@ -50,18 +50,28 @@ export function photoMeta(
 
 /**
  * Pairs each signed URL with the blob that belongs at it, original included.
- * The content type comes from the target rather than from the blob: it was
- * signed into the URL, so it is the one R2 will accept.
+ *
+ * The headers come from the target rather than from the blob. The signature does
+ * not cover them, so R2 will store whatever is sent — which makes this the only
+ * place that decides how a photo is typed and cached for the next year.
  */
 export function bodies(
   targets: readonly Signed[],
   converted: Converted,
   original: Blob,
-): { url: string; body: Blob; contentType: string }[] {
+): { url: string; body: Blob; headers: Record<string, string> }[] {
   return targets.flatMap((target) => {
     const body = target.of === 'original' ? original : converted.variants.get(target.of);
     // A target with nothing to put at it is a bug, not a thing to upload empty.
-    return body === undefined ? [] : [{ url: target.url, body, contentType: target.contentType }];
+    return body === undefined
+      ? []
+      : [
+          {
+            url: target.url,
+            body,
+            headers: { 'Content-Type': target.contentType, 'Cache-Control': target.cacheControl },
+          },
+        ];
   });
 }
 
@@ -70,8 +80,8 @@ export async function uploadPhoto(file: File, converted: Converted, api: Api): P
   try {
     const targets = await api.presign(photoId);
     // Serial: three photos are already in flight, each with six files of its own.
-    for (const { url, body, contentType } of bodies(targets, converted, file)) {
-      await api.put(url, body, contentType);
+    for (const { url, body, headers } of bodies(targets, converted, file)) {
+      await api.put(url, body, headers);
     }
     return photoId;
   } catch (error) {

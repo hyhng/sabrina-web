@@ -51,6 +51,14 @@ describe('targets', () => {
     );
   });
 
+  it('asks every file to be cached for a year, immutable', () => {
+    // Files never change — a new photo is a new id — so nothing here should be
+    // revalidated (docs/TECH.md 4.2).
+    for (const target of targets(row)) {
+      expect(target.cacheControl).toBe('public, max-age=31536000, immutable');
+    }
+  });
+
   it('keeps the original extension, lowercased', () => {
     expect(targets({ ...row, originalFilename: 'a.PNG' }).at(-1)?.key).toBe('originals/17.png');
     expect(targets({ ...row, originalFilename: 'no-extension' }).at(-1)?.key).toBe(
@@ -70,6 +78,7 @@ describe('sign', () => {
       key: 'photos/17/400.webp',
       of: 400,
       contentType: 'image/webp',
+      cacheControl: 'public, max-age=31536000, immutable',
       url: 'https://r2.example/photos/17/400.webp?sig=x',
     });
   });

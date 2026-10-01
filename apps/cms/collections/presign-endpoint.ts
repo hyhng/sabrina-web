@@ -3,7 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import type { Endpoint, PayloadRequest } from 'payload';
 
 import { isMissing, missingMessage, r2Client, readR2Config } from '../lib/r2.ts';
-import { CACHE_CONTROL, PRESIGN_TTL_SECONDS, sign } from '../lib/presign.ts';
+import { PRESIGN_TTL_SECONDS, sign } from '../lib/presign.ts';
 
 /**
  * `POST /api/photos/presign` — signed PUT URLs for one photo's files
@@ -59,17 +59,16 @@ export const presignEndpoint: Endpoint = {
     });
 
     const client = r2Client(config);
+    /*
+     * Only the bucket and the key go into the command. ContentType and
+     * CacheControl used to be here too, and looked like they were signed; they
+     * were not — the signature covers `host` alone — and R2 stored neither. The
+     * browser sends both headers itself, and each target says which.
+     */
     const signed = await sign(row, (target) =>
-      getSignedUrl(
-        client,
-        new PutObjectCommand({
-          Bucket: config.bucket,
-          Key: target.key,
-          ContentType: target.contentType,
-          CacheControl: CACHE_CONTROL,
-        }),
-        { expiresIn: PRESIGN_TTL_SECONDS },
-      ),
+      getSignedUrl(client, new PutObjectCommand({ Bucket: config.bucket, Key: target.key }), {
+        expiresIn: PRESIGN_TTL_SECONDS,
+      }),
     );
 
     return Response.json({ targets: signed, expiresIn: PRESIGN_TTL_SECONDS });

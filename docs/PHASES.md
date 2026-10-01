@@ -106,7 +106,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [x] Globály `Homepage`, `Settings`
 - [x] Access control: veřejně jen `published`
 - [x] Slug — generování a zamčení po publikaci
-- [~] Nahrávání fotek v prohlížeči: Worker, WebP + `@jsquash/webp` fallback, presign, přímý PUT do R2 (TECH 5) — celá cesta hotová a ověřená v prohlížeči (2000px JPEG → 4 varianty + originál, 368 kB → 169 kB, správné klíče a content-type). **Chybí jediné: reálný bucket.** Bez klíčů v `.env` vrací presign 503 a řekne, které chybí. Podpis se dělá lokálně, takže je otestovaný i bez R2; co ověřit s klíči: že R2 URL přijme (CORS na `PUT` z `admin.<doména>`)
+- [x] Nahrávání fotek v prohlížeči: Worker, WebP + `@jsquash/webp` fallback, presign, přímý PUT do R2 (TECH 5) — **ověřeno 1. 10. na reálném bucketu** z reálného prohlížeče, bez podvržených služeb: 4 varianty + originál, správný content-type a `Cache-Control: public, max-age=31536000, immutable`, CORS projde, a mazání řádku fotky uklidilo i objekty v R2. Cestou zjištěno, že podpis kryje jen `host` — content-type ani cache-control se nepodepisují, takže je musí poslat prohlížeč sám (dřív se uložilo bez cache-control, i když to kód tvrdil opakěm)
 - [x] Tabulka nahrávání: před → po, stavy, varování nízkého rozlišení — náhled · soubor · rozlišení · velikost · stav, tři soubory najednou, odmítnutý formát si nechá řádek s důvodem
 - [x] Řazení fotek v projektu, výběr titulní fotky
 - [~] Obrazovka Pořadí na homepage **s živým náhledem mřížky** — hotovo; automatické zařazení nového projektu čeká na otevřenou otázku 10

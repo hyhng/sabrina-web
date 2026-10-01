@@ -19,6 +19,11 @@ export const PRESIGN_TTL_SECONDS = 600;
  * for a year and never revalidated (docs/TECH.md 4.2). This is set on the
  * object at upload time because there is no later chance: nothing rewrites
  * these files afterwards.
+ *
+ * It is the browser that has to send it. The signature covers the host and
+ * nothing else — measured against the real bucket on 1 October — so R2 stores
+ * whatever headers arrive with the PUT. Putting it on the command and calling
+ * it signed, as this file first did, stored nothing at all.
  */
 export const CACHE_CONTROL = 'public, max-age=31536000, immutable';
 
@@ -30,11 +35,14 @@ export type Target = {
   /** The variant this is for, or 'original'. Echoed back so the client can match. */
   readonly of: number | 'original';
   /**
-   * Signed into the URL, so the browser has to send exactly this — which is
-   * also how img.<doména> ends up serving the file as an image rather than as
-   * a download.
+   * What the browser sends as Content-Type. Not enforced by the signature (see
+   * CACHE_CONTROL), so this is a convention the upload keeps rather than a
+   * guarantee R2 gives — but it is what makes img.<doména> serve the file as an
+   * image instead of a download.
    */
   readonly contentType: string;
+  /** What the browser sends as Cache-Control; the same for every file. */
+  readonly cacheControl: string;
 };
 
 export type Signed = Target & { readonly url: string };
@@ -57,10 +65,23 @@ export function targets(row: PhotoRow): Target[] {
 
   const variants = widths
     .filter((width): width is number => typeof width === 'number' && Number.isFinite(width))
-    .map((width) => ({ key: photoKey(id, width), of: width, contentType: 'image/webp' }));
+    .map((width) => ({
+      key: photoKey(id, width),
+      of: width,
+      contentType: 'image/webp',
+      cacheControl: CACHE_CONTROL,
+    }));
 
   const key = originalKey(id, filename);
-  return [...variants, { key, of: 'original' as const, contentType: originalContentType(key) }];
+  return [
+    ...variants,
+    {
+      key,
+      of: 'original' as const,
+      contentType: originalContentType(key),
+      cacheControl: CACHE_CONTROL,
+    },
+  ];
 }
 
 /** From the key, which was built here — never from what the browser claimed. */

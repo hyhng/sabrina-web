@@ -21,13 +21,28 @@ const converted: Converted = {
 
 const file = new File([new Uint8Array(8200)], 'DSC_0041.JPG', { type: 'image/jpeg' });
 
+const CACHE = 'public, max-age=31536000, immutable';
+
 const signed: Signed[] = [
-  { key: 'photos/7/400.webp', of: 400, contentType: 'image/webp', url: 'https://r2/400' },
-  { key: 'photos/7/800.webp', of: 800, contentType: 'image/webp', url: 'https://r2/800' },
+  {
+    key: 'photos/7/400.webp',
+    of: 400,
+    contentType: 'image/webp',
+    cacheControl: CACHE,
+    url: 'https://r2/400',
+  },
+  {
+    key: 'photos/7/800.webp',
+    of: 800,
+    contentType: 'image/webp',
+    cacheControl: CACHE,
+    url: 'https://r2/800',
+  },
   {
     key: 'originals/7.jpg',
     of: 'original',
     contentType: 'image/jpeg',
+    cacheControl: CACHE,
     url: 'https://r2/original',
   },
 ];
@@ -70,12 +85,17 @@ describe('bodies', () => {
     expect(paired.at(-1)?.body).toBe(file);
   });
 
-  it('takes the content type from the signed target, not from the blob', () => {
-    // The type is signed into the URL; R2 rejects anything else.
-    expect(bodies(signed, converted, file).map((entry) => entry.contentType)).toEqual([
-      'image/webp',
-      'image/webp',
-      'image/jpeg',
+  it('sends the type and the caching from the target, not from the blob', () => {
+    /*
+     * Neither header is part of the signature — measured against the real
+     * bucket — so R2 stores exactly what the browser sends. Whatever is not sent
+     * here is simply not there: a photo with no Cache-Control is re-downloaded on
+     * every visit.
+     */
+    expect(bodies(signed, converted, file).map((entry) => entry.headers)).toEqual([
+      { 'Content-Type': 'image/webp', 'Cache-Control': CACHE },
+      { 'Content-Type': 'image/webp', 'Cache-Control': CACHE },
+      { 'Content-Type': 'image/jpeg', 'Cache-Control': CACHE },
     ]);
   });
 
@@ -86,6 +106,7 @@ describe('bodies', () => {
         key: 'photos/7/2400.webp',
         of: 2400 as const,
         contentType: 'image/webp',
+        cacheControl: CACHE,
         url: 'https://r2/x',
       },
     ];
@@ -120,11 +141,17 @@ describe('uploadPhoto', () => {
     expect(api.presign).toHaveBeenCalledWith('7');
   });
 
-  it('sends each file with the type that was signed for it', async () => {
+  it('sends each file with its own type and the caching the target asks for', async () => {
     const api = fakeApi();
     await uploadPhoto(file, converted, api);
-    expect(api.put).toHaveBeenNthCalledWith(1, 'https://r2/400', expect.anything(), 'image/webp');
-    expect(api.put).toHaveBeenNthCalledWith(3, 'https://r2/original', file, 'image/jpeg');
+    expect(api.put).toHaveBeenNthCalledWith(1, 'https://r2/400', expect.anything(), {
+      'Content-Type': 'image/webp',
+      'Cache-Control': CACHE,
+    });
+    expect(api.put).toHaveBeenNthCalledWith(3, 'https://r2/original', file, {
+      'Content-Type': 'image/jpeg',
+      'Cache-Control': CACHE,
+    });
   });
 
   it('takes the row back down when a PUT fails', async () => {

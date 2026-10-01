@@ -49,16 +49,16 @@ export function payloadApi(): Api {
       return ((await response.json()) as { targets: Signed[] }).targets;
     },
 
-    put: async (url: string, body: Blob, contentType: string) => {
+    put: async (url: string, body: Blob, headers: Record<string, string>) => {
       const response = await fetch(url, {
         method: 'PUT',
         body,
         /*
-         * Signed into the URL, so it has to match exactly — which is why it
-         * comes from the target and not from the blob. R2 also stores it, and
-         * that is what makes img.<doména> serve the file as an image.
+         * Content-Type and Cache-Control are not part of the signature, so R2
+         * stores exactly what is sent here. That is what makes img.<doména>
+         * serve the file as an image, cached for a year.
          */
-        headers: { 'Content-Type': contentType },
+        headers,
       });
       if (!response.ok) {
         throw new Error(`R2 odmítlo soubor (${String(response.status)}).`);

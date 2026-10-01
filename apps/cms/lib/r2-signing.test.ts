@@ -2,7 +2,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { describe, expect, it } from 'vitest';
 
-import { CACHE_CONTROL, PRESIGN_TTL_SECONDS, sign, type Target } from './presign.ts';
+import { PRESIGN_TTL_SECONDS, sign, type Target } from './presign.ts';
 import { r2Client, readR2Config } from './r2.ts';
 
 /**
@@ -22,18 +22,16 @@ if ('missing' in config) throw new Error('the fixture is meant to be complete');
 
 const client = r2Client(config);
 const signer = (target: Target) =>
-  getSignedUrl(
-    client,
-    new PutObjectCommand({
-      Bucket: config.bucket,
-      Key: target.key,
-      ContentType: target.contentType,
-      CacheControl: CACHE_CONTROL,
-    }),
-    { expiresIn: PRESIGN_TTL_SECONDS },
-  );
+  getSignedUrl(client, new PutObjectCommand({ Bucket: config.bucket, Key: target.key }), {
+    expiresIn: PRESIGN_TTL_SECONDS,
+  });
 
-const webp = (key: string): Target => ({ key, of: 400, contentType: 'image/webp' });
+const webp = (key: string): Target => ({
+  key,
+  of: 400,
+  contentType: 'image/webp',
+  cacheControl: 'public, max-age=31536000, immutable',
+});
 
 describe('signing a PUT for R2', () => {
   it('points at the account endpoint with the bucket in the path', async () => {
@@ -48,6 +46,17 @@ describe('signing a PUT for R2', () => {
     expect(url.searchParams.get('X-Amz-Expires')).toBe(String(PRESIGN_TTL_SECONDS));
     expect(url.searchParams.get('X-Amz-Algorithm')).toBe('AWS4-HMAC-SHA256');
     expect(url.searchParams.get('X-Amz-Signature')).toMatch(/^[0-9a-f]{64}$/);
+  });
+
+  it('signs the host and nothing else — so the browser must send its own headers', async () => {
+    /*
+     * Measured against the real bucket on 1 October: with ContentType and
+     * CacheControl on the command, SignedHeaders was still just `host`, and R2
+     * stored no Cache-Control at all. If this ever changes, the upload's header
+     * handling in upload-photo.ts needs another look.
+     */
+    const url = new URL(await signer(webp('photos/17/400.webp')));
+    expect(url.searchParams.get('X-Amz-SignedHeaders')).toBe('host');
   });
 
   it('keeps the secret out of the URL', async () => {

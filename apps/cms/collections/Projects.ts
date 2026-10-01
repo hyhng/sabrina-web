@@ -126,14 +126,15 @@ export const Projects: CollectionConfig = {
         },
         {
           label: 'Fotky',
-          description: 'Pořadí tažením. Titulní fotka se vybírá z těchhle.',
+          description: 'Nahraj fotky, přetažením je seřaď a v detailu vyber titulní.',
           fields: [
             {
-              // docs/SPEC.md 8.4: drag and drop, converted in her browser.
-              // Above the list, because uploading comes before ordering.
+              // docs/SPEC.md 8.3, 8.4: the photos as a grid of pictures — upload,
+              // status, order, cover and delete in one place. It drives the two
+              // hidden fields below.
               name: 'upload',
               type: 'ui',
-              admin: { components: { Field: '/components/PhotoUpload#PhotoUpload' } },
+              admin: { components: { Field: '/components/PhotoGrid#PhotoGrid' } },
             },
             {
               name: 'photos',
@@ -141,18 +142,18 @@ export const Projects: CollectionConfig = {
               relationTo: 'photos',
               hasMany: true,
               label: 'Fotky',
-              admin: {
-                description: 'Pořadí tažením. V detailu se fotky listují přesně v tomhle pořadí.',
-              },
+              // Driven from the photo grid. Hidden, not removed: Payload still keeps
+              // the value in the form and saves it, which is all this field is for.
+              admin: { hidden: true },
             },
             {
               name: 'cover',
               type: 'relationship',
               relationTo: 'photos',
               label: 'Titulní fotka',
-              admin: {
-                description: 'Ta, která se ukáže v mřížce. Vybírá se z fotek tohohle projektu.',
-              },
+              // Chosen in the photo grid ("Nastavit jako titulní"), not from a list of
+              // file names. Still validated and filtered as before.
+              admin: { hidden: true },
               // Only this project's photos; see cover-options.ts.
               filterOptions: ({ siblingData }) =>
                 coverOptions((siblingData as { photos?: unknown }).photos),
@@ -179,6 +180,16 @@ export const Projects: CollectionConfig = {
           ],
         },
       ],
+    },
+    {
+      // docs/SPEC.md 8.4: the queue keeps running when she is on another tab, so
+      // something that is always on screen has to say so.
+      name: 'uploadStatus',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: { Field: '/components/UploadStatus#UploadStatus' },
+      },
     },
     {
       // docs/SPEC.md 8.3: the tile as the site will draw it, beside the fields

@@ -181,37 +181,39 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 
 ---
 
-## UX poznámky z prvního testu nahrávání (1. 10.) — **potvrzeno, čeká na implementaci**
+## UX poznámky z prvního testu nahrávání (1. 10.) — **hotovo**
 
 První skutečné nahrání: 8 fotek (6 na výšku, 2 na šířku, 1,4–3,4 MB), všechny v R2, koncept uložen se všemi
-fotkami a titulní. Data jsou v pořádku, potíž je v rozhraní.
+fotkami a titulní. Data byla v pořádku, potíž byla v rozhraní. Vyřešeno jednou **mřížkou náhledů** místo tabulky
+nahrávání, seznamu „Bez názvu — ID" a rozbalovátka s názvy souborů:
 
-1. **Pořadí a výběr titulní fotky jsou slepé.** Seznam ukazuje „Bez názvu — ID: 36", titulní fotka je
-   rozbalovátko s názvy souborů (`A7402886.jpg`). Nikdo nepozná, která fotka je která. Chce se: **náhledy**
-   místo názvů, a to u pořadí i u titulní fotky.
-2. **Stav nahrávání zmizí, když se přepne záložka**, i když se nahrávání dál děje. Komponenta se při přepnutí
-   odmontuje a fronta žije jen v ní. Chce se: nahrávaná fotka je **hned dlaždice s náhledem a stavem přímo na ní**
-   (Převádím… / Nahrávám… / ✓), a ten stav **přežije přepnutí záložky**. Ověřit i, jestli se dokončená fotka při
-   odmontované komponentě stále připojí k projektu (tentokrát se připojily všechny, ale nezkoušelo se to cíleně).
-3. **Klikatelnost.** Některé ovládací prvky vypadají jako prostý text. Chce se: aby bylo vidět, co jde kliknout.
-   *Otevřené: o které prvky jde — viz otázky níže.*
+- **Každá fotka je dlaždice od okamžiku, kdy ji pustíš**: vlastní náhled, stav přímo na ní (Ve frontě / Převádím… /
+  Nahrávám…), varování nízkého rozlišení, číslo pořadí. Po nahrání je to tatáž dlaždice, nic neskáče.
+- **Stav přežije přepnutí záložky.** Fronta už nežije v komponentě (Payload ji při přepnutí odmontuje), ale v
+  `lib/upload-store.ts`. Fotka, která se dokončí, když mřížka není na obrazovce, čeká a připojí se, jakmile se
+  vrátí. V postranním panelu je stálé „Nahrávám fotky… 3 z 8". Při zavírání okna během nahrávání se prohlížeč ptá.
+- **Titulní fotka:** klik na fotku otevře detail a tam je „Nastavit jako titulní". Titulní má štítek a rámeček, a
+  dokud žádná není, mřížka na to upozorní (bez ní by Publikovat stejně odmítl).
+- **Detail fotky:** velký náhled ve správném poměru stran, soubor, rozlišení, velikost před → po, varování, popis
+  (alt), „← Dřív / Později →", smazání se dvěma kroky.
+- **Pořadí:** tažením dlaždic. Pole `photos` a `cover` jsou v adminu skrytá a řídí je mřížka; data zůstávají.
+- **Lišta hromadných akcí v seznamu projektů** vypadá jako tlačítka (Odstranit červeně). Je to **jediná vědomá
+  výjimka z pravidla 9**: `apps/cms/styles/payload-exceptions.css`, jen selektory pod `.list-selection`, test
+  hlídá, že nic dalšího nepřibude. Po každém upgradu Payloadu ji zkontrolovat.
 
-**Návrh řešení (k odsouhlasení):** jedna **mřížka náhledů** nahradí tři věci najednou — tabulku nahrávání, seznam
-„Bez názvu — ID" a výběr titulní fotky. Každá fotka je dlaždice: náhled, stav nahrávání přes náhled, varování
-nízkého rozlišení, ✕ pro smazání, tažení pro pořadí a viditelné označení titulní (klik na dlaždici ji nastaví).
-Fronta se přesune z komponenty do stavu, který přežije přepnutí záložky, plus upozornění před zavřením okna
-během nahrávání.
+Ověřeno v prohlížeči proti skutečnému bucketu: 6 fotek najednou, přepnutí záložky uprostřed nahrávání, titulní,
+přetažení, uložení, studený načet s miniaturami z `img.`, smazání (řádek, soubory v R2 i koncept projektu).
+Cestou našel test dvě chyby: smazaná fotka se zobrazila jako „čekající" dlaždice (opraveno + test) a detail se
+otevíral prázdný, dokud se nenačetl obrázek (rámeček s poměrem stran a barvou).
 
-**Potvrzeno (1. 10.):**
-- Mřížka je správné řešení. Důležité je **hlavně to, aby na každé dlaždici byl náhled a stav**.
-- **Titulní fotka:** klik na fotku otevře její detail a tam je volba „Nastavit jako titulní" (ne přímé nastavení kliknutím).
-- **Klikatelnost se týká lišty hromadných akcí** v seznamu projektů („Vybráno 9 — Upravit / Publikovat / Zrušit
-  publikování / Odstranit"). Je to vestavěný prvek Payloadu, takže jde o výjimku z pravidla 9 — **čeká na
-  rozhodnutí**, jak (viz níže).
-- Ukázkové projekty se mají smazat (provedeno v lokální databázi).
+**Smazání fotky se děje hned, ne až při Uložit** (řádek je pryč natrvalo), proto se současně uloží i koncept
+projektu. Jinak by neuložený projekt dál odkazoval na neexistující fotku a build by narazil na díru.
 
-**Omezení:** pravidlo 9 — vestavěné prvky Payloadu (např. lišta hromadných akcí v seznamu) se nestylují přes CSS.
-Dá se měnit jen to, co je naše vlastní komponenta.
+**Otevřené:**
+- **Nahrané, ale neuložené fotky jsou osiřelé.** Když zavře okno, aniž by uložila koncept, fotky jsou v R2 a v
+  databázi, ale k projektu patří až po uložení. Řešení by bylo automatické ukládání konceptu (autosave verzí v
+  Payloadu). **Navrhuju zapnout; rozhodnutí čeká.**
+- Dlaždice jsou čtverce s ořezem jen v náhledu (v detailu je fotka celá). Návrh, dá se změnit na skutečné poměry.
 
 ## Drobnosti k dořešení
 
@@ -267,6 +269,8 @@ Dá se měnit jen to, co je naše vlastní komponenta.
 | 1. 10. | Cloudflare Pages: **root directory prázdný**, build `pnpm --filter web build`, výstup `apps/web/out` (TECH 7 říká root `apps/web`) | monorepo — pnpm potřebuje vidět celé repo kvůli sdíleným balíčkům. Ověřeno: build z čistého klonu prošel |
 | 1. 10. | Produkční build **odmítne doběhnout bez `NEXT_PUBLIC_SITE_URL`** (větev `main` na Pages) | první živé nasazení mělo sitemap, robots.txt i JSON-LD na `example.com` a nic nevarovalo. Lokálně a na preview se dál jen varuje |
 | 1. 10. | Nastavení buildu veřejného webu je v **`apps/web/.env.production` v repu**, ne v proměnných Cloudflare Pages | „Variables and secrets“ v Pages se do buildu nedostaly — build vypísal všechny proměnné, které vidí, a ze čtyř nastavených nebyla žádná. Hodnoty nejsou tajné (adresa webu, cesta k fotkám), tak jdou do repa; test hlídá, že se tam nedostane nic jiného. Výjimka z pravidla 11 jen pro tenhle soubor. Ověřeno: čistý klon, žádné proměnné |
+| 1. 10. | Fotky projektu jsou **mřížka náhledů** a fronta nahrávání je **mimo React** (`upload-store.ts`) | Payload odmontuje obsah neaktivní záložky a fronta v komponentě s ním zmizela, i když se nahrávalo dál. Store je jediný zdroj pravdy pro mřížku i postranní stav |
+| 1. 10. | **Výjimka z pravidla 9** pro lištu hromadných akcí v seznamu (`styles/payload-exceptions.css`) | klientka: vypadala jako text, ne jako tlačítka. Úzce vymezeno: jen `.list-selection`, test hlídá rozsah, po upgradu Payloadu zkontrolovat |
 | 1. 10. | `public/_headers`: `/_next/static/*` na `immutable`, rok | výchozí Pages je `max-age=0, must-revalidate` i pro soubory s hashem v názvu |
 | 30. 9. | Safari fallback ověřen v **WebKitu z Playwrightu**, ne na reálném Safari | WebKit tiše vrací `image/png` — přesně jak TECH 5 předpokládá — a `@jsquash/webp` vyrobí WebP o stejné velikosti (167 vs 169 kB). Reálné Safari a iOS (limit canvasu) zůstává na F5 |
 | 30. 9. | Počítadlo znaků u bia je **vlastní komponenta** (`afterInput`) | Payload u textarey žádné nekreslí, `maxLength` jen odmítne uložení — a to je pozdě, SPEC 8.4 chce vidět délku při psaní |

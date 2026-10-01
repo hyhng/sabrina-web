@@ -198,7 +198,7 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
 - **Kategorie:** výběr ze dvou hodnot (Commercial / Art)
 - Pole **„Typ dlaždice" neexistuje** (zrušeno)
 - Vpravo **náhled dlaždice** ve skutečné velikosti — stejná komponenta `Tile` z `packages/ui` jako na webu
-- Záložka **Fotky**: drag & drop nahrávání, řazení tažením, smazání, alt text (volitelný)
+- Záložka **Fotky**: drag & drop nahrávání a **mřížka náhledů** — řazení tažením, klik na fotku otevře detail (**Nastavit jako titulní**, posun dřív/později, alt text (volitelný), smazání). Titulní fotka se nevybírá ze seznamu názvů, ale z obrázků
 
 ### 8.4 Nahrávání fotek — **[rozhodnuto]**
 1. Klientka přetáhne **JPEG nebo PNG** (TIFF, HEIC odmítnout s vysvětlením „Exportuj prosím jako JPEG")
@@ -206,7 +206,7 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
 3. **Prohlížeč** fotku zmenší a převede do **WebP** v šířkách **400 / 800 / 1200 / 1600 / 2400** (nikdy nezvětšovat nad originál). Při překreslení na canvas se převede do sRGB a zahodí EXIF včetně GPS.
 4. Varianty i originál jdou **přímo do R2** přes podepsané URL
 5. Server zapíše jen záznam fotky
-6. Tabulka nahrávání: náhled · soubor · rozlišení · **velikost před → po** (např. „8,2 MB → 310 kB") · stav (`Převádím…` / `✓ Připraveno` / `⚠ …`)
+6. Každá fotka je **dlaždice s náhledem a stavem přímo na ní** (`Ve frontě` / `Převádím…` / `Nahrávám…` / `⚠ …`) od okamžiku, kdy ji pustí; stav přežije přepnutí záložky a je vidět i v postranním panelu. Rozlišení a **velikost před → po** (např. „8,2 MB → 310 kB") jsou v detailu fotky
 7. **Jediné varování: nízké rozlišení**, kontextově:
    - šířka < 1240 px → „Málo pro detail — v gridu OK" **[návrh prahu: 620 px × 2 pro retinu]**
    - šířka < 800 px → „Málo i pro grid" **[návrh prahu: 401 px × 2]**

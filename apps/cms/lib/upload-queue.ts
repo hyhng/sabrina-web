@@ -83,7 +83,7 @@ export function accept(
   });
 }
 
-export function patch(items: readonly Item[], id: string, change: Partial<Item>): Item[] {
+export function patch<T extends Item>(items: readonly T[], id: string, change: Partial<Item>): T[] {
   return items.map((item) => (item.id === id ? { ...item, ...change } : item));
 }
 
@@ -94,10 +94,10 @@ const BUSY: readonly Stage[] = ['converting', 'uploading'];
  * Which queued files may start now. Returned rather than started, so the
  * rule is testable and the component stays a loop over this list.
  */
-export function readyToStart(
-  items: readonly Item[],
+export function readyToStart<T extends Item>(
+  items: readonly T[],
   limit: number = MAX_CONCURRENT_UPLOADS,
-): Item[] {
+): T[] {
   const busy = items.filter((item) => BUSY.includes(item.stage)).length;
   const free = Math.max(0, limit - busy);
   return items.filter((item) => item.stage === 'queued').slice(0, free);

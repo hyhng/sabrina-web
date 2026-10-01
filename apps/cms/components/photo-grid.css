@@ -1,0 +1,445 @@
+/**
+ * The photo grid, its detail and the sidebar status.
+ *
+ * Payload's own tokens (--theme-*) and no Tailwind: this sits inside their form
+ * and is not ours to restyle (CLAUDE.md rule 9). Reading their variables is the
+ * supported way to look like part of it.
+ */
+.photo-grid {
+  margin-block: 1rem;
+}
+
+/* --- drop zone --------------------------------------------------------- */
+
+.photo-grid__zone {
+  border: 1px dashed var(--theme-elevation-250);
+  border-radius: 3px;
+  padding: 1.75rem 1rem;
+  text-align: center;
+  color: var(--theme-elevation-600);
+  background: var(--theme-elevation-0);
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.photo-grid__zone label {
+  cursor: pointer;
+}
+
+.photo-grid__zone--over {
+  border-color: var(--theme-elevation-500);
+  background: var(--theme-elevation-50);
+}
+
+.photo-grid__hint {
+  font-size: 0.8rem;
+  color: var(--theme-elevation-500);
+  margin-top: 0.35rem;
+}
+
+/* --- messages ---------------------------------------------------------- */
+
+.photo-grid__error {
+  margin-top: 0.75rem;
+  color: var(--theme-error-600);
+  font-size: 0.85rem;
+}
+
+.photo-grid__nudge {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--theme-warning-300);
+  border-radius: 3px;
+  background: var(--theme-warning-100);
+  color: var(--theme-warning-800);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.photo-grid__legend {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--theme-elevation-500);
+}
+
+.photo-grid__progress {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--theme-elevation-600);
+}
+
+/* --- tiles ------------------------------------------------------------- */
+
+.photo-grid__tiles {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.photo-grid__tile {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 3px;
+  background-color: var(--theme-elevation-100);
+  cursor: grab;
+}
+
+.photo-grid__tile:hover {
+  border-color: var(--theme-elevation-500);
+}
+
+.photo-grid__tile--cover {
+  border-color: var(--theme-success-500);
+  box-shadow: 0 0 0 2px var(--theme-success-500);
+}
+
+.photo-grid__tile--dragging {
+  opacity: 0.4;
+}
+
+.photo-grid__tile--target {
+  border-color: var(--theme-elevation-800);
+  box-shadow: 0 0 0 2px var(--theme-elevation-800);
+}
+
+.photo-grid__tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The picture is the click target: the whole tile opens the detail. */
+.photo-grid__open {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.photo-grid__open:focus-visible {
+  outline: 2px solid var(--theme-elevation-800);
+  outline-offset: -4px;
+}
+
+/* A label that appears on hover, so the tile reads as something to click. */
+.photo-grid__hover {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 0.35rem 0.5rem;
+  background: rgb(0 0 0 / 0.6);
+  color: #fff;
+  font-size: 0.75rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(100%);
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+  pointer-events: none;
+}
+
+.photo-grid__tile:hover .photo-grid__hover,
+.photo-grid__tile:focus-within .photo-grid__hover {
+  opacity: 1;
+  transform: none;
+}
+
+.photo-grid__order,
+.photo-grid__badge,
+.photo-grid__warn {
+  position: absolute;
+  pointer-events: none;
+  font-size: 0.7rem;
+  line-height: 1;
+  padding: 0.28rem 0.42rem;
+  border-radius: 2px;
+  background: rgb(0 0 0 / 0.65);
+  color: #fff;
+}
+
+.photo-grid__order {
+  top: 0.4rem;
+  right: 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.photo-grid__badge {
+  top: 0.4rem;
+  left: 0.4rem;
+  background: var(--theme-success-600);
+}
+
+.photo-grid__warn {
+  bottom: 0.4rem;
+  left: 0.4rem;
+  pointer-events: auto;
+  background: var(--theme-warning-600);
+}
+
+/* --- a photo still on its way ------------------------------------------ */
+
+.photo-grid__tile--busy,
+.photo-grid__tile--failed {
+  cursor: default;
+}
+
+.photo-grid__tile--busy img {
+  opacity: 0.55;
+}
+
+.photo-grid__tile--failed {
+  border-color: var(--theme-error-400);
+}
+
+.photo-grid__tile--failed img {
+  opacity: 0.35;
+}
+
+.photo-grid__filename {
+  display: block;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  word-break: break-all;
+  color: var(--theme-elevation-600);
+}
+
+.photo-grid__status {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.5rem;
+  background: rgb(0 0 0 / 0.72);
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+.photo-grid__tile--failed .photo-grid__status {
+  background: var(--theme-error-700);
+}
+
+.photo-grid__status-warning {
+  color: var(--theme-warning-200);
+}
+
+.photo-grid__bar,
+.upload-status__bar {
+  display: block;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.25);
+  position: relative;
+}
+
+.upload-status__bar {
+  background: var(--theme-elevation-150);
+}
+
+/* No percentage to show — the work happens in a worker — so it just moves. */
+.photo-grid__bar::after,
+.upload-status__bar::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: #fff;
+  animation: photo-grid-slide 1.1s ease-in-out infinite;
+}
+
+.upload-status__bar::after {
+  background: var(--theme-elevation-800);
+}
+
+@keyframes photo-grid-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(260%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-grid__bar::after,
+  .upload-status__bar::after {
+    animation: none;
+    width: 100%;
+    opacity: 0.5;
+  }
+}
+
+.photo-grid__dismiss {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 0;
+  border-radius: 2px;
+  background: rgb(0 0 0 / 0.7);
+  color: #fff;
+  cursor: pointer;
+}
+
+.photo-grid__dismiss:hover {
+  background: #000;
+}
+
+/* --- detail ------------------------------------------------------------ */
+
+.photo-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 44rem;
+}
+
+/* Sized by the photo's own proportions (set inline), capped so a tall one never
+   pushes the actions off the screen. */
+.photo-detail__frame {
+  align-self: flex-start;
+  max-width: 100%;
+  max-height: 60vh;
+  overflow: hidden;
+  background-color: var(--theme-elevation-100);
+}
+
+.photo-detail__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.photo-detail__facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.photo-detail__facts dt {
+  color: var(--theme-elevation-500);
+}
+
+.photo-detail__facts dd {
+  margin: 0;
+  word-break: break-all;
+}
+
+.photo-detail__warning {
+  margin: 0;
+  color: var(--theme-warning-700);
+  font-size: 0.85rem;
+}
+
+.photo-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.photo-detail__actions :is(.btn) {
+  margin: 0;
+}
+
+.photo-detail__is-cover {
+  margin: 0;
+  color: var(--theme-success-700);
+  font-weight: 500;
+}
+
+.photo-detail__move {
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.photo-detail__alt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+}
+
+.photo-detail__alt input {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 3px;
+  background: var(--theme-input-bg, var(--theme-elevation-0));
+  color: var(--theme-elevation-800);
+  font-size: 1rem;
+}
+
+.photo-detail__alt small {
+  color: var(--theme-elevation-500);
+}
+
+.photo-detail__danger {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--theme-elevation-100);
+}
+
+.photo-detail__danger p {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--theme-error-600);
+}
+
+.photo-detail__danger .btn {
+  margin: 0;
+}
+
+/* --- sidebar status ---------------------------------------------------- */
+
+.upload-status {
+  margin-block: 1rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 3px;
+  background: var(--theme-elevation-50);
+}
+
+.upload-status p {
+  margin: 0;
+}
+
+.upload-status__title {
+  font-weight: 500;
+}
+
+.upload-status__line {
+  margin-top: 0.15rem !important;
+  font-size: 0.85rem;
+  color: var(--theme-elevation-600);
+}
+
+.upload-status__bar {
+  margin-top: 0.5rem;
+}
+
+.upload-status__hint {
+  margin-top: 0.5rem !important;
+  font-size: 0.75rem;
+  color: var(--theme-elevation-500);
+}

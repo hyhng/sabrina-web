@@ -1,4 +1,5 @@
-import { PhotoUpload as PhotoUpload_dfc92b02dc2518f6e5cd91f87030d53d } from '../../../components/PhotoUpload'
+import { PhotoGrid as PhotoGrid_af09df45db3b1b10a618cd16d8abcbff } from '../../../components/PhotoGrid'
+import { UploadStatus as UploadStatus_6807b23afa610f568ca3c5a72b64e846 } from '../../../components/UploadStatus'
 import { TilePreview as TilePreview_8d17b0a5f2f1c78d7a961ae93f4dcb4c } from '../../../components/TilePreview'
 import { NewProject as NewProject_a758667b0938818b7e8e352b59d52a95 } from '../../../components/NewProject'
 import { OrderPreview as OrderPreview_05f44c313a2bfd54fbebc719dd440b38 } from '../../../components/OrderPreview'
@@ -8,7 +9,8 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
-  "/components/PhotoUpload#PhotoUpload": PhotoUpload_dfc92b02dc2518f6e5cd91f87030d53d,
+  "/components/PhotoGrid#PhotoGrid": PhotoGrid_af09df45db3b1b10a618cd16d8abcbff,
+  "/components/UploadStatus#UploadStatus": UploadStatus_6807b23afa610f568ca3c5a72b64e846,
   "/components/TilePreview#TilePreview": TilePreview_8d17b0a5f2f1c78d7a961ae93f4dcb4c,
   "/components/NewProject#NewProject": NewProject_a758667b0938818b7e8e352b59d52a95,
   "/components/OrderPreview#OrderPreview": OrderPreview_05f44c313a2bfd54fbebc719dd440b38,

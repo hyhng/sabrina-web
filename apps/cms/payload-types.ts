@@ -153,13 +153,7 @@ export interface Project {
         id?: string | null;
       }[]
     | null;
-  /**
-   * Pořadí tažením. V detailu se fotky listují přesně v tomhle pořadí.
-   */
   photos?: (number | Photo)[] | null;
-  /**
-   * Ta, která se ukáže v mřížce. Vybírá se z fotek tohohle projektu.
-   */
   cover?: (number | null) | Photo;
   updatedAt: string;
   createdAt: string;

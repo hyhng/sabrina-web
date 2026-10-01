@@ -1,3 +1,6 @@
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+
 import { contentSchema, type Content } from '@sabrina/shared';
 
 /**
@@ -39,9 +42,19 @@ async function readSeed(): Promise<unknown> {
  * must not lean on.
  */
 async function readPayload(): Promise<unknown> {
+  /*
+   * A filesystem read, not `import('../content/payload.json')`. The file is
+   * generated and gitignored, so on a clean checkout it does not exist — and an
+   * import is resolved by the typechecker and the bundler whether or not this
+   * branch ever runs. That is exactly how the first Cloudflare Pages build
+   * failed on 1 October with TS2307, while it passed on the machine that had
+   * built against the CMS once and still had the file lying around.
+   *
+   * Read this way, the seed build never looks for it.
+   */
+  const file = path.join(process.cwd(), 'content', 'payload.json');
   try {
-    const module_ = (await import('../content/payload.json')) as { default: unknown };
-    return module_.default;
+    return JSON.parse(await readFile(file, 'utf8')) as unknown;
   } catch {
     throw new Error(
       'CONTENT_SOURCE=payload needs content/payload.json — run scripts/fetch-content.mts ' +

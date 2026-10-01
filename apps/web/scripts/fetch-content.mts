@@ -17,6 +17,7 @@
  *
  * Usage: pnpm --filter web build  (or node scripts/fetch-content.mts)
  */
+import { existsSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -30,6 +31,14 @@ const OUT_FILE = path.join(WEB_ROOT, 'content', 'payload.json');
 
 /** homepage → projects → photos needs 2; settings only its own photos. */
 const DEPTH = { homepage: 2, settings: 1 } as const;
+
+/*
+ * `next build` reads .env.production on its own; this script runs under plain
+ * node before it, so it has to do the same, or the two would disagree about where
+ * the content comes from. A variable already set in the shell is left alone.
+ */
+const ENV_FILE = path.join(WEB_ROOT, '.env.production');
+if (existsSync(ENV_FILE)) process.loadEnvFile(ENV_FILE);
 
 if ((process.env.CONTENT_SOURCE ?? 'seed') !== 'payload') {
   console.log('[content] CONTENT_SOURCE is not payload — nothing to fetch.');

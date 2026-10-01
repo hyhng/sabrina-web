@@ -22,6 +22,10 @@ next-env.d.ts
 .env
 .env.*
 !.env.example
+# The one deliberate exception: build settings for the public site. Public
+# values only (the site's address, where photos are served from) — never a
+# secret. apps/web/lib/env-production.test.ts fails if anything else lands in it.
+!apps/web/.env.production
 
 # Testing / coverage
 coverage/

@@ -181,6 +181,30 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 
 ---
 
+## UX poznámky z prvního testu nahrávání (1. 10.) — **k potvrzení, zatím neimplementováno**
+
+První skutečné nahrání: 8 fotek (6 na výšku, 2 na šířku, 1,4–3,4 MB), všechny v R2, koncept uložen se všemi
+fotkami a titulní. Data jsou v pořádku, potíž je v rozhraní.
+
+1. **Pořadí a výběr titulní fotky jsou slepé.** Seznam ukazuje „Bez názvu — ID: 36", titulní fotka je
+   rozbalovátko s názvy souborů (`A7402886.jpg`). Nikdo nepozná, která fotka je která. Chce se: **náhledy**
+   místo názvů, a to u pořadí i u titulní fotky.
+2. **Stav nahrávání zmizí, když se přepne záložka**, i když se nahrávání dál děje. Komponenta se při přepnutí
+   odmontuje a fronta žije jen v ní. Chce se: nahrávaná fotka je **hned dlaždice s náhledem a stavem přímo na ní**
+   (Převádím… / Nahrávám… / ✓), a ten stav **přežije přepnutí záložky**. Ověřit i, jestli se dokončená fotka při
+   odmontované komponentě stále připojí k projektu (tentokrát se připojily všechny, ale nezkoušelo se to cíleně).
+3. **Klikatelnost.** Některé ovládací prvky vypadají jako prostý text. Chce se: aby bylo vidět, co jde kliknout.
+   *Otevřené: o které prvky jde — viz otázky níže.*
+
+**Návrh řešení (k odsouhlasení):** jedna **mřížka náhledů** nahradí tři věci najednou — tabulku nahrávání, seznam
+„Bez názvu — ID" a výběr titulní fotky. Každá fotka je dlaždice: náhled, stav nahrávání přes náhled, varování
+nízkého rozlišení, ✕ pro smazání, tažení pro pořadí a viditelné označení titulní (klik na dlaždici ji nastaví).
+Fronta se přesune z komponenty do stavu, který přežije přepnutí záložky, plus upozornění před zavřením okna
+během nahrávání.
+
+**Omezení:** pravidlo 9 — vestavěné prvky Payloadu (např. lišta hromadných akcí v seznamu) se nestylují přes CSS.
+Dá se měnit jen to, co je naše vlastní komponenta.
+
 ## Drobnosti k dořešení
 
 - ~~E2E test `detail › closes with Escape` jednou spadl~~ — **vyřešeno.** Byl to závod testu s hydratací: detail je předgenerovaný, takže dialog je na obrazovce dřív, než se připojí obsluha kláves. Změřeno zablokováním klientských chunků: dialog vidět, Esc nic nedělá. Oba testy, které mačkají klávesu hned po `goto`, teď čekají na zámek scrollování — ten nastavuje stejná komponenta. 90 opakování na 8 workerech zelených.

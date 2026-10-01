@@ -1,0 +1,73 @@
+name: CMS image
+
+# Builds the admin image for the server (docs/TECH.md 7).
+#
+# linux/arm64 only: the Hetzner CAX11 is an Ampere machine. Building a second
+# architecture nobody runs would double the build time for nothing.
+#
+# Nothing here deploys. The server pulls — see infra/README.md — because a
+# workflow that can reach the server needs a key that can reach the server, and
+# that key would live in a repo the client does not own (docs/TECH.md 7).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/cms/**'
+      - 'packages/**'
+      - 'infra/Dockerfile'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/cms-image.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: cms-image-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # Pinned for the same reason as ci.yml: a runner changing under a handover
+    # is not a surprise worth having.
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # arm64 on an x86 runner. Slower than a native builder and simpler than
+      # keeping one; this image is built on merges to main, not on every push.
+      - uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/sabrina-cms
+          # `latest` is what the server's compose file follows; the sha tag is
+          # what you pin to when rolling back.
+          tags: |
+            type=raw,value=latest
+            type=sha,format=long
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infra/Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Without this every run reinstalls the whole workspace.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

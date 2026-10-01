@@ -10,6 +10,7 @@ import { publishEndpoint } from './endpoints/publish.ts';
 import { Projects } from './collections/Projects.ts';
 import { Users } from './collections/Users.ts';
 import { Homepage } from './globals/Homepage.ts';
+import { migrations } from './migrations/index.ts';
 import { Publish } from './globals/Publish.ts';
 import { Settings } from './globals/Settings.ts';
 
@@ -54,6 +55,18 @@ export default buildConfig({
 
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URI ?? '' },
+    /*
+     * In development Payload pushes the schema straight at the database. In
+     * production it does not, and without this a fresh server comes up against
+     * an empty database and every page 500s on `relation "users" does not
+     * exist` — measured on 1 October against the real image.
+     *
+     * Passing the migrations here rather than running `payload migrate` as a
+     * deploy step is what suits a container: they are imported by the config,
+     * so Next traces them into the standalone output, and the server applies
+     * them itself on connect. One less thing to remember on the server.
+     */
+    prodMigrations: migrations,
   }),
 
   // Required by Payload even though nothing here is rich text: the biography

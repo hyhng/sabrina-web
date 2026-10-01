@@ -1,0 +1,37 @@
+# Caddy in front of the admin (docs/TECH.md 7).
+#
+# Caddy is here for one reason: it gets and renews the TLS certificate on its
+# own. Nothing is proxied but the admin — the public site is static on
+# Cloudflare Pages and never touches this server.
+#
+# ADMIN_DOMAIN comes from .env. Set it to localhost to run the stack on a
+# laptop, which turns off the ACME certificate and uses Caddy's local one.
+
+{$ADMIN_DOMAIN} {
+	encode zstd gzip
+
+	# Payload's own session cookies are what authorise the admin; Caddy adds
+	# only the headers a browser should be told regardless.
+	header {
+		# The admin is never meant to be framed, and it is not a public page.
+		X-Frame-Options DENY
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	# 40 MB: a camera original is the largest thing that is posted here, and the
+	# photos themselves go straight to R2, not through this server.
+	request_body {
+		max_size 40MB
+	}
+
+	reverse_proxy cms:3001
+
+	log {
+		output file /var/log/caddy/admin.log {
+			roll_size 10MB
+			roll_keep 5
+		}
+	}
+}

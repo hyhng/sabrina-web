@@ -13,3 +13,7 @@ docs/
 # them only invites churn.
 apps/cms/payload-types.ts
 apps/cms/app/(payload)/admin/importMap.js
+
+# Written by `payload migrate:create`. The SQL inside is generated, and the
+# whole point of a migration is that it is never edited after it has run.
+apps/cms/migrations/

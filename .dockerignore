@@ -1,0 +1,26 @@
+# The build context is the repo root (the install needs the workspace), so
+# everything heavy or machine-specific is kept out of it deliberately.
+**/node_modules
+**/.next
+**/out
+**/.turbo
+.git
+.github
+
+# Secrets never go into an image (CLAUDE.md rule 11).
+.env
+.env.*
+!.env.example
+
+# Test output and local fixtures.
+test-results
+playwright-report
+apps/web/public/cms
+apps/web/content/payload.json
+
+# Documentation and editor files change nothing about the build.
+docs
+*.md
+!README.md
+.vscode
+.idea

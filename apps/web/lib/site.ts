@@ -33,10 +33,20 @@ export function resolveSiteUrl(env: SiteEnv): string {
 
   if (configured === '' || configured.replace(/\/+$/, '') === FALLBACK) {
     if (production) {
+      /*
+       * Says what it received. "Missing" and "present but wrong" (a stray space,
+       * the wrong environment, a lookalike character in the name) look the same
+       * from the outside and need different fixes. The value is a public address,
+       * not a secret, so printing it costs nothing.
+       */
+      const seen =
+        env.NEXT_PUBLIC_SITE_URL === undefined
+          ? 'the variable is not set at all'
+          : `it is set to ${JSON.stringify(env.NEXT_PUBLIC_SITE_URL)}`;
       throw new Error(
-        'NEXT_PUBLIC_SITE_URL is missing or still example.com on the production build. ' +
+        `NEXT_PUBLIC_SITE_URL is missing or still example.com on the production build (${seen}). ` +
           'Set it in Cloudflare Pages → Settings → Variables and secrets → Production, ' +
-          'e.g. https://sabrinakulhankova.photography, then retry the deployment.',
+          'e.g. https://sabrinakulhankova.photography, then start a new deployment.',
       );
     }
     return FALLBACK;

@@ -35,6 +35,18 @@ describe('resolveSiteUrl', () => {
     ).toThrow(/example\.com/);
   });
 
+  it('says whether the variable is absent or set to something unusable', () => {
+    // From the outside "missing" and "present but wrong" look identical, and they
+    // need different fixes.
+    expect(() => resolveSiteUrl({ CF_PAGES_BRANCH: 'main' })).toThrow(/not set at all/);
+    expect(() => resolveSiteUrl({ CF_PAGES_BRANCH: 'main', NEXT_PUBLIC_SITE_URL: '' })).toThrow(
+      /set to ""/,
+    );
+    expect(() =>
+      resolveSiteUrl({ CF_PAGES_BRANCH: 'main', NEXT_PUBLIC_SITE_URL: 'https://example.com' }),
+    ).toThrow(/set to "https:\/\/example\.com"/);
+  });
+
   it('says where to fix it, in words the person reading the build log can act on', () => {
     expect(() => resolveSiteUrl({ CF_PAGES_BRANCH: 'main' })).toThrow(/Variables and secrets/);
   });

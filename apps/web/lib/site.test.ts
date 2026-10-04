@@ -51,7 +51,7 @@ describe('resolveSiteUrl', () => {
     const env = {
       CF_PAGES_BRANCH: 'main',
       'NEXT_PUBLIC_SITE_URL ': 'https://value-canary.invalid',
-      NODE_VERSION: '24.13.1',
+      NODE_VERSION: 'version-canary-9.9.9',
       UNRELATED_SECRET: 'hunter2',
     };
     let message = '';
@@ -63,7 +63,10 @@ describe('resolveSiteUrl', () => {
     // The trailing space in the name is exactly what this is meant to expose.
     expect(message).toContain('"NEXT_PUBLIC_SITE_URL "');
     expect(message).toContain('"NODE_VERSION"');
-    expect(message).not.toContain('24.13.1');
+    // A canary, not a real version: the message prints the running Node's own version
+    // on purpose, and a realistic value here collided with it on CI (Node 24.13.1)
+    // while passing on a machine running a different one.
+    expect(message).not.toContain('version-canary');
     expect(message).not.toContain('value-canary');
     // Unrelated variables are neither listed nor leaked.
     expect(message).not.toContain('UNRELATED_SECRET');

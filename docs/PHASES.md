@@ -210,9 +210,12 @@ otevíral prázdný, dokud se nenačetl obrázek (rámeček s poměrem stran a b
 projektu. Jinak by neuložený projekt dál odkazoval na neexistující fotku a build by narazil na díru.
 
 **Otevřené:**
-- **Nahrané, ale neuložené fotky jsou osiřelé.** Když zavře okno, aniž by uložila koncept, fotky jsou v R2 a v
-  databázi, ale k projektu patří až po uložení. Řešení by bylo automatické ukládání konceptu (autosave verzí v
-  Payloadu). **Navrhuju zapnout; rozhodnutí čeká.**
+- ~~Nahrané, ale neuložené fotky jsou osiřelé~~ — **rozhodnuto (4. 10.): automatické ukládání konceptu se
+  nedělá.** Když odejde bez uložení, fotky se k projektu nepřipojí; přijde o ně, ale s upozorněním. Ověřeno v
+  prohlížeči, že Payload upozorní oběma způsoby: při zavírání okna (beforeunload) i při odchodu přes menu
+  („Odejít bez uložení — Vaše změny nebyly uloženy"). Kód se neměnil. **Důsledek:** soubory zůstanou v R2 a
+  řádky v databázi; stojí to haléře, ale časem by stálo za to osiřelé fotky (nepatří žádnému projektu ani verzi)
+  jednou za čas smazat.
 - Dlaždice jsou čtverce s ořezem jen v náhledu (v detailu je fotka celá). Návrh, dá se změnit na skutečné poměry.
 
 ## Drobnosti k dořešení

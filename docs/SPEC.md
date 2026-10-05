@@ -83,14 +83,15 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 ### 4.1 Desktop a tablet (≥ 768 px)
 
 - Homepage v pozadí **vybledlá**, přes ni **plocha 800 px** vycentrovaná vodorovně
-  - **Plocha má velikost podle okna, ne podle obsahu** — **[rozhodnuto 24. 9. 2026]**: výška `100dvh` mínus okraje, obsah se roluje uvnitř ní. Když výšku určovala fotka, plocha při listování série poskakovala mezi vysokou a nízkou. Vzor: `lydiebonhomme.com` (Cargo), kde je panel `position: fixed` s `max-height: 100dvh`.
+  - **Plocha je minimálně vysoká jako okno, roste s obsahem a scrolluje okno, ne plocha** — **[rozhodnuto 5. 10. 2026, mění rozhodnutí z 24. 9.]**: výška plochy je nejméně `100dvh` mínus okraje. U vysoké fotky je vyšší a scrolluje celá vrstva přes okno, takže posuvník je na kraji okna, ne uvnitř plochy. Kratší obsah (vodorovná fotka) je v ploše **vycentrovaný svisle**.
+    - Původně (24. 9.) měla plocha pevnou výšku okna a obsah se scrolloval uvnitř ní (vzor `lydiebonhomme.com`). Důvod, proč plocha neposkakuje při listování série, platí dál: výšku rámu fotky určuje nejvyšší fotka série (viz 4.2), takže je pro celý projekt stejná.
   - Plocha je ve Figmě `#faf9f6` (paper), ne bílá, přestože ji DESIGN.md jmenuje „bílá" — node `154:170`.
 - Uvnitř sloupec **620 px**: nahoře **název projektu** vlevo a **✕** vpravo, pod tím **fotka**, pod ní **meta** ve dvou sloupcích:
   - `Client :` — název klienta, druhý řádek (např. „Marlow" / „Marlow Cosmetics")
   - `Credits :` — řádky `Role · Jméno`
 - **Fotka je přes celou šířku obsahového sloupce (620)**, výška dopadne podle jejího poměru stran — **[rozhodnuto 24. 9. 2026, mění původní zadání]**. Levá a pravá hrana fotky tak lícují s názvem nad ní a meta pod ní.
   - Původně tu stálo, že plocha je pevných 620 × 740 a při nižším okně se zmenšuje, aby se vše vešlo bez scrollu. Zrušeno: pevná plocha znamenala, že fotka na výšku byla užší než text kolem, což bylo vidět jako nezarovnanost.
-  - **Důsledek:** u vysokých fotek může detail na nižším okně scrollovat. Přijato vědomě — zarovnání má přednost.
+  - **Důsledek:** u vysokých fotek detail na nižším okně scrolluje, a to celé okno (viz výše). Přijato vědomě — zarovnání má přednost.
 - **Fotka se nikdy neořezává** — **[rozhodnuto 23. 9. 2026, mění původní zadání]**. Zobrazí se celá ve vlastním poměru stran, vycentrovaná v ploše 620 × 740. Název, meta a šipky zůstávají na stejném místě bez ohledu na tvar fotky (UI 05B).
   - Původně tu stálo, že fotka s poměrem blízkým 620:740 (do ~8 %) se ořízne přes `cover`, protože „mírný ořez je v designu schválený". Zrušeno na přání klienta: přizpůsobovat fotku ploše — ořezem ani výplní — je nežádoucí.
   - Element se velikostně řídí fotkou, ne plochou. Dřívější implementace roztahovala `<img>` na celou plochu a fotku do ní vkládala, čímž po stranách prosvítal placeholderový `dominantColor` jako tmavé pruhy.
@@ -110,7 +111,7 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 
 - Kulaté tlačítko **40 px**, `#9E9E9E` / 55 % krytí + jemný `backdrop-filter: blur`
 - Bílý chevron **7 × 14 px**, tah 1,5 px, zakulacené konce
-- Na fotce, **zarovnané s okrajem** fotky (a tedy i sloupce), svisle uprostřed fotky — **[změněno 24. 9. 2026]**, původně 16 px od okraje
+- Na fotce, **16 px od okraje** fotky, svisle uprostřed fotky — **[změněno 5. 10. 2026]**. Mezi 24. 9. a 5. 10. byly zarovnané přesně s okrajem, ale tam vypadaly jako součást rámu, ne jako ovládání.
 - Chevron **přesně ve středu** kruhu — **[změněno 24. 9. 2026]**, původně opticky posunutý o 1,5 px proti směru šipky
 - **Skryté**, objeví se při hoveru nad fotkou (fade ~200 ms). Při fokusu z klávesnice viditelné vždy.
 - Klávesy **← →** listují, **Esc** zavírá
@@ -166,10 +167,14 @@ Figma: UI 10 (desktop), UI 11 (mobil). Header a patička jako na homepage, upros
 | Uprostřed | filtr | — | — |
 | Vpravo | Information · e-mail · Instagram | Information · Instagram | Information |
 | Filtr | v headeru uprostřed | pod jménem | pod jménem |
-| Patička | © rok + Information · e-mail · Instagram | totéž | totéž |
+| Patička | vlevo „Created by KeySpace", uprostřed Information · e-mail · Instagram, vpravo © rok | navigace na vlastním řádku, pod ní KeySpace vlevo a © vpravo | pod sebou: navigace, © rok, KeySpace |
 
 - Klik na jméno: zavře overlay a resetuje filtr na All. **[návrh]**
-- Header **není sticky**, odscrolluje se s obsahem. **[návrh — chování při scrollu ve Figmě není]**
+- Header **je sticky a ustupuje** — **[rozhodnuto 5. 10. 2026, dřív „není sticky"]**: při scrollu dolů se zasune nahoru, při scrollu nahoru se hned vrátí. Nahoře na stránce je vždy vidět. Při otevřeném overlayi se chování nemění a při fokusu z klávesnice se header vrátí. S `prefers-reduced-motion` bez animace.
+- Patička — **[rozhodnuto 5. 10. 2026, Figma má © vlevo a odkazy vpravo]**:
+  - „Created by KeySpace" je **odkaz na https://keyspace.cz** (nový panel), v řezu Medium (500), tedy tom, který se načítá. Skutečné tučné (700) by vyžadovalo načíst další řez Lory.
+  - **Písmo je o stupeň větší než ve Figmě** (tam 12 / 12,5 px): mobil 13, tablet 14, desktop 15 px (jako odkazy v headeru).
+  - **Odstup nad patičkou** [návrh]: 96 px mobil, 120 px tablet, 140 px desktop. Ve Figmě patička navazuje na mřížku téměř hned a u skutečné stránky se popiska posledního projektu dotýkala linky.
 - Rok v patičce se bere z data buildu.
 
 ---

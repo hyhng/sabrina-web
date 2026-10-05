@@ -35,7 +35,16 @@ export const Settings: GlobalConfig = {
       type: 'relationship',
       relationTo: 'photos',
       label: 'Portrét',
-      admin: { description: 'Ukáže se v sekci Information.' },
+      admin: {
+        description: 'Ukáže se v sekci Information.',
+        /*
+         * Payload's "+" opens a raw Photos form asking for width, colour and
+         * byte counts — values the upload pipeline works out, not something to
+         * type. Until the portrait has an uploader of its own (docs/PHASES.md,
+         * Drobnosti), it is picked from photos already uploaded.
+         */
+        allowCreate: false,
+      },
     },
     {
       name: 'bio',

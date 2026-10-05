@@ -28,16 +28,21 @@ export const CREDIT = {
   href: 'https://keyspace.cz',
 } as const;
 
+/**
+ * One colour and size for both, so the credit differs from the copyright only in
+ * the weight of the name: the same ink at the same strength at every width.
+ */
+const TEXT =
+  'text-[12px] opacity-50 tablet:text-[14px] tablet:opacity-60 desktop:text-[15px] desktop:opacity-100';
+
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="mt-[96px] flex flex-col gap-[12px] border-t border-line px-[16px] pt-[24px] pb-[32px] text-[13px] text-ink tablet:mt-[120px] tablet:flex-row tablet:items-start tablet:justify-between tablet:gap-0 tablet:px-[24px] tablet:pt-[28px] tablet:pb-[36px] tablet:text-[14px] desktop:mt-[140px] desktop:px-[34px] desktop:pt-[30px] desktop:pb-[44px] desktop:text-[15px] desktop:leading-[1.4] desktop:text-muted">
-      <p className="text-[12px] opacity-50 tablet:text-[14px] tablet:opacity-60 desktop:text-[15px] desktop:opacity-100">
-        © {year} Sabrina Kulhankova
-      </p>
+      <p className={TEXT}>© {year} Sabrina Kulhankova</p>
 
-      <a href={CREDIT.href} className="text-ink" target="_blank" rel="noreferrer">
+      <a href={CREDIT.href} className={TEXT} target="_blank" rel="noreferrer">
         {CREDIT.prefix} <span className="font-medium">{CREDIT.name}</span>
       </a>
     </footer>

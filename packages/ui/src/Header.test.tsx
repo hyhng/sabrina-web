@@ -109,6 +109,16 @@ describe('Footer', () => {
     );
   });
 
+  it('gives the credit the same colour and size as the copyright', () => {
+    // It differs only in the weight of the name. Black beside grey was a bug.
+    const classOf = (needle: string) => {
+      const tag = new RegExp(`<(?:a|p)[^>]*class="([^"]*)"[^>]*>${needle}`).exec(html);
+      return tag?.[1] ?? '';
+    };
+    expect(classOf('Created by')).toBe(classOf('©'));
+    expect(classOf('©')).not.toBe('');
+  });
+
   it('is set larger than Figma: 13, 14, 15px', () => {
     expect(html).toContain('text-[13px]');
     expect(html).toContain('tablet:text-[14px]');

@@ -165,9 +165,10 @@ describe('DetailOverlay — mobile (UI 09)', () => {
     const dialogClass = /role="dialog"[^>]*class="([^"]*)"/.exec(html)?.[1] ?? '';
     expect(dialogClass.split(/\s+/)).toContain('bg-paper');
     expect(dialogClass.split(/\s+/)).toContain('detail:bg-paper/88');
-    // Fills the viewport on mobile, so there is no backdrop left to click.
+    // Fills the viewport on mobile, so there is no backdrop left to click; from
+    // 768 it is at least a window tall, less the margin that shows the backdrop.
     expect(html).toContain('min-h-full');
-    expect(html).toContain('detail:min-h-0');
+    expect(html).toContain('detail:min-h-[calc(100dvh-70px)]');
   });
 
   it('uses the mobile type sizes and grows them from 768', () => {
@@ -185,21 +186,31 @@ describe('DetailOverlay — mobile (UI 09)', () => {
   });
 });
 
-describe('DetailOverlay — the plate holds its size', () => {
+describe('DetailOverlay — the window scrolls, not the plate', () => {
   const tall = { ...cover, id: 'tall', width: 1000, height: 2000, aspectRatio: 0.5 };
   const wide = { ...cover, id: 'wide', width: 2000, height: 1000, aspectRatio: 2 };
 
   const plateClass = (html: string) =>
-    (/<div class="(min-h-full bg-paper[^"]*)"/.exec(html)?.[1] ?? '').split(/\s+/);
+    (/<div class="(flex min-h-full flex-col bg-paper[^"]*)"/.exec(html)?.[1] ?? '').split(/\s+/);
+  const layerClass = (html: string) =>
+    (/<div[^>]*role="dialog"[^>]*class="([^"]*)"/.exec(html)?.[1] ?? '').split(/\s+/);
 
-  it('is sized by the window, not by the photo', () => {
-    // Otherwise the plate jumps every time a series moves from a portrait to
-    // a landscape. Same pattern as the reference the client gave.
+  it('is at least as tall as the window and grows with the photo', () => {
+    // A fixed height with its own scrollbar is what this replaced: the
+    // scrollbar sat inside the plate rather than at the edge of the window.
     for (const photo of [tall, wide]) {
       const classes = plateClass(render({ ...commercial, cover: photo, photos: [photo] }));
-      expect(classes).toContain('detail:h-[calc(100dvh-70px)]');
+      expect(classes).toContain('detail:min-h-[calc(100dvh-70px)]');
       expect(classes).toContain('detail:w-[min(800px,100vw-48px)]');
+      expect(classes).not.toContain('detail:h-[calc(100dvh-70px)]');
+      expect(classes).not.toContain('detail:overflow-y-auto');
     }
+  });
+
+  it('centres a short series in the window', () => {
+    expect(plateClass(render({ ...commercial, cover: wide, photos: [wide] }))).toContain(
+      'detail:justify-center',
+    );
   });
 
   it('comes out identical whatever shape the photo is', () => {
@@ -208,12 +219,11 @@ describe('DetailOverlay — the plate holds its size', () => {
     );
   });
 
-  it('scrolls inside itself, so a tall photo does not grow it', () => {
-    const classes = plateClass(render({ ...commercial, cover: tall, photos: [tall] }));
-    expect(classes).toContain('detail:overflow-y-auto');
-    // The layer behind it does not scroll as well.
-    expect(render({ ...commercial, cover: tall, photos: [tall] })).toContain(
-      'detail:overflow-hidden',
-    );
+  it('is the layer behind the plate that scrolls, over the whole window', () => {
+    const classes = layerClass(render({ ...commercial, cover: tall, photos: [tall] }));
+    expect(classes).toContain('fixed');
+    expect(classes).toContain('inset-0');
+    expect(classes).toContain('overflow-y-auto');
+    expect(classes).not.toContain('detail:overflow-hidden');
   });
 });

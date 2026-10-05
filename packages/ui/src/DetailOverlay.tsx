@@ -13,12 +13,15 @@ import { useFocusTrap, useScrollLock } from './overlay-chrome.ts';
  * veil, a plate 800px wide, and a 620px column carrying the title and ✕, the
  * photo, and the meta in two columns.
  *
- * The plate is sized by the window, not by its contents — a fixed height of
- * the viewport less its margins, scrolling inside itself. Letting the photo
- * drive the height meant the plate jumped every time a series moved from a
- * portrait to a landscape. This is the pattern the client pointed at on
- * lydiebonhomme.com, where the panel is `position: fixed` with
- * `max-height: 100dvh` and the content scrolls within it.
+ * The plate is at least as tall as the window and grows with its contents.
+ * What scrolls is the layer behind it, which covers the whole window, so the
+ * scrollbar sits at the edge of the browser rather than inside the plate
+ * [rozhodnuto 5. 10. 2026, mění 24. 9.]. A short series is centred vertically
+ * in the plate; a tall photo makes the page scroll.
+ *
+ * The plate does not jump while a series is paged: the carousel's box is as
+ * tall as the tallest photo of the series (Carousel.tsx), so the height is the
+ * same for every photo of one project.
  *
  * Below that it is a page of its own — full screen on paper, no ghost of the
  * grid behind it, a top bar, the photo full-bleed, and the meta stacked
@@ -70,11 +73,11 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
       aria-modal="true"
       aria-labelledby="detail-title"
       tabIndex={-1}
-      className="fixed inset-0 z-50 overflow-y-auto bg-paper outline-none detail:overflow-hidden detail:bg-paper/88"
+      className="fixed inset-0 z-50 overflow-y-auto bg-paper outline-none detail:bg-paper/88 detail:py-[35px]"
       onClick={onClose}
     >
       <div
-        className="min-h-full bg-paper detail:mx-auto detail:my-[35px] detail:h-[calc(100dvh-70px)] detail:min-h-0 detail:w-[min(800px,100vw-48px)] detail:overflow-y-auto detail:pt-[48px] detail:pb-[61px]"
+        className="flex min-h-full flex-col bg-paper detail:mx-auto detail:min-h-[calc(100dvh-70px)] detail:w-[min(800px,100vw-48px)] detail:justify-center detail:pt-[48px] detail:pb-[61px]"
         onClick={(event) => {
           event.stopPropagation();
         }}

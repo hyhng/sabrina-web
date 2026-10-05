@@ -231,7 +231,7 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
 ### 8.5 Pořadí na homepage — `69:2`
 - Vlastní obrazovka, ne pole v projektu
 - Seznam publikovaných projektů, řazení tažením
-- Nově publikovaný projekt se automaticky přidá **na konec**
+- Nově publikovaný projekt se automaticky přidá **na začátek** — **[rozhodnuto 5. 10. 2026, otázka 10; dřív „na konec“]**. Projekty, které v pořadí už jsou, se nehýbou; přesunout ho jde dál tažením. Přidá se při publikaci (i znovu po odpublikování), ne při každém uložení.
 - Náhled rozložení do 3 sloupců (stejný algoritmus jako web) **[návrh — ve wireframu je, v MVP stačí seznam]**
 
 ### 8.6 Nastavení webu — `70:5`

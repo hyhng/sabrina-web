@@ -2,6 +2,7 @@ import { CATEGORIES, CATEGORY_LABELS } from '@sabrina/shared/categories';
 import { APIError, type CollectionConfig } from 'payload';
 
 import { coverOptions } from './cover-options.ts';
+import { becomesPublished, orderIds, withNewFirst } from './homepage-order.ts';
 import { publishBlocker } from './publish-rules.ts';
 import { isLocked, locksOnPublish, nextSlug } from './slug-rules.ts';
 
@@ -38,6 +39,23 @@ export const Projects: CollectionConfig = {
         const blocker = publishBlocker(data);
         if (blocker !== undefined) throw new APIError(blocker, 400);
         return locksOnPublish(data._status) ? { ...data, slugLocked: true } : data;
+      },
+    ],
+    afterChange: [
+      // docs/SPEC.md 8.5: a project that goes public joins the homepage order
+      // at the top; without this it was published and still not on the site.
+      async ({ doc, previousDoc, req }) => {
+        if (!becomesPublished(doc._status, previousDoc?._status)) return doc;
+        const homepage = await req.payload.findGlobal({ slug: 'homepage', depth: 0, req });
+        const next = withNewFirst(orderIds(homepage.projects), doc.id);
+        if (next !== undefined) {
+          await req.payload.updateGlobal({
+            slug: 'homepage',
+            data: { projects: next.map(Number) },
+            req,
+          });
+        }
+        return doc;
       },
     ],
   },

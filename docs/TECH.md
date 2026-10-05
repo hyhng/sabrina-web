@@ -178,7 +178,7 @@ Další pozor:
 - Jeden uživatel, kolekce `Users` s auth, bez rolí; registrace vypnutá
 - `Projects` s `versions: { drafts: true }` → koncept / publikováno
 - Slug: hook `beforeValidate` generuje z názvu; po první publikaci pole `readOnly` s popiskem pod polem
-- `Homepage` globál: `relationship` hasMany na `Projects`, řazení tažením; hook po publikaci projektu ho přidá na konec
+- `Homepage` globál: `relationship` hasMany na `Projects`, řazení tažením; hook po publikaci projektu ho přidá na začátek (rozhodnuto 5. 10.)
 - Tlačítko **Publikovat web**: vlastní komponenta → endpoint `/api/publish` → `POST` na `CF_DEPLOY_HOOK_URL`. Ukazuje čas posledního publikování.
 - Náhled dlaždice: importuje `Tile` z `packages/ui`
 - Vzhled adminu jen přes `admin.components` a konfiguraci. **Nepřepisovat CSS Payloadu.**

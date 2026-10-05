@@ -203,8 +203,9 @@ describe('DetailOverlay — how the photo sits in the stage', () => {
   it('slides between photos rather than crossfading', () => {
     const html = render({ ...commercial, cover, photos: [cover, landscape] });
     expect(html).toContain('transition-transform');
-    expect(html).toContain('translateX(0%)');
-    expect(html).toContain('translateX(100%)');
+    expect(html).toContain('translateX(calc(0 * (100% + 24px)))');
+    // A gap past a full width, so no sliver of the neighbour shows at the edge.
+    expect(html).toContain('translateX(calc(1 * (100% + 24px)))');
     // The photos themselves no longer fade; only the arrows do, on hover.
     const slides = [...html.matchAll(/<div class="absolute inset-0[^"]*"/g)].map(([tag]) => tag);
     expect(slides).toHaveLength(2);

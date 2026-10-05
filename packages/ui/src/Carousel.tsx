@@ -48,6 +48,9 @@ import { Photo } from './Photo.tsx';
  * not to fire while scrolling the page, close enough not to feel stubborn.
  */
 
+/** Space between neighbouring photos in the row, so no sliver of one shows. */
+export const SLIDE_GAP = 24;
+
 /** [návrh] Horizontal distance before a drag is taken as a swipe. */
 export const SWIPE_THRESHOLD = 48;
 
@@ -128,7 +131,13 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
           <div
             key={photo.id}
             className="absolute inset-0 flex items-center justify-center transition-transform duration-[380ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none"
-            style={{ transform: `translateX(${String((position - index) * 100)}%)` }}
+            /*
+             * One stage-width plus a gap per step. Flush, the neighbour's edge
+             * showed as a 1px line wherever the stage was a fractional width.
+             */
+            style={{
+              transform: `translateX(calc(${String(position - index)} * (100% + ${String(SLIDE_GAP)}px)))`,
+            }}
             aria-hidden={current ? undefined : true}
             inert={!current}
           >

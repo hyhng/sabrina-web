@@ -25,7 +25,8 @@ import { useFocusTrap, useScrollLock } from './overlay-chrome.ts';
  * lydiebonhomme.com]: at most 620px, narrow enough that the title, the stage
  * and the start of the meta fit in the window's height (316px is everything
  * that is not the stage), and narrow enough to fit across. The stage is the
- * column at 4:5, so the text lines up with it, and the plate is the column
+ * column at 3:4 — the tallest a photo is meant to be — so the text lines up
+ * with a portrait in it, and the plate is the column
  * plus a margin either side, so it shrinks with it rather than leaving empty
  * paper at the sides. One size for every project at a given window, so the ✕
  * never moves.
@@ -90,7 +91,7 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
       onClick={onClose}
     >
       <div
-        className="flex min-h-full flex-col bg-paper detail:[--pad:clamp(24px,6vw,90px)] detail:[--col:clamp(260px,min(calc((100dvh-316px)*0.8),calc(100vw-48px-2*var(--pad))),620px)] detail:[--stage-h:calc(var(--col)*1.25)] detail:mx-auto detail:min-h-[calc(100dvh-70px)] detail:w-[calc(var(--col)+2*var(--pad))] detail:pt-[48px] detail:pb-[61px]"
+        className="flex min-h-full flex-col bg-paper detail:[--pad:clamp(24px,6vw,90px)] detail:[--col:clamp(260px,min(calc((100dvh-316px)*0.75),calc(100vw-48px-2*var(--pad))),620px)] detail:[--stage-h:calc(var(--col)*4/3)] detail:mx-auto detail:min-h-[calc(100dvh-70px)] detail:w-[calc(var(--col)+2*var(--pad))] detail:pt-[48px] detail:pb-[61px]"
         onClick={(event) => {
           event.stopPropagation();
         }}

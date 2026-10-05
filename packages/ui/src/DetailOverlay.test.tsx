@@ -128,12 +128,12 @@ describe('DetailOverlay — how the photo sits in the stage', () => {
     for (const each of heights) expect(each).toEqual(heights[0]);
   });
 
-  it('makes the stage the column at 4:5', () => {
+  it('makes the stage the column at 3:4', () => {
     // 100dvh less the 70px of window margin and the 246px of the panel that is
     // not the stage. The floor keeps a short window from squeezing the photo to
     // nothing; the ceiling stops a very tall one blowing it up.
     const html = render(commercial);
-    expect(html).toContain('detail:[--stage-h:calc(var(--col)*1.25)]');
+    expect(html).toContain('detail:[--stage-h:calc(var(--col)*4/3)]');
   });
 
   it('works the column out from the window, both ways, so the meta stays in view', () => {
@@ -141,7 +141,7 @@ describe('DetailOverlay — how the photo sits in the stage', () => {
     // meta all take that width, so their edges meet and the ✕ stays where it is.
     const html = render(commercial);
     expect(html).toContain(
-      'detail:[--col:clamp(260px,min(calc((100dvh-316px)*0.8),calc(100vw-48px-2*var(--pad))),620px)]',
+      'detail:[--col:clamp(260px,min(calc((100dvh-316px)*0.75),calc(100vw-48px-2*var(--pad))),620px)]',
     );
     expect(html.match(/detail:w-\(--col\)/g)).toHaveLength(3);
     expect(html).not.toContain('detail:w-[620px]');

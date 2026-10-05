@@ -215,10 +215,14 @@ describe('DetailOverlay — the window scrolls, not the plate', () => {
     }
   });
 
-  it('centres a short series in the window', () => {
-    expect(plateClass(render({ ...commercial, cover: wide, photos: [wide] }))).toContain(
-      'detail:justify-center',
-    );
+  it('does not centre the content, so the title and the close button never move', () => {
+    // Centred, a landscape project had its title in the middle of the window and
+    // a portrait one at the top. The title is a fixed template.
+    for (const photo of [tall, wide]) {
+      const classes = plateClass(render({ ...commercial, cover: photo, photos: [photo] }));
+      expect(classes).not.toContain('detail:justify-center');
+      expect(classes).toContain('detail:pt-[48px]');
+    }
   });
 
   it('comes out identical whatever shape the photo is', () => {

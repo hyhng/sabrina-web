@@ -83,7 +83,7 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 ### 4.1 Desktop a tablet (≥ 768 px)
 
 - Homepage v pozadí **vybledlá**, přes ni **plocha 800 px** vycentrovaná vodorovně
-  - **Plocha je minimálně vysoká jako okno, roste s obsahem a scrolluje okno, ne plocha** — **[rozhodnuto 5. 10. 2026, mění rozhodnutí z 24. 9.]**: výška plochy je nejméně `100dvh` mínus okraje. U vysoké fotky je vyšší a scrolluje celá vrstva přes okno, takže posuvník je na kraji okna, ne uvnitř plochy. Kratší obsah (vodorovná fotka) je v ploše **vycentrovaný svisle**.
+  - **Plocha je minimálně vysoká jako okno, roste s obsahem a scrolluje okno, ne plocha** — **[rozhodnuto 5. 10. 2026, mění rozhodnutí z 24. 9.]**: výška plochy je nejméně `100dvh` mínus okraje. U vysoké fotky je vyšší a scrolluje celá vrstva přes okno, takže posuvník je na kraji okna, ne uvnitř plochy. **Nadpis a ✕ jsou pevná šablona**: u každého projektu začínají na stejném místě nahoře v ploše, ať je fotka na výšku, nebo na šířku. Obsah se proto **nevystředuje svisle** (vystředěný by měl vodorovný projekt nadpis uprostřed okna a svislý nahoře a nadpis by při přechodu mezi projekty skákal).
     - Původně (24. 9.) měla plocha pevnou výšku okna a obsah se scrolloval uvnitř ní (vzor `lydiebonhomme.com`). Důvod, proč plocha neposkakuje při listování série, platí dál: výšku rámu fotky určuje nejvyšší fotka série (viz 4.2), takže je pro celý projekt stejná.
   - Plocha je ve Figmě `#faf9f6` (paper), ne bílá, přestože ji DESIGN.md jmenuje „bílá" — node `154:170`.
 - Uvnitř sloupec **620 px**: nahoře **název projektu** vlevo a **✕** vpravo, pod tím **fotka**, pod ní **meta** ve dvou sloupcích:

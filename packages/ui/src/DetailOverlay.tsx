@@ -16,8 +16,13 @@ import { useFocusTrap, useScrollLock } from './overlay-chrome.ts';
  * The plate is at least as tall as the window and grows with its contents.
  * What scrolls is the layer behind it, which covers the whole window, so the
  * scrollbar sits at the edge of the browser rather than inside the plate
- * [rozhodnuto 5. 10. 2026, mění 24. 9.]. A short series is centred vertically
- * in the plate; a tall photo makes the page scroll.
+ * [rozhodnuto 5. 10. 2026, mění 24. 9.]. A tall photo makes the page scroll.
+ *
+ * The title and ✕ are a fixed template: they start at the same place in the
+ * plate for every project, whatever the shape of its photos. Content is not
+ * centred vertically for that reason — a landscape project would put them in
+ * the middle of the window and a portrait one at the top, and they would jump
+ * as the visitor moved from one project to the next.
  *
  * The plate does not jump while a series is paged: the carousel's box is as
  * tall as the tallest photo of the series (Carousel.tsx), so the height is the
@@ -77,7 +82,7 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
       onClick={onClose}
     >
       <div
-        className="flex min-h-full flex-col bg-paper detail:mx-auto detail:min-h-[calc(100dvh-70px)] detail:w-[min(800px,100vw-48px)] detail:justify-center detail:pt-[48px] detail:pb-[61px]"
+        className="flex min-h-full flex-col bg-paper detail:mx-auto detail:min-h-[calc(100dvh-70px)] detail:w-[min(800px,100vw-48px)] detail:pt-[48px] detail:pb-[61px]"
         onClick={(event) => {
           event.stopPropagation();
         }}

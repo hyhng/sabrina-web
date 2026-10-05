@@ -49,6 +49,17 @@ COPY . .
 ENV DATABASE_URI=postgres://build:build@127.0.0.1:5432/build
 ENV PAYLOAD_SECRET=build-only-not-a-secret
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Where the photographs are served from. Not a secret — it is in every page of
+# the public site — and it has to be here rather than in the container's
+# environment: the admin's components (PhotoGrid, TilePreview) read it in the
+# browser, and Next writes `NEXT_PUBLIC_*` into the client bundle at build time.
+# Set only at run time it never reaches the browser, the grid's previews point
+# at the admin host, and every thumbnail is a broken image. Override with
+# `--build-arg` if the domain ever changes.
+ARG NEXT_PUBLIC_IMG_BASE=https://img.sabrinakulhankova.photography
+ENV NEXT_PUBLIC_IMG_BASE=$NEXT_PUBLIC_IMG_BASE
+
 RUN pnpm --filter cms build
 
 

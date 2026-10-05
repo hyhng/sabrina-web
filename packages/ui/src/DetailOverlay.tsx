@@ -20,12 +20,15 @@ import { useFocusTrap, useScrollLock } from './overlay-chrome.ts';
  * plate is one size too and nothing moves between projects or while paging.
  * A portrait photo is scaled down to fit rather than making the window scroll.
  *
- * The column — title, ✕, stage and meta — is as wide as the stage is tall times
- * 0.8, up to 620px [rozhodnuto 5. 10. 2026]. The stage is 4:5, so the edges of
- * the text line up with the edges of the stage and with a 4:5 photo in it, and
- * the column is one width for every project at a given window size, so the ✕
- * does not shift sideways between them. A taller window gives a wider column;
- * a short one a narrower, never below 480px of stage.
+ * The column — title, ✕, stage and meta — is worked out from the window, both
+ * ways, and everything else follows from it [rozhodnuto 5. 10. 2026, vzor
+ * lydiebonhomme.com]: at most 620px, narrow enough that the title, the stage
+ * and the start of the meta fit in the window's height (316px is everything
+ * that is not the stage), and narrow enough to fit across. The stage is the
+ * column at 4:5, so the text lines up with it, and the plate is the column
+ * plus a margin either side, so it shrinks with it rather than leaving empty
+ * paper at the sides. One size for every project at a given window, so the ✕
+ * never moves.
  *
  * The plate is at least as tall as the window and grows only with the meta,
  * which can run long. What scrolls then is the layer behind it, which covers
@@ -87,7 +90,7 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
       onClick={onClose}
     >
       <div
-        className="flex min-h-full flex-col bg-paper detail:[--col:min(620px,calc(var(--stage-h)*0.8))] detail:[--stage-h:clamp(480px,calc(100dvh-316px),775px)] detail:mx-auto detail:min-h-[calc(100dvh-70px)] detail:w-[min(800px,100vw-48px)] detail:pt-[48px] detail:pb-[61px]"
+        className="flex min-h-full flex-col bg-paper detail:[--pad:clamp(24px,6vw,90px)] detail:[--col:clamp(260px,min(calc((100dvh-316px)*0.8),calc(100vw-48px-2*var(--pad))),620px)] detail:[--stage-h:calc(var(--col)*1.25)] detail:mx-auto detail:min-h-[calc(100dvh-70px)] detail:w-[calc(var(--col)+2*var(--pad))] detail:pt-[48px] detail:pb-[61px]"
         onClick={(event) => {
           event.stopPropagation();
         }}

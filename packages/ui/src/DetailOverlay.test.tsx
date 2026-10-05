@@ -88,7 +88,7 @@ describe('DetailOverlay', () => {
   it('holds the column at most 620 and lets the plate padding fall out of it', () => {
     // 90 either side at 1440, 71 at 810 (docs/SPEC.md 4.1) — without either
     // number being written down. The width itself is derived from the stage.
-    expect(html).toContain('detail:w-[min(800px,100vw-48px)]');
+    expect(html).toContain('detail:w-[calc(var(--col)+2*var(--pad))]');
     expect(html).toContain('detail:w-(--col) detail:max-w-[calc(100%-48px)]');
   });
 
@@ -128,19 +128,21 @@ describe('DetailOverlay — how the photo sits in the stage', () => {
     for (const each of heights) expect(each).toEqual(heights[0]);
   });
 
-  it('works the stage height out from the window, with a floor and a ceiling', () => {
+  it('makes the stage the column at 4:5', () => {
     // 100dvh less the 70px of window margin and the 246px of the panel that is
     // not the stage. The floor keeps a short window from squeezing the photo to
     // nothing; the ceiling stops a very tall one blowing it up.
     const html = render(commercial);
-    expect(html).toContain('detail:[--stage-h:clamp(480px,calc(100dvh-316px),775px)]');
+    expect(html).toContain('detail:[--stage-h:calc(var(--col)*1.25)]');
   });
 
-  it('makes the column 4:5 with the stage, so the text lines up with it', () => {
+  it('works the column out from the window, both ways, so the meta stays in view', () => {
     // The column is the stage's height times 0.8, up to 620px. Title, ✕, stage and
     // meta all take that width, so their edges meet and the ✕ stays where it is.
     const html = render(commercial);
-    expect(html).toContain('detail:[--col:min(620px,calc(var(--stage-h)*0.8))]');
+    expect(html).toContain(
+      'detail:[--col:clamp(260px,min(calc((100dvh-316px)*0.8),calc(100vw-48px-2*var(--pad))),620px)]',
+    );
     expect(html.match(/detail:w-\(--col\)/g)).toHaveLength(3);
     expect(html).not.toContain('detail:w-[620px]');
   });
@@ -262,7 +264,7 @@ describe('DetailOverlay — the window scrolls, not the plate', () => {
     for (const photo of [tall, wide]) {
       const classes = plateClass(render({ ...commercial, cover: photo, photos: [photo] }));
       expect(classes).toContain('detail:min-h-[calc(100dvh-70px)]');
-      expect(classes).toContain('detail:w-[min(800px,100vw-48px)]');
+      expect(classes).toContain('detail:w-[calc(var(--col)+2*var(--pad))]');
       expect(classes).not.toContain('detail:h-[calc(100dvh-70px)]');
       expect(classes).not.toContain('detail:overflow-y-auto');
     }

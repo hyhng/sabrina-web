@@ -38,12 +38,10 @@ export const Settings: GlobalConfig = {
       admin: {
         description: 'Ukáže se v sekci Information.',
         /*
-         * Payload's "+" opens a raw Photos form asking for width, colour and
-         * byte counts — values the upload pipeline works out, not something to
-         * type. Until the portrait has an uploader of its own (docs/PHASES.md,
-         * Drobnosti), it is picked from photos already uploaded.
+         * Uploaded like a project's photos rather than picked from a list of
+         * records; Payload's "+" opened a form asking for widths and byte counts.
          */
-        allowCreate: false,
+        components: { Field: '/components/SinglePhotoField#SinglePhotoField' },
       },
     },
     {
@@ -100,7 +98,10 @@ export const Settings: GlobalConfig = {
       type: 'relationship',
       relationTo: 'photos',
       label: 'Obrázek pro sdílení',
-      admin: { description: 'Ukáže se, když někdo sdílí odkaz na web. Nepovinné.' },
+      admin: {
+        description: 'Ukáže se, když někdo sdílí odkaz na web. Nepovinné.',
+        components: { Field: '/components/SinglePhotoField#SinglePhotoField' },
+      },
     },
   ],
 };

@@ -220,7 +220,7 @@ projektu. Jinak by neuložený projekt dál odkazoval na neexistující fotku a 
 
 ## Drobnosti k dořešení
 
-- [ ] **Portrét v Nastavení nemá nahrávání.** Jde jen vybrat z už nahraných fotek; „+“ (ruční formulář s rozměry a bajty) je od 5. 10. schované. Potřebuje stejné nahrávání jako fotky v projektu (přetáhnout, náhled, převod v prohlížeči), jinak si ho Sabrina sama nenahraje.
+- [x] **Portrét a obrázek pro sdílení v Nastavení mají nahrávání** (5. 10.): `SinglePhotoField` — přetáhnout nebo vybrat, převod v prohlížeči přes stejnou frontu, náhled, „Nahrát jiný“ a „Odebrat“. Místo seznamu názvů souborů a „+“ s ručním formulářem.
 - ~~E2E test `detail › closes with Escape` jednou spadl~~ — **vyřešeno.** Byl to závod testu s hydratací: detail je předgenerovaný, takže dialog je na obrazovce dřív, než se připojí obsluha kláves. Změřeno zablokováním klientských chunků: dialog vidět, Esc nic nedělá. Oba testy, které mačkají klávesu hned po `goto`, teď čekají na zámek scrollování — ten nastavuje stejná komponenta. 90 opakování na 8 workerech zelených.
 
 - Po nahrání se fotka v seznamu pod tabulkou ukáže jako „Bez názvu — ID: 5", správný název se objeví

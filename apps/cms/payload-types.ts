@@ -166,7 +166,7 @@ export interface Project {
 export interface Photo {
   id: number;
   /**
-   * Nepovinné. Když zůstane prázdné, doplní se „Název projektu — photo 2".
+   * Nepovinné, anglicky, jednou větou. Je to tzv. alt text: na webu ho nikdo nevidí, ale nevidomým ho přečte čtečka obrazovky a Google podle něj fotku najde. Když zůstane prázdné, doplní se „Název projektu — photo 2“.
    */
   alt?: string | null;
   width: number;

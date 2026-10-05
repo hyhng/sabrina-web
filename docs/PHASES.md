@@ -220,6 +220,8 @@ projektu. Jinak by neuložený projekt dál odkazoval na neexistující fotku a 
 
 ## Drobnosti k dořešení
 
+- [ ] **Odkaz „Zobrazit web“ u Publikovat** (návrh vývojáře 5. 10.): po publikování rovnou proklik na web, aby Sabrina viděla výsledek.
+- [ ] **Přidání dalšího uživatele do adminu** (návrh vývojáře 5. 10.): dnes je zakládání účtů zavřené (`Users.create: () => false`, SPEC/TECH: jeden uživatel). Potřeba rozhodnout, kdo smí účet založit (jen přihlášený uživatel), a zapsat do SPEC. Souvisí s předáním: první účet je zatím vývojářův.
 - [x] **Portrét a obrázek pro sdílení v Nastavení mají nahrávání** (5. 10.): `SinglePhotoField` — přetáhnout nebo vybrat, převod v prohlížeči přes stejnou frontu, náhled, „Nahrát jiný“ a „Odebrat“. Místo seznamu názvů souborů a „+“ s ručním formulářem.
 - ~~E2E test `detail › closes with Escape` jednou spadl~~ — **vyřešeno.** Byl to závod testu s hydratací: detail je předgenerovaný, takže dialog je na obrazovce dřív, než se připojí obsluha kláves. Změřeno zablokováním klientských chunků: dialog vidět, Esc nic nedělá. Oba testy, které mačkají klávesu hned po `goto`, teď čekají na zámek scrollování — ten nastavuje stejná komponenta. 90 opakování na 8 workerech zelených.
 

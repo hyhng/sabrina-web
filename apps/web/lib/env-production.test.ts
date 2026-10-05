@@ -47,3 +47,16 @@ describe('apps/web/.env.production', () => {
     for (const [, value] of entries()) expect(value).not.toContain('example.com');
   });
 });
+
+describe('apps/web/.env.production — the live content', () => {
+  const value = (name: string) => entries().find(([key]) => key === name)?.[1];
+
+  it('builds from the admin, read over its public address', () => {
+    expect(value('CONTENT_SOURCE')).toBe('payload');
+    expect(value('PAYLOAD_PUBLIC_URL')).toBe('https://admin.sabrinakulhankova.photography');
+  });
+
+  it('serves photos from the image domain, not the seed fixture', () => {
+    expect(value('NEXT_PUBLIC_IMG_BASE')).toBe('https://img.sabrinakulhankova.photography');
+  });
+});

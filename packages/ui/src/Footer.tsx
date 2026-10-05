@@ -1,15 +1,11 @@
-import type { Settings } from '@sabrina/shared/schema';
-import type { MouseEvent } from 'react';
-
 /**
  * Site footer (Figma UI 04 node 154:10, UI 12 node 161:647, UI 06 node 154:381).
  *
- * Desktop is one row of three: the studio credit left, the links in the middle,
- * the copyright right [rozhodnuto 5. 10. 2026; Figma has the copyright left and
- * the links right]. Tablet puts the links on a row of their own with the credit
- * and copyright underneath, because three items do not fit across 810px at this
- * size. On mobile everything stacks: the two short links, then the address, then
- * the copyright, then the credit.
+ * The copyright on the left and the studio credit on the right, in one row from
+ * tablet up and stacked below it [rozhodnuto 5. 10. 2026]. Figma has the links
+ * here as well (Information, address, Instagram); they are gone. The header
+ * carries them, and on a phone, where it shows Information alone, the address
+ * and Instagram are on that page.
  *
  * Type is a step up from Figma (12 / 12.5px there) — 13, 14 and 15px, the last
  * being what the header's links use. [rozhodnuto 5. 10. 2026]
@@ -21,60 +17,28 @@ import type { MouseEvent } from 'react';
  * The year comes from the build (docs/SPEC.md 7), so a rebuild rolls it over
  * and nobody has to remember.
  */
-export interface FooterProps {
-  settings: Settings;
-  /** Open Information without navigating (docs/TECH.md 4.1). */
-  onOpenInformation?: () => void;
-}
 
-/** Who built the site. Medium, the weight the wordmark uses, to stand out. */
-export const CREDIT = { label: 'Created by KeySpace', href: 'https://keyspace.cz' } as const;
+/**
+ * Who built the site. The whole phrase is the link; only the name is set in
+ * Medium, the weight the wordmark uses, to stand out.
+ */
+export const CREDIT = {
+  prefix: 'Created by',
+  name: 'KeySpace',
+  href: 'https://keyspace.cz',
+} as const;
 
-export function Footer({ settings, onOpenInformation }: FooterProps) {
-  const openInformation =
-    onOpenInformation === undefined
-      ? undefined
-      : (event: MouseEvent) => {
-          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-          event.preventDefault();
-          onOpenInformation();
-        };
-
+export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-[96px] flex flex-col gap-[12px] border-t border-line px-[16px] pt-[24px] pb-[32px] text-[13px] text-ink tablet:mt-[120px] tablet:grid tablet:grid-cols-2 tablet:gap-x-0 tablet:gap-y-[20px] tablet:px-[24px] tablet:pt-[28px] tablet:pb-[36px] tablet:text-[14px] desktop:mt-[140px] desktop:grid-cols-[1fr_auto_1fr] desktop:items-start desktop:px-[34px] desktop:pt-[30px] desktop:pb-[44px] desktop:text-[15px] desktop:leading-[1.4] desktop:text-muted">
-      <div className="order-1 flex flex-col gap-[12px] tablet:col-span-2 tablet:flex-row tablet:justify-center tablet:gap-[20px] desktop:order-2 desktop:col-span-1 desktop:gap-[24px]">
-        {/* display:contents from tablet up, so the three links share one row. */}
-        <div className="flex gap-[20px] tablet:contents">
-          <a href="/information/" className="tablet:order-1" onClick={openInformation}>
-            Information
-          </a>
-          <a
-            href={settings.instagramUrl}
-            className="tablet:order-3"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Instagram
-          </a>
-        </div>
-        <a href={`mailto:${settings.email}`} className="tablet:order-2">
-          {settings.email}
-        </a>
-      </div>
-
-      <p className="order-2 text-[12px] opacity-50 tablet:order-3 tablet:justify-self-end tablet:text-[14px] tablet:opacity-60 desktop:order-3 desktop:text-[15px] desktop:opacity-100">
+    <footer className="mt-[96px] flex flex-col gap-[12px] border-t border-line px-[16px] pt-[24px] pb-[32px] text-[13px] text-ink tablet:mt-[120px] tablet:flex-row tablet:items-start tablet:justify-between tablet:gap-0 tablet:px-[24px] tablet:pt-[28px] tablet:pb-[36px] tablet:text-[14px] desktop:mt-[140px] desktop:px-[34px] desktop:pt-[30px] desktop:pb-[44px] desktop:text-[15px] desktop:leading-[1.4] desktop:text-muted">
+      <p className="text-[12px] opacity-50 tablet:text-[14px] tablet:opacity-60 desktop:text-[15px] desktop:opacity-100">
         © {year} Sabrina Kulhankova
       </p>
 
-      <a
-        href={CREDIT.href}
-        className="order-3 font-medium text-ink tablet:order-2 tablet:justify-self-start desktop:order-1"
-        target="_blank"
-        rel="noreferrer"
-      >
-        {CREDIT.label}
+      <a href={CREDIT.href} className="text-ink" target="_blank" rel="noreferrer">
+        {CREDIT.prefix} <span className="font-medium">{CREDIT.name}</span>
       </a>
     </footer>
   );

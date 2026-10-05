@@ -167,12 +167,13 @@ Figma: UI 10 (desktop), UI 11 (mobil). Header a patička jako na homepage, upros
 | Uprostřed | filtr | — | — |
 | Vpravo | Information · e-mail · Instagram | Information · Instagram | Information |
 | Filtr | v headeru uprostřed | pod jménem | pod jménem |
-| Patička | vlevo „Created by KeySpace", uprostřed Information · e-mail · Instagram, vpravo © rok | navigace na vlastním řádku, pod ní KeySpace vlevo a © vpravo | pod sebou: navigace, © rok, KeySpace |
+| Patička | vlevo © rok, vpravo „Created by **KeySpace**" (bez navigace) | totéž | pod sebou: © rok, „Created by KeySpace" |
 
 - Klik na jméno: zavře overlay a resetuje filtr na All. **[návrh]**
 - Header **je sticky a ustupuje** — **[rozhodnuto 5. 10. 2026, dřív „není sticky"]**: při scrollu dolů se zasune nahoru, při scrollu nahoru se hned vrátí. Nahoře na stránce je vždy vidět. Při otevřeném overlayi se chování nemění a při fokusu z klávesnice se header vrátí. S `prefers-reduced-motion` bez animace.
-- Patička — **[rozhodnuto 5. 10. 2026, Figma má © vlevo a odkazy vpravo]**:
-  - „Created by KeySpace" je **odkaz na https://keyspace.cz** (nový panel), v řezu Medium (500), tedy tom, který se načítá. Skutečné tučné (700) by vyžadovalo načíst další řez Lory.
+- Patička — **[rozhodnuto 5. 10. 2026, Figma má © vlevo a odkazy Information · e-mail · Instagram vpravo]**:
+  - **Navigace v patičce je pryč.** Odkazy má header; na mobilu, kde header ukazuje jen Information, jsou e-mail a Instagram na stránce Information (viz 5).
+  - „Created by KeySpace" je **odkaz na https://keyspace.cz** (nový panel), celá fráze je odkaz, **tučné je jen „KeySpace"**, v řezu Medium (500), tedy tom, který se načítá. Skutečné tučné (700) by vyžadovalo načíst další řez Lory.
   - **Písmo je o stupeň větší než ve Figmě** (tam 12 / 12,5 px): mobil 13, tablet 14, desktop 15 px (jako odkazy v headeru).
   - **Odstup nad patičkou** [návrh]: 96 px mobil, 120 px tablet, 140 px desktop. Ve Figmě patička navazuje na mřížku téměř hned a u skutečné stránky se popiska posledního projektu dotýkala linky.
 - Rok v patičce se bere z data buildu.

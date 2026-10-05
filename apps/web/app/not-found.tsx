@@ -27,7 +27,7 @@ export default async function NotFound() {
           Back to all work
         </a>
       </main>
-      <Footer settings={settings} />
+      <Footer />
     </div>
   );
 }

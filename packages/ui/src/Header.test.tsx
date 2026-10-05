@@ -63,23 +63,24 @@ describe('Header', () => {
 });
 
 describe('Footer', () => {
-  const html = renderToStaticMarkup(<Footer settings={settings} />);
+  const html = renderToStaticMarkup(<Footer />);
 
   it('takes the year from the build', () => {
     expect(html).toContain(`© ${new Date().getFullYear()} Sabrina Kulhankova`);
   });
 
-  it('repeats the three links', () => {
-    expect(html).toContain('href="/information/"');
-    expect(html).toContain('href="mailto:sabrina.kulhankova@gmail.com"');
-    expect(html).toContain(settings.instagramUrl);
+  it('has no navigation: the header carries the links', () => {
+    // Removed on 5 Oct 2026; Figma repeats Information, address and Instagram here.
+    expect(html).not.toContain('href="/information/"');
+    expect(html).not.toContain('mailto:');
+    expect(html).not.toContain('instagram');
   });
 
-  it('stacks on mobile and lines up from tablet', () => {
+  it('puts the year left and the credit right, stacked on mobile', () => {
     expect(html).toContain('flex-col');
-    expect(html).toContain('tablet:grid');
-    // display:contents pulls the two short links into the same row as the address.
-    expect(html).toContain('tablet:contents');
+    expect(html).toContain('tablet:flex-row');
+    expect(html).toContain('tablet:justify-between');
+    expect(html.indexOf('©')).toBeLessThan(html.indexOf('Created by'));
   });
 
   it('sits under a rule', () => {
@@ -92,21 +93,20 @@ describe('Footer', () => {
     expect(html).toContain('desktop:mt-[140px]');
   });
 
-  it('credits KeySpace with a link, in the heavier weight, opening in a new tab', () => {
-    const credit = /<a[^>]*href="https:\/\/keyspace\.cz"[^>]*>Created by KeySpace<\/a>/.exec(html);
-    expect(credit?.[0]).toContain('font-medium');
-    expect(credit?.[0]).toContain('rel="noreferrer"');
-    expect(credit?.[0]).toContain('target="_blank"');
+  it('links the whole credit to KeySpace, in a new tab', () => {
+    const credit = /<a([^>]*href="https:\/\/keyspace\.cz"[^>]*)>(.*?)<\/a>/.exec(html);
+    expect(credit?.[1]).toContain('rel="noreferrer"');
+    expect(credit?.[1]).toContain('target="_blank"');
+    expect(credit?.[2]).toContain('Created by');
   });
 
-  it('puts the credit left, the links in the middle and the year right on desktop', () => {
-    const order = (needle: string) => {
-      const tag = new RegExp(`<(?:a|p|div)[^>]*class="([^"]*)"[^>]*>\\s*${needle}`).exec(html);
-      return tag?.[1] ?? '';
-    };
-    expect(order('Created by KeySpace')).toContain('desktop:order-1');
-    expect(html).toMatch(/desktop:order-2 desktop:col-span-1/);
-    expect(order('©')).toContain('desktop:order-3');
+  it('sets only the name in the heavier weight, not the words before it', () => {
+    const credit = /<a[^>]*href="https:\/\/keyspace\.cz"[^>]*>(.*?)<\/a>/.exec(html)?.[1] ?? '';
+    expect(credit).toMatch(/^Created by <span class="font-medium">KeySpace<\/span>$/);
+    // Nor the link itself.
+    expect(/<a[^>]*href="https:\/\/keyspace\.cz"[^>]*>/.exec(html)?.[0]).not.toContain(
+      'font-medium',
+    );
   });
 
   it('is set larger than Figma: 13, 14, 15px', () => {

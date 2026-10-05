@@ -55,12 +55,7 @@ export function Site({ projects, settings, imgBase, initialPath }: SiteProps) {
           }}
         />
       </main>
-      <Footer
-        settings={settings}
-        onOpenInformation={() => {
-          pushPath('/information/');
-        }}
-      />
+      <Footer />
       {open === undefined ? null : (
         <DetailOverlay project={open} imgBase={imgBase} onClose={closeOverlay} />
       )}

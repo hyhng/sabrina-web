@@ -1,12 +1,16 @@
 import type { CollectionConfig } from 'payload';
 
+import { canDeleteUser } from './user-rules.ts';
+
 /**
- * One user: the client (docs/TECH.md 6). No roles, because there is nobody to
- * distinguish her from.
+ * The people who can sign in to the admin (docs/TECH.md 6). No roles: everyone
+ * signed in can do everything.
  *
- * Registration is off. Payload's create-first-user runs with
- * overrideAccess, so the client still gets her account; after that, the
- * refusal here is what closes the door.
+ * There is no registration. The very first account is made by Payload's
+ * create-first-user screen (it runs with overrideAccess); after that, only
+ * someone already signed in can add another, from Uživatelé
+ * [rozhodnuto 5. 10. 2026, dřív jen jeden účet]. Nobody can delete their own
+ * account, so the admin can never end up with nobody able to get in.
  */
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -18,10 +22,10 @@ export const Users: CollectionConfig = {
     hidden: false,
   },
   access: {
-    create: () => false,
+    create: ({ req }) => Boolean(req.user),
     read: ({ req }) => Boolean(req.user),
     update: ({ req }) => Boolean(req.user),
-    delete: () => false,
+    delete: ({ req, id }) => canDeleteUser(req.user?.id, id),
   },
   fields: [],
 };

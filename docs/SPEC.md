@@ -192,7 +192,7 @@ Figma: UI 10 (desktop), UI 11 (mobil). Header a patička jako na homepage, upros
 
 ## 8. Admin (CMS)
 
-Figma: stránka UX, sloupec „CMS / ADMIN" (wireframy, nody v `DESIGN.md`). Admin je **česky**, jeden uživatel, žádné role. Navigace: **Projekty · Pořadí na homepage · Nastavení webu · Odhlásit**.
+Figma: stránka UX, sloupec „CMS / ADMIN" (wireframy, nody v `DESIGN.md`). Admin je **česky**, bez rolí. **Další účet může založit jen přihlášený uživatel** (Uživatelé → Vytvořit nové); vlastní účet smazat nejde, aby se do adminu vždy dalo dostat — **[rozhodnuto 5. 10. 2026, dřív jeden uživatel]**. Zapomenuté heslo zatím nefunguje, dokud není nastavený e-mail (Resend). Navigace: **Projekty · Pořadí na homepage · Nastavení webu · Odhlásit**.
 
 ### 8.1 Projekty (dashboard) — `66:6`
 - Seznam projektů: náhled, název, kategorie, počet fotek, stav (koncept / publikováno)
@@ -246,6 +246,7 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
 - U tlačítka napsat: „Změny budou na webu za pár minut."
 - Uložení projektu **nepublikuje** web automaticky. **[návrh — klientka má kontrolu, kdy se web mění; alternativa: auto-publish po uložení publikovaného projektu]**
 
+- Pod tlačítkem odkaz **„Zobrazit web ↗“** (nový panel) — **[rozhodnuto 5. 10. 2026]**. Adresa je `SITE_URL` v `.env` serveru; bez ní `https://sabrina-web.pages.dev`. Po přepnutí domény ze starého webu ji změnit tam, bez nového sestavení.
 ### 8.8 Prázdné stavy a chyby — `71:2`
 - Prázdný stav je návod („Zatím tu nic není. Začni prvním projektem.")
 - Zašedlé tlačítko Publikovat říká, co chybí („Chybí titulní fotka")

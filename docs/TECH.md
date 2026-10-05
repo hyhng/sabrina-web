@@ -175,7 +175,7 @@ Další pozor:
 ## 6. Admin (Payload)
 
 - `i18n`: čeština jako jediný jazyk rozhraní (`@payloadcms/translations/languages/cs`), vlastní texty v `cs`
-- Jeden uživatel, kolekce `Users` s auth, bez rolí; registrace vypnutá
+- Kolekce `Users` s auth, bez rolí; registrace vypnutá, další účet zakládá jen přihlášený uživatel, vlastní účet smazat nejde (rozhodnuto 5. 10.)
 - `Projects` s `versions: { drafts: true }` → koncept / publikováno
 - Slug: hook `beforeValidate` generuje z názvu; po první publikaci pole `readOnly` s popiskem pod polem
 - `Homepage` globál: `relationship` hasMany na `Projects`, řazení tažením; hook po publikaci projektu ho přidá na začátek (rozhodnuto 5. 10.)

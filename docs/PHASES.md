@@ -220,8 +220,8 @@ projektu. Jinak by neuložený projekt dál odkazoval na neexistující fotku a 
 
 ## Drobnosti k dořešení
 
-- [ ] **Odkaz „Zobrazit web“ u Publikovat** (návrh vývojáře 5. 10.): po publikování rovnou proklik na web, aby Sabrina viděla výsledek.
-- [ ] **Přidání dalšího uživatele do adminu** (návrh vývojáře 5. 10.): dnes je zakládání účtů zavřené (`Users.create: () => false`, SPEC/TECH: jeden uživatel). Potřeba rozhodnout, kdo smí účet založit (jen přihlášený uživatel), a zapsat do SPEC. Souvisí s předáním: první účet je zatím vývojářův.
+- [x] **Odkaz „Zobrazit web“ u Publikovat** (5. 10.) — hotovo, adresa ze `SITE_URL` na serveru: po publikování rovnou proklik na web, aby Sabrina viděla výsledek.
+- [x] **Přidání dalšího uživatele do adminu** (5. 10.) — hotovo: zakládá jen přihlášený, vlastní účet smazat nejde. Původně: dnes je zakládání účtů zavřené (`Users.create: () => false`, SPEC/TECH: jeden uživatel). Potřeba rozhodnout, kdo smí účet založit (jen přihlášený uživatel), a zapsat do SPEC. Souvisí s předáním: první účet je zatím vývojářův.
 - [x] **Portrét a obrázek pro sdílení v Nastavení mají nahrávání** (5. 10.): `SinglePhotoField` — přetáhnout nebo vybrat, převod v prohlížeči přes stejnou frontu, náhled, „Nahrát jiný“ a „Odebrat“. Místo seznamu názvů souborů a „+“ s ručním formulářem.
 - ~~E2E test `detail › closes with Escape` jednou spadl~~ — **vyřešeno.** Byl to závod testu s hydratací: detail je předgenerovaný, takže dialog je na obrazovce dřív, než se připojí obsluha kláves. Změřeno zablokováním klientských chunků: dialog vidět, Esc nic nedělá. Oba testy, které mačkají klávesu hned po `goto`, teď čekají na zámek scrollování — ten nastavuje stejná komponenta. 90 opakování na 8 workerech zelených.
 
@@ -281,6 +281,7 @@ projektu. Jinak by neuložený projekt dál odkazoval na neexistující fotku a 
 | 5. 10. | **Fotka přes celé okno** (SPEC 4.6): klik na fotku v detailu, Esc vrací do detailu | vývojář, podle lydiebonhomme.com; nová funkce mimo původní spec |
 | 5. 10. | Overlaye (detail, Information, fotka přes celé okno) se při otevření kliknutím **objeví fade-in 250 ms**; při příchodu přímo na adresu bez animace | vývojář |
 | 5. 10. | **Nově publikovaný projekt se zařadí na začátek** pořadí na homepage (otázka 10) | vývojář: bez toho byl projekt publikovaný, a přesto nebyl na webu |
+| 5. 10. | **Další účty do adminu** zakládá přihlášený uživatel; vlastní účet smazat nejde. U Publikovat odkaz **„Zobrazit web“** (`SITE_URL`) | vývojář; předání účtu Sabrině, kontrola výsledku publikace |
 | 5. 10. | **Header je sticky a ustupuje** (dolů se zasune, nahoru se hned vrátí) | vývojář; dřív „není sticky“ jen jako návrh. Pravidla v `header-visibility.ts`, testovaná bez prohlížeče |
 | 5. 10. | **Patička: © vlevo, „Created by KeySpace“ vpravo (odkaz na keyspace.cz, tučné jen KeySpace, Medium), bez navigace**; písmo 13 / 14 / 15 px místo 12 / 12,5; odstup nad ní 96 / 120 / 140 px | vývojář; ve Figmě je © vlevo a odkazy vpravo, patička přilepená k obsahu. Navigaci má header; na mobilu jsou e-mail a Instagram na stránce Information. „Tučně“ je Medium 500, protože další řez Lory se nenačítá |
 | 1. 10. | Nastavení buildu veřejného webu je v **`apps/web/.env.production` v repu**, ne v proměnných Cloudflare Pages | „Variables and secrets“ v Pages se do buildu nedostaly — build vypísal všechny proměnné, které vidí, a ze čtyř nastavených nebyla žádná. Hodnoty nejsou tajné (adresa webu, cesta k fotkám), tak jdou do repa; test hlídá, že se tam nedostane nic jiného. Výjimka z pravidla 11 jen pro tenhle soubor. Ověřeno: čistý klon, žádné proměnné |

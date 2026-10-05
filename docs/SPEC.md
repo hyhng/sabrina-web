@@ -139,6 +139,13 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 - `prefers-reduced-motion`: všechny přechody nahradit krátkým fade.
 - Při otevřeném overlayi se stránka pod ním nescrolluje; po zavření zůstane grid na stejném místě.
 
+### 4.6 Fotka přes celé okno — **[rozhodnuto 5. 10. 2026, vzor lydiebonhomme.com]**
+
+- **Otevření:** klik na fotku v detailu (kurzor lupa). Jen od 768 px a na zařízení s myší (`(hover: hover)`); na mobilu je fotka už teď přes celou šířku a klepnutí je začátek swipe.
+- Papírové pozadí přes celé okno, **fotka co největší a celá** (nikdy neořezaná), 96 px volno vlevo a vpravo pro šipky, 40 px nahoře a dole. Velikost z poměru stran z dat. Bez nadpisu a meta.
+- Šipky u krajů okna (24 px), kulaté ✕ vpravo nahoře ve stylu šipek. Klávesy ← → listují tutéž sérii.
+- **Esc a ✕ vrací do detailu**, ne na homepage, na fotce, na které návštěvník skončil. URL se nemění.
+
 ---
 
 ## 5. Information (overlay)

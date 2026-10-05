@@ -1,9 +1,10 @@
 'use client';
 
 import type { Photo as PhotoData } from '@sabrina/shared/schema';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 
 import { ArrowButton } from './ArrowButton.tsx';
+import { FullscreenPhoto } from './FullscreenPhoto.tsx';
 import { Photo } from './Photo.tsx';
 
 /**
@@ -48,6 +49,13 @@ import { Photo } from './Photo.tsx';
  * not to fire while scrolling the page, close enough not to feel stubborn.
  */
 
+/**
+ * Where clicking the photo opens it full screen: from the detail breakpoint
+ * up, and only with a mouse — on a phone the photo already runs edge to edge
+ * and a tap is the start of a swipe.
+ */
+export const FULLSCREEN_QUERY = '(min-width: 768px) and (hover: hover)';
+
 /** Space between neighbouring photos in the row, so no sliver of one shows. */
 export const SLIDE_GAP = 24;
 
@@ -78,7 +86,28 @@ export interface CarouselProps {
 
 export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselProps) {
   const [index, setIndex] = useState(startIndex);
+  const [full, setFull] = useState(false);
   const swipeFrom = useRef<number | null>(null);
+  const opener = useRef<HTMLButtonElement | null>(null);
+  const closeFull = useCallback(() => {
+    setFull(false);
+    // Back to the photo it was opened from, which is the one now on screen —
+    // without a focus ring round it if it was closed with Esc, as with the tile
+    // after the detail (overlay-chrome.ts). The ring returns once focus moves on.
+    requestAnimationFrame(() => {
+      const button = opener.current;
+      if (button === null) return;
+      button.focus({ preventScroll: true });
+      button.style.outline = 'none';
+      button.addEventListener(
+        'blur',
+        () => {
+          button.style.outline = '';
+        },
+        { once: true },
+      );
+    });
+  }, []);
 
   const last = photos.length - 1;
   /** The tallest frame at a given width is the one with the smallest ratio. */
@@ -103,83 +132,111 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
     };
   }, [last]);
 
-  return (
-    <div
-      className="group/photo relative aspect-(--ratio) w-full overflow-hidden detail:aspect-auto detail:h-(--stage-h)"
-      /*
-       * `--ratio` is the mobile height, from the tallest photo; from 768 the
-       * stage has a height of its own. `container-type: size` is what lets a
-       * photo be sized in the stage's units below.
-       */
-      style={{ '--ratio': String(tallest), containerType: 'size' } as CSSProperties}
-      onTouchStart={(event) => {
-        swipeFrom.current = event.touches[0]?.clientX ?? null;
-      }}
-      onTouchEnd={(event) => {
-        const from = swipeFrom.current;
-        swipeFrom.current = null;
-        if (from === null) return;
-        const direction = swipeDirection(from, event.changedTouches[0]?.clientX ?? from);
-        if (direction === 'next') goForward();
-        if (direction === 'previous') goBack();
-      }}
-    >
-      {photos.map((photo, position) => {
-        if (Math.abs(position - index) > 1) return null;
-        const current = position === index;
-        return (
-          <div
-            key={photo.id}
-            className="absolute inset-0 flex items-center justify-center transition-transform duration-[380ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none"
-            /*
-             * One stage-width plus a gap per step. Flush, the neighbour's edge
-             * showed as a 1px line wherever the stage was a fractional width.
-             */
-            style={{
-              transform: `translateX(calc(${String(position - index)} * (100% + ${String(SLIDE_GAP)}px)))`,
-            }}
-            aria-hidden={current ? undefined : true}
-            inert={!current}
-          >
-            {/*
-             * The box takes the photo's own proportions and is bounded by the
-             * stage — never the other way round. Stretching the element to the
-             * stage and fitting the image inside left the placeholder colour
-             * showing in the gutters, which read as bars round the picture.
-             */}
-            <div
-              style={{
-                width: `min(100cqw, calc(100cqh * ${String(photo.aspectRatio)}))`,
-                aspectRatio: String(photo.aspectRatio),
-              }}
-            >
-              <Photo
-                photo={photo}
-                imgBase={imgBase}
-                sizes="620px"
-                eager
-                alt={photo.alt ?? `${title} — photo ${position + 1}`}
-                className="size-full"
-              />
-            </div>
-          </div>
-        );
-      })}
+  const photo = photos[index];
 
-      {canGoBack ? (
-        <ArrowButton
-          direction="previous"
-          onClick={goBack}
-          className="absolute left-[16px] top-1/2 -translate-y-1/2"
+  return (
+    <>
+      <div
+        className="group/photo relative aspect-(--ratio) w-full overflow-hidden detail:aspect-auto detail:h-(--stage-h)"
+        /*
+         * `--ratio` is the mobile height, from the tallest photo; from 768 the
+         * stage has a height of its own. `container-type: size` is what lets a
+         * photo be sized in the stage's units below.
+         */
+        style={{ '--ratio': String(tallest), containerType: 'size' } as CSSProperties}
+        onTouchStart={(event) => {
+          swipeFrom.current = event.touches[0]?.clientX ?? null;
+        }}
+        onTouchEnd={(event) => {
+          const from = swipeFrom.current;
+          swipeFrom.current = null;
+          if (from === null) return;
+          const direction = swipeDirection(from, event.changedTouches[0]?.clientX ?? from);
+          if (direction === 'next') goForward();
+          if (direction === 'previous') goBack();
+        }}
+      >
+        {photos.map((slide, position) => {
+          if (Math.abs(position - index) > 1) return null;
+          const current = position === index;
+          return (
+            <div
+              key={slide.id}
+              className="absolute inset-0 flex items-center justify-center transition-transform duration-[380ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none"
+              /*
+               * One stage-width plus a gap per step. Flush, the neighbour's edge
+               * showed as a 1px line wherever the stage was a fractional width.
+               */
+              style={{
+                transform: `translateX(calc(${String(position - index)} * (100% + ${String(SLIDE_GAP)}px)))`,
+              }}
+              aria-hidden={current ? undefined : true}
+              inert={!current}
+            >
+              {/*
+               * The box takes the photo's own proportions and is bounded by the
+               * stage — never the other way round. Stretching the element to the
+               * stage and fitting the image inside left the placeholder colour
+               * showing in the gutters, which read as bars round the picture.
+               */}
+              <button
+                type="button"
+                ref={current ? opener : undefined}
+                aria-label="View full screen"
+                className="block cursor-zoom-in [@media(hover:none)]:cursor-auto"
+                style={{
+                  width: `min(100cqw, calc(100cqh * ${String(slide.aspectRatio)}))`,
+                  aspectRatio: String(slide.aspectRatio),
+                }}
+                onClick={() => {
+                  if (window.matchMedia(FULLSCREEN_QUERY).matches) setFull(true);
+                }}
+              >
+                <Photo
+                  photo={slide}
+                  imgBase={imgBase}
+                  sizes="620px"
+                  eager
+                  alt={slide.alt ?? `${title} — photo ${position + 1}`}
+                  className="size-full"
+                />
+              </button>
+            </div>
+          );
+        })}
+
+        {canGoBack ? (
+          <ArrowButton
+            direction="previous"
+            onClick={goBack}
+            className="absolute left-[16px] top-1/2 -translate-y-1/2"
+          />
+        ) : null}
+        {canGoForward ? (
+          <ArrowButton
+            direction="next"
+            onClick={goForward}
+            className="absolute right-[16px] top-1/2 -translate-y-1/2"
+          />
+        ) : null}
+      </div>
+
+      {/*
+       * Outside the stage: the stage is a size container, and that makes it the
+       * containing block of anything fixed inside it.
+       */}
+      {full && photo !== undefined ? (
+        <FullscreenPhoto
+          photo={photo}
+          imgBase={imgBase}
+          alt={photo.alt ?? `${title} — photo ${index + 1}`}
+          canGoBack={canGoBack}
+          canGoForward={canGoForward}
+          onBack={goBack}
+          onForward={goForward}
+          onClose={closeFull}
         />
       ) : null}
-      {canGoForward ? (
-        <ArrowButton
-          direction="next"
-          onClick={goForward}
-          className="absolute right-[16px] top-1/2 -translate-y-1/2"
-        />
-      ) : null}
-    </div>
+    </>
   );
 }

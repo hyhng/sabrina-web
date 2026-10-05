@@ -134,3 +134,28 @@ test.describe('carousel', () => {
     await expect(dialog.getByRole('button', { name: /photo$/ })).toHaveCount(0);
   });
 });
+
+test.describe('full screen', () => {
+  test.skip(({ isMobile }) => isMobile, 'opened with a mouse, from 768 up');
+
+  test('opens from the photo, pages, and Esc goes back to the detail, not home', async ({
+    page,
+  }) => {
+    await page.goto('/work/wool-ss26-campaign/');
+    await overlayIsLive(page);
+    await page.getByRole('button', { name: 'View full screen' }).first().click();
+    const layer = page.getByLabel('Full screen photo');
+    await expect(layer).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(layer).toBeHidden();
+    // Still in the detail.
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await expect(page).toHaveURL(/\/work\/wool-ss26-campaign\/$/);
+
+    await page.getByRole('button', { name: 'View full screen' }).first().click();
+    await page.getByRole('button', { name: 'Close full screen' }).click();
+    await expect(layer).toBeHidden();
+    await expect(page.getByRole('dialog')).toBeVisible();
+  });
+});

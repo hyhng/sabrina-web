@@ -2,6 +2,7 @@ export * from './ArrowButton.tsx';
 export * from './Carousel.tsx';
 export * from './DetailOverlay.tsx';
 export * from './Filter.tsx';
+export * from './FullscreenPhoto.tsx';
 export * from './Footer.tsx';
 export * from './Header.tsx';
 export * from './InfoOverlay.tsx';

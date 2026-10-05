@@ -58,6 +58,8 @@ services:
       R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
       R2_BUCKET: ${R2_BUCKET:-}
       CF_DEPLOY_HOOK_URL: ${CF_DEPLOY_HOOK_URL:-}
+      # Where „Zobrazit web“ in the admin leads; the Pages address when unset.
+      SITE_URL: ${SITE_URL:-}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
       NEXT_PUBLIC_IMG_BASE: ${IMG_BASE_URL:-}

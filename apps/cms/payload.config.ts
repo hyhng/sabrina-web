@@ -44,7 +44,7 @@ export default buildConfig({
      * button belongs in the navigation because it is the last step of every
      * session, whichever screen she finishes on.
      */
-    components: { afterNavLinks: ['/components/PublishButton#PublishButton'] },
+    components: { afterNavLinks: ['/components/PublishNav#PublishNav'] },
   },
 
   collections: [Projects, Photos, Users],

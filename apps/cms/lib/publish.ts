@@ -17,6 +17,18 @@ export const HOOK_MISSING = 'Publikování ještě není nastavené: v .env chyb
 export const HOOK_REFUSED = 'Cloudflare nepřijal požadavek na publikování.';
 export const STARTED = 'Publikuju. Změny budou na webu za pár minut.';
 
+/**
+ * Where „Zobrazit web" leads (docs/SPEC.md 8.7). The Pages address until the
+ * domain is switched over from the old site; then SITE_URL in the server's
+ * .env, and nothing has to be rebuilt.
+ */
+export const DEFAULT_SITE_URL = 'https://sabrina-web.pages.dev';
+
+export function siteUrl(env: Record<string, string | undefined>): string {
+  const url = (env.SITE_URL ?? '').trim();
+  return /^https:\/\/[^\s]+$/.test(url) ? url.replace(/\/+$/, '') : DEFAULT_SITE_URL;
+}
+
 export function deployHook(env: Record<string, string | undefined>): string | undefined {
   const url = env.CF_DEPLOY_HOOK_URL ?? '';
   return url === '' ? undefined : url;

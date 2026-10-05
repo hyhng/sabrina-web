@@ -14,3 +14,11 @@
   line-height: 1.4;
   color: var(--theme-elevation-500);
 }
+
+.publish__site {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--theme-elevation-800);
+  text-decoration: underline;
+}

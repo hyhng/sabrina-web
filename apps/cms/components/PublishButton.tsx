@@ -16,8 +16,11 @@ import './publish-button.css';
  *
  * It sits in the navigation rather than on one screen because it is the last
  * step of every session, whichever screen she finishes on.
+ *
+ * Underneath, „Zobrazit web" opens the site in a new tab, so she can check the
+ * result without leaving the admin [rozhodnuto 5. 10. 2026].
  */
-export function PublishButton() {
+export function PublishButton({ siteUrl }: { siteUrl: string }) {
   const [busy, setBusy] = useState(false);
   const [lastPublishedAt, setLastPublishedAt] = useState<unknown>(undefined);
 
@@ -68,6 +71,9 @@ export function PublishButton() {
         {busy ? 'Publikuju…' : 'Publikovat web'}
       </Button>
       <p className="publish__when">{lastPublishedLabel(lastPublishedAt)}</p>
+      <a className="publish__site" href={siteUrl} target="_blank" rel="noreferrer">
+        Zobrazit web ↗
+      </a>
     </div>
   );
 }

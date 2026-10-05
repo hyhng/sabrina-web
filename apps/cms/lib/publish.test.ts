@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { deployHook, lastPublishedLabel } from './publish.ts';
+import { DEFAULT_SITE_URL, deployHook, lastPublishedLabel, siteUrl } from './publish.ts';
 
 describe('deployHook', () => {
   it('reads the hook from the environment', () => {
@@ -40,5 +40,23 @@ describe('lastPublishedLabel', () => {
     expect(lastPublishedLabel(ago(23 * 60), now)).toBe('Publikováno před 23 h.');
     // Past a day the exact time stops mattering and the date starts to.
     expect(lastPublishedLabel(ago(48 * 60), now)).toMatch(/Publikováno 28\. ?9\. ?2026\./);
+  });
+});
+
+describe('siteUrl', () => {
+  it('is the Pages address until SITE_URL is set on the server', () => {
+    expect(siteUrl({})).toBe(DEFAULT_SITE_URL);
+    expect(siteUrl({ SITE_URL: '' })).toBe(DEFAULT_SITE_URL);
+  });
+
+  it('takes SITE_URL when it is an https address, without a trailing slash', () => {
+    expect(siteUrl({ SITE_URL: 'https://sabrinakulhankova.photography/' })).toBe(
+      'https://sabrinakulhankova.photography',
+    );
+  });
+
+  it('ignores anything that is not an https address rather than linking to it', () => {
+    expect(siteUrl({ SITE_URL: 'javascript:alert(1)' })).toBe(DEFAULT_SITE_URL);
+    expect(siteUrl({ SITE_URL: 'http://example.com' })).toBe(DEFAULT_SITE_URL);
   });
 });

@@ -5,7 +5,7 @@ import { NewProject as NewProject_a758667b0938818b7e8e352b59d52a95 } from '../..
 import { OrderPreview as OrderPreview_05f44c313a2bfd54fbebc719dd440b38 } from '../../../components/OrderPreview'
 import { SinglePhotoField as SinglePhotoField_04c00c3868f0cfb9f222c3806f974847 } from '../../../components/SinglePhotoField'
 import { CharacterCount as CharacterCount_c4bd9dc50e4d21feed3c6d5556c645dd } from '../../../components/CharacterCount'
-import { PublishButton as PublishButton_111386cb5ab07909d9e2398475065d54 } from '../../../components/PublishButton'
+import { PublishNav as PublishNav_ad66fecd5604bb1088011f8207c4d451 } from '../../../components/PublishNav'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -17,6 +17,6 @@ export const importMap = {
   "/components/OrderPreview#OrderPreview": OrderPreview_05f44c313a2bfd54fbebc719dd440b38,
   "/components/SinglePhotoField#SinglePhotoField": SinglePhotoField_04c00c3868f0cfb9f222c3806f974847,
   "/components/CharacterCount#CharacterCount": CharacterCount_c4bd9dc50e4d21feed3c6d5556c645dd,
-  "/components/PublishButton#PublishButton": PublishButton_111386cb5ab07909d9e2398475065d54,
+  "/components/PublishNav#PublishNav": PublishNav_ad66fecd5604bb1088011f8207c4d451,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

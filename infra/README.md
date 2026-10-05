@@ -61,13 +61,14 @@ account to Sabrina.
 Beside `docker-compose.prod.yml`. Compose refuses to start without the first
 five and says which one is missing:
 
-| Variable                                                                     | Notes                                                                                     |
-| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `ADMIN_DOMAIN`                                                               | `admin.<domain>`. Caddy gets the certificate for this name                                |
-| `POSTGRES_USER` · `POSTGRES_PASSWORD` · `POSTGRES_DB`                        | invent them here; nothing else uses them                                                  |
-| `PAYLOAD_SECRET`                                                             | long random string. Changing it logs everyone out                                         |
-| `CMS_IMAGE`                                                                  | optional; defaults to `ghcr.io/hyhng/sabrina-cms:latest`                                  |
-| `R2_*`, `CF_DEPLOY_HOOK_URL`, `RESEND_API_KEY`, `EMAIL_FROM`, `IMG_BASE_URL` | optional. Without them the admin still runs and says which one a given feature is missing |
+| Variable                                                                     | Notes                                                                                                                          |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `ADMIN_DOMAIN`                                                               | `admin.<domain>`. Caddy gets the certificate for this name                                                                     |
+| `POSTGRES_USER` · `POSTGRES_PASSWORD` · `POSTGRES_DB`                        | invent them here; nothing else uses them                                                                                       |
+| `PAYLOAD_SECRET`                                                             | long random string. Changing it logs everyone out                                                                              |
+| `CMS_IMAGE`                                                                  | optional; defaults to `ghcr.io/hyhng/sabrina-cms:latest`                                                                       |
+| `SITE_URL`                                                                   | optional; where „Zobrazit web“ in the admin leads. Unset = `https://sabrina-web.pages.dev`; set it when the domain is switched |
+| `R2_*`, `CF_DEPLOY_HOOK_URL`, `RESEND_API_KEY`, `EMAIL_FROM`, `IMG_BASE_URL` | optional. Without them the admin still runs and says which one a given feature is missing                                      |
 
 `ADMIN_DOMAIN=localhost` runs the whole stack on a laptop with Caddy's own local
 certificate, which is how all of this was tested.

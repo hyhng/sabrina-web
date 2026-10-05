@@ -1,8 +1,10 @@
 import { CATEGORY_LABELS } from '@sabrina/shared/categories';
 import { photoSrc } from '@sabrina/shared/photo-url';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 import { getContent } from '../../../lib/content.ts';
+import { NO_PROJECTS_SLUG, projectParams } from '../../../lib/project-params.ts';
 import { SITE_NAME } from '../../../lib/site.ts';
 import { Site } from '../../_components/Site.tsx';
 
@@ -15,7 +17,8 @@ const IMG_BASE = process.env.NEXT_PUBLIC_IMG_BASE ?? '/seed';
  */
 export async function generateStaticParams() {
   const { homepage } = await getContent();
-  return homepage.projects.map((project) => ({ slug: project.slug }));
+  // Never empty — see project-params.ts.
+  return projectParams(homepage.projects);
 }
 
 /** Anything not generated above is a 404, not a runtime lookup. */
@@ -56,6 +59,7 @@ export async function generateMetadata({
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  if (slug === NO_PROJECTS_SLUG) notFound();
   const { homepage, settings } = await getContent();
   return (
     <Site

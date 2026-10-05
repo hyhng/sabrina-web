@@ -1,7 +1,7 @@
 'use client';
 
 import type { Photo as PhotoData } from '@sabrina/shared/schema';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 
 import { ArrowButton } from './ArrowButton.tsx';
 import { Photo } from './Photo.tsx';
@@ -17,18 +17,27 @@ import { Photo } from './Photo.tsx';
  * arrow on the last, which without a counter is the only signal that the
  * series has ended.
  *
- * The photo spans the full width of the content column, so its left and right
- * edges line up with the title above it and the meta below, and its height
- * follows its own proportion. Nothing is ever cropped or padded.
+ * The photos live in a stage — a container of one fixed size for every project
+ * [rozhodnuto 5. 10. 2026, vzor: Rosée Marron na lydiebonhomme.com]. From 768 up
+ * it is the width of the content column and a height worked out from the
+ * window, so the whole detail is one size and nothing moves between projects.
+ * The height is `--stage-h`, set by DetailOverlay, which also derives the
+ * column's width from it so the stage is always 4:5.
+ * Each photo is fitted inside it and centred both ways: a portrait is scaled
+ * down to fit, a landscape has room above and below. Nothing is cropped, and
+ * nothing is enlarged past the stage.
  *
- * The box around it is as tall as the tallest photo in the series would be at
- * that width — the smallest aspect ratio, worked out from the data. It is
- * therefore the same height for every photo, so the arrows sit still while
- * paging and a shorter frame is simply centred in it.
+ * The fit is arithmetic on the aspect ratio from the data, not a measurement
+ * (CLAUDE.md rule 3): the photo's width is the smaller of the stage's width and
+ * its height times the ratio, in the stage's own container units.
  *
- * The arrows sit 16px in from the photo's edge, vertically centred
- * [rozhodnuto 5. 10. 2026, vrací původních 16 px ze 24. 9.]; flush with the
- * edge they read as part of the frame rather than as controls.
+ * Below 768 the photo runs the full width and the stage is as tall as the
+ * tallest photo of the series would be at that width, so the page still has
+ * room for the meta underneath.
+ *
+ * The arrows sit 16px in from the stage's edge, vertically centred, so they
+ * stay put whatever shape the photo is. They were flush with the photo's edge
+ * between 24 Sep and 5 Oct 2026, and read as part of the frame.
  *
  * Photos slide rather than crossfade: each sits one box-width to the left or
  * right of the one on screen and the whole row shifts. Only the current photo
@@ -93,9 +102,13 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
 
   return (
     <div
-      className="group/photo relative w-full overflow-hidden"
-      /* One height for the whole series, so nothing shifts while paging. */
-      style={{ aspectRatio: String(tallest) }}
+      className="group/photo relative aspect-(--ratio) w-full overflow-hidden detail:aspect-auto detail:h-(--stage-h)"
+      /*
+       * `--ratio` is the mobile height, from the tallest photo; from 768 the
+       * stage has a height of its own. `container-type: size` is what lets a
+       * photo be sized in the stage's units below.
+       */
+      style={{ '--ratio': String(tallest), containerType: 'size' } as CSSProperties}
       onTouchStart={(event) => {
         swipeFrom.current = event.touches[0]?.clientX ?? null;
       }}
@@ -119,21 +132,27 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
             aria-hidden={current ? undefined : true}
             inert={!current}
           >
-            <Photo
-              photo={photo}
-              imgBase={imgBase}
-              sizes="620px"
-              eager
-              alt={photo.alt ?? `${title} — photo ${position + 1}`}
-              /*
-               * The box takes the photo's own proportions, bounded by the
-               * area — never the other way round. Stretching the element to
-               * the area and fitting the image inside left the placeholder
-               * colour showing in the gutters, which read as deliberate bars
-               * around the picture.
-               */
-              className="h-auto max-h-full w-full"
-            />
+            {/*
+             * The box takes the photo's own proportions and is bounded by the
+             * stage — never the other way round. Stretching the element to the
+             * stage and fitting the image inside left the placeholder colour
+             * showing in the gutters, which read as bars round the picture.
+             */}
+            <div
+              style={{
+                width: `min(100cqw, calc(100cqh * ${String(photo.aspectRatio)}))`,
+                aspectRatio: String(photo.aspectRatio),
+              }}
+            >
+              <Photo
+                photo={photo}
+                imgBase={imgBase}
+                sizes="620px"
+                eager
+                alt={photo.alt ?? `${title} — photo ${position + 1}`}
+                className="size-full"
+              />
+            </div>
           </div>
         );
       })}

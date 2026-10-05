@@ -13,20 +13,25 @@ import { useFocusTrap, useScrollLock } from './overlay-chrome.ts';
  * veil, a plate 800px wide, and a 620px column carrying the title and ✕, the
  * photo, and the meta in two columns.
  *
- * The plate is at least as tall as the window and grows with its contents.
- * What scrolls is the layer behind it, which covers the whole window, so the
- * scrollbar sits at the edge of the browser rather than inside the plate
- * [rozhodnuto 5. 10. 2026, mění 24. 9.]. A tall photo makes the page scroll.
+ * A fixed template [rozhodnuto 5. 10. 2026, vzor: Rosée Marron na
+ * lydiebonhomme.com]: the title and ✕ at the top, then a stage that holds only
+ * the photos, then the meta. The stage is one size for every project and every
+ * photo (Carousel.tsx), and each photo is fitted into it and centred, so the
+ * plate is one size too and nothing moves between projects or while paging.
+ * A portrait photo is scaled down to fit rather than making the window scroll.
  *
- * The title and ✕ are a fixed template: they start at the same place in the
- * plate for every project, whatever the shape of its photos. Content is not
- * centred vertically for that reason — a landscape project would put them in
- * the middle of the window and a portrait one at the top, and they would jump
- * as the visitor moved from one project to the next.
+ * The column — title, ✕, stage and meta — is as wide as the stage is tall times
+ * 0.8, up to 620px [rozhodnuto 5. 10. 2026]. The stage is 4:5, so the edges of
+ * the text line up with the edges of the stage and with a 4:5 photo in it, and
+ * the column is one width for every project at a given window size, so the ✕
+ * does not shift sideways between them. A taller window gives a wider column;
+ * a short one a narrower, never below 480px of stage.
  *
- * The plate does not jump while a series is paged: the carousel's box is as
- * tall as the tallest photo of the series (Carousel.tsx), so the height is the
- * same for every photo of one project.
+ * The plate is at least as tall as the window and grows only with the meta,
+ * which can run long. What scrolls then is the layer behind it, which covers
+ * the whole window, so the scrollbar sits at the edge of the browser rather
+ * than inside the plate. Content is not centred vertically: that would put the
+ * title in a different place for a short project than for a long one.
  *
  * Below that it is a page of its own — full screen on paper, no ghost of the
  * grid behind it, a top bar, the photo full-bleed, and the meta stacked
@@ -41,7 +46,7 @@ import { useFocusTrap, useScrollLock } from './overlay-chrome.ts';
 
 /** The 620 column on desktop; plain 16px gutters on mobile. */
 const COLUMN =
-  'px-[16px] detail:mx-auto detail:w-[620px] detail:max-w-[calc(100%-48px)] detail:px-0';
+  'px-[16px] detail:mx-auto detail:w-(--col) detail:max-w-[calc(100%-48px)] detail:px-0';
 
 export interface DetailOverlayProps {
   project: Project;
@@ -82,7 +87,7 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
       onClick={onClose}
     >
       <div
-        className="flex min-h-full flex-col bg-paper detail:mx-auto detail:min-h-[calc(100dvh-70px)] detail:w-[min(800px,100vw-48px)] detail:pt-[48px] detail:pb-[61px]"
+        className="flex min-h-full flex-col bg-paper detail:[--col:min(620px,calc(var(--stage-h)*0.8))] detail:[--stage-h:clamp(480px,calc(100dvh-316px),775px)] detail:mx-auto detail:min-h-[calc(100dvh-70px)] detail:w-[min(800px,100vw-48px)] detail:pt-[48px] detail:pb-[61px]"
         onClick={(event) => {
           event.stopPropagation();
         }}
@@ -107,7 +112,7 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
         </div>
 
         {/* Full-bleed on mobile, inside the column from 768 up. */}
-        <div className="detail:mx-auto detail:mt-[21px] detail:w-[620px] detail:max-w-[calc(100%-48px)]">
+        <div className="detail:mx-auto detail:mt-[21px] detail:w-(--col) detail:max-w-[calc(100%-48px)]">
           <Carousel
             photos={project.photos}
             imgBase={imgBase}

@@ -85,11 +85,11 @@ describe('DetailOverlay', () => {
     expect(render({ ...commercial, credits: [] })).not.toContain('Credits :');
   });
 
-  it('holds the column at 620 and lets the plate padding fall out of it', () => {
+  it('holds the column at most 620 and lets the plate padding fall out of it', () => {
     // 90 either side at 1440, 71 at 810 (docs/SPEC.md 4.1) — without either
-    // number being written down.
+    // number being written down. The width itself is derived from the stage.
     expect(html).toContain('detail:w-[min(800px,100vw-48px)]');
-    expect(html).toContain('detail:w-[620px] detail:max-w-[calc(100%-48px)]');
+    expect(html).toContain('detail:w-(--col) detail:max-w-[calc(100%-48px)]');
   });
 
   it('loads the detail photo eagerly — it is what the visitor came for', () => {
@@ -98,7 +98,7 @@ describe('DetailOverlay', () => {
   });
 });
 
-describe('DetailOverlay — how the photo sits in the column', () => {
+describe('DetailOverlay — how the photo sits in the stage', () => {
   const landscape = { ...cover, id: 'soda', width: 1604, height: 1068, aspectRatio: 1604 / 1068 };
   const areaShaped = { ...cover, id: 'fit', width: 620, height: 740, aspectRatio: 620 / 740 };
 
@@ -106,27 +106,80 @@ describe('DetailOverlay — how the photo sits in the column', () => {
   const box = (html: string) =>
     /<div class="group\/photo[^"]*"[^>]*style="([^"]*)"/.exec(html)?.[1] ?? '';
 
-  it('spans the full width of the column, so it lines up with the text', () => {
+  const stageClass = (html: string) =>
+    (/<div class="(group\/photo[^"]*)"/.exec(html)?.[1] ?? '').split(/\s+/);
+
+  it('holds the photos in a stage that is the width of the column', () => {
     for (const photo of [landscape, areaShaped, cover]) {
       const html = render({ ...commercial, cover: photo, photos: [photo] });
-      expect(html).toContain('group/photo relative w-full');
+      expect(stageClass(html)).toContain('w-full');
     }
   });
 
-  it('is as tall as the tallest frame in the series, so nothing shifts', () => {
-    // The tallest frame at a given width is the one with the smallest ratio.
+  it('gives the stage one height from 768 up, whatever the photos are', () => {
+    // A fixed template: the same stage for a portrait, a landscape and a mixed
+    // series, so the plate is one size and nothing moves between projects.
+    const heights = [cover, landscape, areaShaped].map((photo) =>
+      stageClass(render({ ...commercial, cover: photo, photos: [photo] })).filter(
+        (name) => name.startsWith('detail:h-') || name === 'detail:aspect-auto',
+      ),
+    );
+    expect(heights[0]).toEqual(['detail:aspect-auto', 'detail:h-(--stage-h)']);
+    for (const each of heights) expect(each).toEqual(heights[0]);
+  });
+
+  it('works the stage height out from the window, with a floor and a ceiling', () => {
+    // 100dvh less the 70px of window margin and the 246px of the panel that is
+    // not the stage. The floor keeps a short window from squeezing the photo to
+    // nothing; the ceiling stops a very tall one blowing it up.
+    const html = render(commercial);
+    expect(html).toContain('detail:[--stage-h:clamp(480px,calc(100dvh-316px),775px)]');
+  });
+
+  it('makes the column 4:5 with the stage, so the text lines up with it', () => {
+    // The column is the stage's height times 0.8, up to 620px. Title, ✕, stage and
+    // meta all take that width, so their edges meet and the ✕ stays where it is.
+    const html = render(commercial);
+    expect(html).toContain('detail:[--col:min(620px,calc(var(--stage-h)*0.8))]');
+    expect(html.match(/detail:w-\(--col\)/g)).toHaveLength(3);
+    expect(html).not.toContain('detail:w-[620px]');
+  });
+
+  it('keeps the mobile height from the tallest frame in the series', () => {
+    // Below 768 the photo runs full width and the stage is as tall as the
+    // tallest photo would be at that width: the smallest ratio.
     const series = [areaShaped, landscape, cover];
     const html = render({ ...commercial, cover: areaShaped, photos: series });
     const smallest = Math.min(...series.map((photo) => photo.aspectRatio));
-    expect(box(html)).toContain(`aspect-ratio:${String(smallest)}`);
+    expect(box(html)).toContain(`--ratio:${String(smallest)}`);
+    expect(stageClass(html)).toContain('aspect-(--ratio)');
   });
 
-  it('keeps that height whichever photo of the series is showing', () => {
+  it('keeps that stage whichever photo of the series is showing', () => {
     const series = [cover, landscape];
     const onFirst = box(render({ ...commercial, cover, photos: series }));
     const onSecond = box(render({ ...commercial, cover: landscape, photos: series }));
-    // Otherwise the arrows, centred on the box, would jump between photos.
+    // Otherwise the arrows, centred on the stage, would jump between photos.
     expect(onFirst).toBe(onSecond);
+  });
+
+  it('fits each photo inside the stage from its aspect ratio, and centres it', () => {
+    // The smaller of the stage's width and its height times the ratio: a
+    // portrait is scaled down to fit, a landscape fills the width. Arithmetic on
+    // the data, not a measurement (CLAUDE.md rule 3).
+    for (const photo of [cover, landscape, areaShaped]) {
+      const html = render({ ...commercial, cover: photo, photos: [photo] });
+      const ratio = String(photo.aspectRatio);
+      expect(html).toContain(`width:min(100cqw, calc(100cqh * ${ratio}))`);
+      expect(html).toContain(`aspect-ratio:${ratio}`);
+    }
+    const html = render({ ...commercial, cover, photos: [cover] });
+    expect(html).toContain('absolute inset-0 flex items-center justify-center');
+  });
+
+  it('makes the stage a size container, which is what the units above resolve against', () => {
+    const html = render({ ...commercial, cover, photos: [cover] });
+    expect(box(html)).toContain('container-type:size');
   });
 
   it('never crops', () => {
@@ -138,11 +191,11 @@ describe('DetailOverlay — how the photo sits in the column', () => {
   });
 
   it('leaves no gutter for the placeholder colour to show in', () => {
-    // The photo is sized by width with its height left to follow, so the
-    // element is exactly the picture and dominantColor has nowhere to show.
+    // The wrapper takes the photo's own proportions and the picture fills it, so
+    // the element is exactly the picture and dominantColor has nowhere to show.
     const html = render({ ...commercial, cover: landscape, photos: [landscape] });
     const imgClass = /<img[^>]*class="([^"]*)"/.exec(html)?.[1] ?? '';
-    expect(imgClass.split(/\s+/)).toEqual(['h-auto', 'max-h-full', 'w-full']);
+    expect(imgClass.split(/\s+/)).toEqual(['size-full']);
   });
 
   it('slides between photos rather than crossfading', () => {
@@ -190,7 +243,7 @@ describe('DetailOverlay — mobile (UI 09)', () => {
   });
 
   it('lets the photo run full width on mobile and into the column from 768', () => {
-    expect(html).toContain('detail:mx-auto detail:mt-[21px] detail:w-[620px]');
+    expect(html).toContain('detail:mx-auto detail:mt-[21px] detail:w-(--col)');
   });
 });
 

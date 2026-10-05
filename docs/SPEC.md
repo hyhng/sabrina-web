@@ -83,18 +83,20 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 ### 4.1 Desktop a tablet (≥ 768 px)
 
 - Homepage v pozadí **vybledlá**, přes ni **plocha 800 px** vycentrovaná vodorovně
-  - **Plocha je minimálně vysoká jako okno, roste s obsahem a scrolluje okno, ne plocha** — **[rozhodnuto 5. 10. 2026, mění rozhodnutí z 24. 9.]**: výška plochy je nejméně `100dvh` mínus okraje. U vysoké fotky je vyšší a scrolluje celá vrstva přes okno, takže posuvník je na kraji okna, ne uvnitř plochy. **Nadpis a ✕ jsou pevná šablona**: u každého projektu začínají na stejném místě nahoře v ploše, ať je fotka na výšku, nebo na šířku. Obsah se proto **nevystředuje svisle** (vystředěný by měl vodorovný projekt nadpis uprostřed okna a svislý nahoře a nadpis by při přechodu mezi projekty skákal).
-    - Původně (24. 9.) měla plocha pevnou výšku okna a obsah se scrolloval uvnitř ní (vzor `lydiebonhomme.com`). Důvod, proč plocha neposkakuje při listování série, platí dál: výšku rámu fotky určuje nejvyšší fotka série (viz 4.2), takže je pro celý projekt stejná.
+  - **Detail je pevná šablona jedné velikosti** — **[rozhodnuto 5. 10. 2026, mění rozhodnutí z 23. a 24. 9.; vzor: Rosée Marron na `lydiebonhomme.com`]**: nahoře název a ✕, uprostřed **plocha jen pro fotky** pevné velikosti (viz 4.2), pod ní meta. Plocha, a tedy i celý panel, je pro všechny projekty a všechny fotky stejná, takže se nic nehýbe ani mezi projekty, ani při listování.
+  - Panel je nejméně vysoký jako okno (`100dvh` mínus okraje) a roste jen s meta, které může být dlouhé. Pak scrolluje celé okno, ne panel, takže posuvník je na kraji okna.
+  - Nadpis a ✕ začínají u každého projektu na stejném místě. Obsah se proto **nevystředuje svisle** (vystředěný by měl krátký projekt nadpis jinde než dlouhý).
   - Plocha je ve Figmě `#faf9f6` (paper), ne bílá, přestože ji DESIGN.md jmenuje „bílá" — node `154:170`.
 - Uvnitř sloupec **620 px**: nahoře **název projektu** vlevo a **✕** vpravo, pod tím **fotka**, pod ní **meta** ve dvou sloupcích:
   - `Client :` — název klienta, druhý řádek (např. „Marlow" / „Marlow Cosmetics")
   - `Credits :` — řádky `Role · Jméno`
   - **Písmo meta je 14 px na všech šířkách** — **[rozhodnuto 5. 10. 2026]**, ve Figmě 12,5 px. Popisky `Client :` a `Credits :` mají stejnou velikost jako řádky pod nimi.
-- **Fotka je přes celou šířku obsahového sloupce (620)**, výška dopadne podle jejího poměru stran — **[rozhodnuto 24. 9. 2026, mění původní zadání]**. Levá a pravá hrana fotky tak lícují s názvem nad ní a meta pod ní.
-  - Původně tu stálo, že plocha je pevných 620 × 740 a při nižším okně se zmenšuje, aby se vše vešlo bez scrollu. Zrušeno: pevná plocha znamenala, že fotka na výšku byla užší než text kolem, což bylo vidět jako nezarovnanost.
-  - **Důsledek:** u vysokých fotek detail na nižším okně scrolluje, a to celé okno (viz výše). Přijato vědomě — zarovnání má přednost.
-- **Fotka se nikdy neořezává** — **[rozhodnuto 23. 9. 2026, mění původní zadání]**. Zobrazí se celá ve vlastním poměru stran, vycentrovaná v ploše 620 × 740. Název, meta a šipky zůstávají na stejném místě bez ohledu na tvar fotky (UI 05B).
-  - Původně tu stálo, že fotka s poměrem blízkým 620:740 (do ~8 %) se ořízne přes `cover`, protože „mírný ořez je v designu schválený". Zrušeno na přání klienta: přizpůsobovat fotku ploše — ořezem ani výplní — je nežádoucí.
+- **Fotka se vejde celá do plochy a je v ní vycentrovaná vodorovně i svisle** — **[rozhodnuto 5. 10. 2026, mění rozhodnutí z 24. 9. o plné šířce sloupce]**. Fotka na výšku se **zmenší, aby se vešla** (nescrolluje se kvůli ní), fotka na šířku vyplní šířku plochy a má nad sebou a pod sebou volné místo. Nikdy se neořezává a nikdy se nezvětšuje nad plochu.
+  - **Plocha fotek je 4:5 a její výška se počítá z okna**: `clamp(480px, 100dvh − 316px, 775px)`. Číslo 316 je okraje okna (70) a to, co je v panelu mimo plochu (odsazení nahoře, nadpis, mezery, tři řádky meta, odsazení dole). Na okně 1440 × 900 vyjde plocha 467 × 584, na 1920 × 1200 je 620 × 775 (strop), na 810 × 1000 je 547 × 684.
+  - **Sloupec je stejně široký jako plocha: `min(620px, výška plochy × 0,8)`** — **[rozhodnuto 5. 10. 2026]**. Nadpis, ✕, plocha i meta mají tutéž šířku, takže jejich okraje **vždy lícují** a fotka 4:5 plochu vyplní přesně. Šířka je stejná pro všechny projekty při dané velikosti okna, takže ✕ neskáče do stran. Cena: na nižším okně je sloupec užší (467 px na 900 px výšky, 384 px na spodní hranici). Fotky 3:4 nebo 2:3 jsou o kousek užší než sloupec a jsou vycentrované.
+  - Pod 720 px výšky okna plocha dosáhne spodní hranice 480 px a okno se o kousek scrolluje (na 1280 × 720 o 55 px, na 1024 × 768 o 7 px).
+  - Velikost fotky se počítá z poměru stran z dat jako menší z šířky plochy a výšky plochy krát poměr — v jednotkách kontejneru, nic se neměří (CLAUDE.md pravidlo 3).
+  - Původně (23. 9.) byla plocha pevných 620 × 740, 24. 9. se změnila na plnou šířku sloupce s výškou podle fotky, protože užší fotka na výšku nelícovala s textem kolem. Teď je to plocha pevné velikosti 4:5 s fotkou zmenšenou a vycentrovanou, a sloupec se jí přizpůsobuje, aby okraje lícovaly (viz níže).
   - Element se velikostně řídí fotkou, ne plochou. Dřívější implementace roztahovala `<img>` na celou plochu a fotku do ní vkládala, čímž po stranách prosvítal placeholderový `dominantColor` jako tmavé pruhy.
 - Tablet (810): stejné okno jako desktop. Bílá plocha má šířku `min(800px, 100vw − 48px)`, obsahový sloupec 620 px zůstává — na 810 px vyjde bílá plocha 762 px a kolem sloupce 71 px. Samostatný návrh není potřeba.
 
@@ -106,13 +108,13 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 - Detail se otevře na **titulní fotce** (ta, ze které byl přechod z dlaždice). **[návrh]**
 - Sousední fotka (±1) se přednačítá.
 - Přechod mezi fotkami: **slide** (~380 ms) — **[změněno 24. 9. 2026]**, původně návrh crossfade ~250 ms. Fotky leží vedle sebe a celá řada se posune.
-- **Plocha fotky je vysoká jako nejvyšší fotka série** při dané šířce (tedy nejmenší poměr stran) — **[rozhodnuto 24. 9. 2026]**. Díky tomu se při listování nehýbou šipky ani meta a nižší fotka se v ploše vycentruje. Počítá se z dat, neměří se.
+- **Plocha fotek je u každé série stejná** (viz 4.1), takže se při listování nehýbou šipky ani meta a každá fotka je v ní vycentrovaná. **Pod 768 px** má fotka plnou šířku a plocha je vysoká jako nejvyšší fotka série při dané šířce (nejmenší poměr stran), počítáno z dat — **[rozhodnuto 24. 9. 2026]**.
 
 ### 4.3 Šipky — **[rozhodnuto]**
 
 - Kulaté tlačítko **40 px**, `#9E9E9E` / 55 % krytí + jemný `backdrop-filter: blur`
 - Bílý chevron **7 × 14 px**, tah 1,5 px, zakulacené konce
-- Na fotce, **16 px od okraje** fotky, svisle uprostřed fotky — **[změněno 5. 10. 2026]**. Mezi 24. 9. a 5. 10. byly zarovnané přesně s okrajem, ale tam vypadaly jako součást rámu, ne jako ovládání.
+- Na ploše fotek, **16 px od jejího okraje**, svisle uprostřed — **[změněno 5. 10. 2026]**. Jsou u okraje plochy, ne fotky, takže se nehýbou podle tvaru fotky. Mezi 24. 9. a 5. 10. byly zarovnané přesně s okrajem fotky, ale tam vypadaly jako součást rámu, ne jako ovládání.
 - Chevron **přesně ve středu** kruhu — **[změněno 24. 9. 2026]**, původně opticky posunutý o 1,5 px proti směru šipky
 - **Skryté**, objeví se při hoveru nad fotkou (fade ~200 ms). Při fokusu z klávesnice viditelné vždy.
 - Klávesy **← →** listují, **Esc** zavírá

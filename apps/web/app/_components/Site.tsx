@@ -2,8 +2,16 @@
 
 import { filterProjects } from '@sabrina/shared/filter';
 import type { Project, Settings } from '@sabrina/shared/schema';
-import { DetailOverlay, Filter, Footer, Header, InfoOverlay, OffsetGrid } from '@sabrina/ui';
-import { useMemo } from 'react';
+import {
+  DetailOverlay,
+  Filter,
+  Footer,
+  Header,
+  InfoOverlay,
+  markInteractive,
+  OffsetGrid,
+} from '@sabrina/ui';
+import { useEffect, useMemo } from 'react';
 
 import { setFilter, useFilter } from '../../lib/use-filter.ts';
 import { closeOverlay, overlayFromPath, pushPath, usePath } from '../../lib/use-route.ts';
@@ -23,6 +31,8 @@ export interface SiteProps {
 
 export function Site({ projects, settings, imgBase, initialPath }: SiteProps) {
   const path = usePath(initialPath);
+  // From here on, an overlay that opens fades in (overlay-chrome.ts).
+  useEffect(markInteractive, []);
   const overlay = useMemo(() => overlayFromPath(path), [path]);
 
   const filter = useFilter();

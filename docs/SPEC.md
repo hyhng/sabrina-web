@@ -134,6 +134,7 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
   - **Byl to nápad klientky — stojí za to potvrdit s ní**, že se ruší.
   - Implementace je v historii gitu (commit `24bf762`), vrácení je otázka jednoho revertu.
 
+- **Otevření kliknutím: fade-in 250 ms** — **[rozhodnuto 5. 10. 2026]**, platí pro detail, Information i fotku přes celé okno. S `prefers-reduced-motion` bez animace.
 - **Přímý příchod na `/work/[slug]/`:** bez přechodu, detail je rovnou otevřený.
 - **Zavření:** ✕, Esc, klik na vybledlé pozadí mimo bílou plochu, tlačítko Zpět v prohlížeči. Pokud je dlaždice projektu v aktuálním filtru, fotka se vrátí zpět do ní (obrácený přechod); jinak fade.
 - `prefers-reduced-motion`: všechny přechody nahradit krátkým fade.

@@ -48,6 +48,30 @@ export function useScrollLock(): void {
   useEffect(lockScroll, []);
 }
 
+/**
+ * Overlays fade in when they are opened on the page [rozhodnuto 5. 10. 2026],
+ * but not when the visitor arrives on an overlay's own address: then it is
+ * simply open (docs/SPEC.md 4.5). The HTML for that address already carries
+ * the overlay, and a CSS animation on it would play on page load.
+ *
+ * So the fade is switched on only once the page is interactive. A module
+ * value rather than state: the render that hydrates the server HTML must read
+ * false, as the server did, and every overlay mounted after it reads true.
+ */
+let interactive = false;
+
+/** Called once the page has hydrated (apps/web Site). */
+export function markInteractive(): void {
+  interactive = true;
+}
+
+/** The fade-in classes for an overlay opened now, or nothing on arrival. */
+export function openFade(): string {
+  return interactive ? OPEN_FADE : '';
+}
+
+export const OPEN_FADE = 'animate-fade-in motion-reduce:animate-none';
+
 const FOCUSABLE = [
   'a[href]',
   'button:not([disabled])',

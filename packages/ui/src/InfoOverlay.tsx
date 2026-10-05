@@ -1,9 +1,9 @@
 'use client';
 
 import type { Settings } from '@sabrina/shared/schema';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { useFocusTrap, useScrollLock } from './overlay-chrome.ts';
+import { openFade, useFocusTrap, useScrollLock } from './overlay-chrome.ts';
 import { Photo } from './Photo.tsx';
 
 /**
@@ -40,6 +40,8 @@ const TITLE = 'Sabrina Kulhankova, photographer.';
 
 export function InfoOverlay({ settings, imgBase, onClose }: InfoOverlayProps) {
   const dialog = useRef<HTMLDivElement>(null);
+  // Decided once, when it opens: added later, the class would replay the fade.
+  const [fade] = useState(openFade);
   useScrollLock();
   useFocusTrap(dialog);
 
@@ -62,7 +64,7 @@ export function InfoOverlay({ settings, imgBase, onClose }: InfoOverlayProps) {
       aria-modal="true"
       aria-labelledby="info-title"
       tabIndex={-1}
-      className="fixed inset-0 z-50 overflow-y-auto bg-paper outline-none detail:bg-white/93"
+      className={`fixed inset-0 z-50 overflow-y-auto bg-paper outline-none detail:bg-white/93 ${fade}`}
       onClick={onClose}
     >
       <div

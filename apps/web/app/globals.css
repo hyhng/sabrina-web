@@ -8,6 +8,17 @@
  * One place for every value, so a contrast change is a one-line change.
  */
 @theme {
+  /*
+   * Overlays fade in when opened from a click (OPEN_FADE in packages/ui).
+   * [rozhodnuto 5. 10. 2026]
+   */
+  --animate-fade-in: fade-in 250ms ease-out;
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
   --color-paper: #faf9f6; /* page background */
   --color-ink: #14130f; /* text */
   --color-muted: #78746b; /* footer, category on hover */

@@ -120,3 +120,14 @@ describe('trapFocus', () => {
     release();
   });
 });
+
+describe('openFade', () => {
+  it('is nothing until the page is interactive, so arriving on an overlay does not fade it in', async () => {
+    vi.resetModules();
+    const chrome = await import('./overlay-chrome.ts');
+    expect(chrome.openFade()).toBe('');
+    chrome.markInteractive();
+    expect(chrome.openFade()).toBe(chrome.OPEN_FADE);
+    expect(chrome.OPEN_FADE).toContain('motion-reduce:animate-none');
+  });
+});

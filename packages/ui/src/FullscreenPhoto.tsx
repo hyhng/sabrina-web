@@ -4,6 +4,7 @@ import type { Photo as PhotoData } from '@sabrina/shared/schema';
 import { useEffect, useRef } from 'react';
 
 import { ArrowButton } from './ArrowButton.tsx';
+import { OPEN_FADE } from './overlay-chrome.ts';
 import { Photo } from './Photo.tsx';
 
 /**
@@ -69,7 +70,7 @@ export function FullscreenPhoto({
       ref={layer}
       tabIndex={-1}
       aria-label="Full screen photo"
-      className="group/photo fixed inset-0 z-[60] flex items-center justify-center bg-paper outline-none"
+      className={`group/photo fixed inset-0 z-[60] flex items-center justify-center bg-paper outline-none ${OPEN_FADE}`}
     >
       <div
         style={{

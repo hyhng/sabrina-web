@@ -1,10 +1,10 @@
 'use client';
 
 import type { Project } from '@sabrina/shared/schema';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Carousel } from './Carousel.tsx';
-import { useFocusTrap, useScrollLock } from './overlay-chrome.ts';
+import { openFade, useFocusTrap, useScrollLock } from './overlay-chrome.ts';
 
 /**
  * Project detail (Figma UI 05 node 154:71, UI 09 node 161:278).
@@ -60,6 +60,8 @@ export interface DetailOverlayProps {
 
 export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps) {
   const dialog = useRef<HTMLDivElement>(null);
+  // Decided once, when it opens: added later, the class would replay the fade.
+  const [fade] = useState(openFade);
   useScrollLock();
   useFocusTrap(dialog);
 
@@ -87,7 +89,7 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
       aria-modal="true"
       aria-labelledby="detail-title"
       tabIndex={-1}
-      className="fixed inset-0 z-50 overflow-y-auto bg-paper outline-none detail:bg-paper/88 detail:py-[35px]"
+      className={`fixed inset-0 z-50 overflow-y-auto bg-paper outline-none detail:bg-paper/88 detail:py-[35px] ${fade}`}
       onClick={onClose}
     >
       <div

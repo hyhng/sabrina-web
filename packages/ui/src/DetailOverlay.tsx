@@ -112,22 +112,18 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
         </div>
 
         <div
-          className={`${COLUMN} flex flex-col gap-[16px] pt-[20px] pb-[40px] text-[13px] text-ink detail:mt-[26px] detail:flex-row detail:items-start detail:gap-0 detail:pt-0 detail:pb-0 detail:text-[12.5px] detail:leading-[1.5]`}
+          className={`${COLUMN} flex flex-col gap-[16px] pt-[20px] pb-[40px] text-[14px] text-ink detail:mt-[26px] detail:flex-row detail:items-start detail:gap-0 detail:pt-0 detail:pb-0 detail:leading-[1.5]`}
         >
           {project.client === undefined ? null : (
             <div className="flex flex-col gap-[2px] detail:min-w-px detail:flex-1 detail:gap-0">
-              <p className="text-[12.5px] opacity-50 detail:text-muted detail:opacity-100">
-                Client :
-              </p>
+              <p className="opacity-50 detail:text-muted detail:opacity-100">Client :</p>
               <p className="font-medium">{project.client}</p>
               {project.clientLine2 === undefined ? null : <p>{project.clientLine2}</p>}
             </div>
           )}
           {project.credits.length === 0 ? null : (
             <div className="flex flex-col gap-[2px] detail:min-w-px detail:flex-1 detail:gap-0">
-              <p className="text-[12.5px] opacity-50 detail:text-muted detail:opacity-100">
-                Credits :
-              </p>
+              <p className="opacity-50 detail:text-muted detail:opacity-100">Credits :</p>
               {project.credits.map((credit) => (
                 <p key={`${credit.role}-${credit.name}`}>
                   {credit.role} · {credit.name}

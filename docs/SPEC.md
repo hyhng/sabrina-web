@@ -89,6 +89,7 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 - Uvnitř sloupec **620 px**: nahoře **název projektu** vlevo a **✕** vpravo, pod tím **fotka**, pod ní **meta** ve dvou sloupcích:
   - `Client :` — název klienta, druhý řádek (např. „Marlow" / „Marlow Cosmetics")
   - `Credits :` — řádky `Role · Jméno`
+  - **Písmo meta je 14 px na všech šířkách** — **[rozhodnuto 5. 10. 2026]**, ve Figmě 12,5 px. Popisky `Client :` a `Credits :` mají stejnou velikost jako řádky pod nimi.
 - **Fotka je přes celou šířku obsahového sloupce (620)**, výška dopadne podle jejího poměru stran — **[rozhodnuto 24. 9. 2026, mění původní zadání]**. Levá a pravá hrana fotky tak lícují s názvem nad ní a meta pod ní.
   - Původně tu stálo, že plocha je pevných 620 × 740 a při nižším okně se zmenšuje, aby se vše vešlo bez scrollu. Zrušeno: pevná plocha znamenala, že fotka na výšku byla užší než text kolem, což bylo vidět jako nezarovnanost.
   - **Důsledek:** u vysokých fotek detail na nižším okně scrolluje, a to celé okno (viz výše). Přijato vědomě — zarovnání má přednost.

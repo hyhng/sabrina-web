@@ -176,6 +176,14 @@ describe('DetailOverlay — mobile (UI 09)', () => {
     expect(html).toContain('text-[17px]');
   });
 
+  it('sets the meta under the photo at 14px at every width', () => {
+    // Raised from Figma's 12.5px on 5 Oct 2026. One size, so there is no step
+    // at 768 and the Client and Credits labels match the lines under them.
+    expect(html).toContain('pb-[40px] text-[14px] text-ink');
+    expect(html).not.toContain('text-[12.5px]');
+    expect(html).not.toContain('detail:text-[12.5px]');
+  });
+
   it('stacks the meta on mobile and lines it up from 768', () => {
     expect(html).toContain('flex flex-col gap-[16px]');
     expect(html).toContain('detail:flex-row');

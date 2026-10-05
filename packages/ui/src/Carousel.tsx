@@ -26,6 +26,10 @@ import { Photo } from './Photo.tsx';
  * therefore the same height for every photo, so the arrows sit still while
  * paging and a shorter frame is simply centred in it.
  *
+ * The arrows sit 16px in from the photo's edge, vertically centred
+ * [rozhodnuto 5. 10. 2026, vrací původních 16 px ze 24. 9.]; flush with the
+ * edge they read as part of the frame rather than as controls.
+ *
  * Photos slide rather than crossfade: each sits one box-width to the left or
  * right of the one on screen and the whole row shifts. Only the current photo
  * and its neighbours exist, so that is also what preloads ±1.
@@ -138,14 +142,14 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
         <ArrowButton
           direction="previous"
           onClick={goBack}
-          className="absolute left-0 top-1/2 -translate-y-1/2"
+          className="absolute left-[16px] top-1/2 -translate-y-1/2"
         />
       ) : null}
       {canGoForward ? (
         <ArrowButton
           direction="next"
           onClick={goForward}
-          className="absolute right-0 top-1/2 -translate-y-1/2"
+          className="absolute right-[16px] top-1/2 -translate-y-1/2"
         />
       ) : null}
     </div>

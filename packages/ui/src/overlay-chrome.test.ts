@@ -70,6 +70,24 @@ describe('trapFocus', () => {
     expect(document.activeElement?.id).toBe('opener');
   });
 
+  it('holds the focus ring back on the tile it hands focus to, until focus moves on', () => {
+    // Esc is a key press, so the browser would ring the tile. Focus stays; the
+    // ring does not.
+    overlay();
+    const opener = document.querySelector<HTMLElement>('#opener') as HTMLElement;
+    opener.focus();
+    const release = trapFocus(document.querySelector('#dialog') as HTMLElement);
+
+    release();
+    expect(document.activeElement).toBe(opener);
+    // jsdom writes the shorthand out in full, so match the start only.
+    expect(opener.style.outline).toMatch(/^none/);
+
+    // Once focus moves on, the tile is back to normal for the next time.
+    opener.blur();
+    expect(opener.style.outline).toBe('');
+  });
+
   it('wraps Tab round rather than letting it escape to the page behind', () => {
     const dialog = overlay();
     const release = trapFocus(dialog);

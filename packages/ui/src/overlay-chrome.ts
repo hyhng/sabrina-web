@@ -101,7 +101,23 @@ export function trapFocus(node: HTMLElement): () => void {
     node.addEventListener('keydown', onKeyDown);
     return () => {
       node.removeEventListener('keydown', onKeyDown);
-      opener?.focus();
+      if (opener === null) return;
+      opener.focus();
+      /*
+       * Closing with Esc is a key press, so the browser draws its focus ring on
+       * the tile the focus lands on — a ring the visitor did not ask for, round
+       * a photograph. Focus is what matters to a keyboard visitor, and it is
+       * there; only the ring is held back until focus moves on, and Tab shows
+       * the next one as usual.
+       */
+      opener.style.outline = 'none';
+      opener.addEventListener(
+        'blur',
+        () => {
+          opener.style.outline = '';
+        },
+        { once: true },
+      );
     };
   }
 }

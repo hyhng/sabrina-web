@@ -44,6 +44,10 @@ import './photo-grid.css';
  */
 
 const IMG_BASE = process.env.NEXT_PUBLIC_IMG_BASE ?? '';
+
+/** What the alt field is, for someone who has not met the term. */
+export const ALT_HINT =
+  'Nepovinné, anglicky, jednou větou. Je to tzv. alt text: na webu ho nikdo nevidí, ale nevidomým ho přečte čtečka obrazovky a Google podle něj fotku najde. Když zůstane prázdné, doplní se „Název projektu — photo 2“.';
 const ACCEPT_ATTRIBUTE = ACCEPTED_TYPES.join(',');
 const DRAWER = 'photo-detail';
 
@@ -521,7 +525,7 @@ function PhotoDetail({
       </div>
 
       <label className="photo-detail__alt">
-        <span>Popis fotky</span>
+        <span>Popis fotky (alt text)</span>
         <input
           type="text"
           value={alt}
@@ -532,7 +536,7 @@ function PhotoDetail({
             onAlt(alt.trim());
           }}
         />
-        <small>Nepovinné. Čtou ho čtečky obrazovky a hledá se podle něj.</small>
+        <small>{ALT_HINT}</small>
       </label>
 
       <div className="photo-detail__danger">

@@ -67,9 +67,10 @@ export const Photos: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
-      label: 'Popis fotky',
+      label: 'Popis fotky (alt text)',
       admin: {
-        description: 'Nepovinné. Když zůstane prázdné, doplní se „Název projektu — photo 2".',
+        description:
+          'Nepovinné, anglicky, jednou větou. Je to tzv. alt text: na webu ho nikdo nevidí, ale nevidomým ho přečte čtečka obrazovky a Google podle něj fotku najde. Když zůstane prázdné, doplní se „Název projektu — photo 2“.',
       },
     },
     {

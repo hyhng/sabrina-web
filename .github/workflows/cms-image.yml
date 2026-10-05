@@ -2,8 +2,10 @@ name: CMS image
 
 # Builds the admin image for the server (docs/TECH.md 7).
 #
-# linux/arm64 only: the Hetzner CAX11 is an Ampere machine. Building a second
-# architecture nobody runs would double the build time for nothing.
+# Both architectures. The plan is a Hetzner CAX11 (arm64), but those cheap ARM
+# servers are sold out in some datacentres at times, and the fallback is an x86
+# machine. One tag that runs on either means the choice of server never has to
+# wait for a rebuild.
 #
 # Nothing here deploys. The server pulls — see infra/README.md — because a
 # workflow that can reach the server needs a key that can reach the server, and
@@ -36,8 +38,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # arm64 on an x86 runner. Slower than a native builder and simpler than
-      # keeping one; this image is built on merges to main, not on every push.
+      # arm64 on an x86 runner, emulated. Slower than a native builder and simpler
+      # than keeping one; this image is built on merges to main, not on every push.
       - uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
@@ -64,7 +66,7 @@ jobs:
         with:
           context: .
           file: infra/Dockerfile
-          platforms: linux/arm64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

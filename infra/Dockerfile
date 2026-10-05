@@ -1,8 +1,10 @@
 # The admin (apps/cms) as an image for the server (docs/TECH.md 7).
 #
-# Built for linux/arm64: the Hetzner CAX11 is an Ampere machine, and so is any
-# Apple Silicon laptop, which is why this image can be built and run locally
-# before the server exists.
+# Built for linux/amd64 and linux/arm64 (the workflow does both). The plan is a
+# Hetzner CAX11, which is arm64 — as is any Apple Silicon laptop, which is why
+# this image was rehearsed locally before the server existed — but an x86 server
+# runs the same tag. Nothing in here is architecture-specific: the base image is
+# multi-arch and the native pieces (Next's SWC) are picked at install time.
 #
 # Debian slim rather than Alpine on purpose. Next ships separate SWC binaries
 # for glibc and musl, and the glibc one is the better-trodden path; the image is

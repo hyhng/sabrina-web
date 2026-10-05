@@ -10,13 +10,13 @@ surprises. What could not be rehearsed is named as such.
 
 ## What is in this folder
 
-| File                      | What it is                                                    |
-| ------------------------- | ------------------------------------------------------------- |
-| `Dockerfile`              | the admin as an `arm64` image; build context is the repo root |
-| `docker-compose.yml`      | **local only** — a Postgres for `pnpm dev:cms`                |
-| `docker-compose.prod.yml` | the server: `caddy` + `db` + `cms`                            |
-| `Caddyfile`               | TLS and the reverse proxy for `admin.<domain>`                |
-| `backup.sh`               | daily `pg_dump` → R2, 30 days of retention                    |
+| File                      | What it is                                                              |
+| ------------------------- | ----------------------------------------------------------------------- |
+| `Dockerfile`              | the admin as an `arm64` + `amd64` image; build context is the repo root |
+| `docker-compose.yml`      | **local only** — a Postgres for `pnpm dev:cms`                          |
+| `docker-compose.prod.yml` | the server: `caddy` + `db` + `cms`                                      |
+| `Caddyfile`               | TLS and the reverse proxy for `admin.<domain>`                          |
+| `backup.sh`               | daily `pg_dump` → R2, 30 days of retention                              |
 
 ## First run on a new server
 

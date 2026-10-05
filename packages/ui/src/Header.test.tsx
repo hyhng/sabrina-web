@@ -50,6 +50,16 @@ describe('Header', () => {
   it('leaves the filter row out entirely when there is no filter', () => {
     expect(html).not.toContain('desktop:-translate-x-1/2');
   });
+
+  it('is sticky, over the grid, on a background of its own', () => {
+    // Without the background the tiles would show through it as it overlaps them.
+    expect(html).toContain('sticky top-0 z-40 bg-paper');
+  });
+
+  it('starts out showing, and slides without motion for those who ask for none', () => {
+    expect(html).not.toContain('-translate-y-full');
+    expect(html).toContain('motion-reduce:transition-none');
+  });
 });
 
 describe('Footer', () => {
@@ -67,12 +77,43 @@ describe('Footer', () => {
 
   it('stacks on mobile and lines up from tablet', () => {
     expect(html).toContain('flex-col');
-    expect(html).toContain('tablet:flex-row');
+    expect(html).toContain('tablet:grid');
     // display:contents pulls the two short links into the same row as the address.
     expect(html).toContain('tablet:contents');
   });
 
   it('sits under a rule', () => {
     expect(html).toContain('border-t border-line');
+  });
+
+  it('keeps clear of the content above it', () => {
+    expect(html).toMatch(/<footer class="mt-\[96px\]/);
+    expect(html).toContain('tablet:mt-[120px]');
+    expect(html).toContain('desktop:mt-[140px]');
+  });
+
+  it('credits KeySpace with a link, in the heavier weight, opening in a new tab', () => {
+    const credit = /<a[^>]*href="https:\/\/keyspace\.cz"[^>]*>Created by KeySpace<\/a>/.exec(html);
+    expect(credit?.[0]).toContain('font-medium');
+    expect(credit?.[0]).toContain('rel="noreferrer"');
+    expect(credit?.[0]).toContain('target="_blank"');
+  });
+
+  it('puts the credit left, the links in the middle and the year right on desktop', () => {
+    const order = (needle: string) => {
+      const tag = new RegExp(`<(?:a|p|div)[^>]*class="([^"]*)"[^>]*>\\s*${needle}`).exec(html);
+      return tag?.[1] ?? '';
+    };
+    expect(order('Created by KeySpace')).toContain('desktop:order-1');
+    expect(html).toMatch(/desktop:order-2 desktop:col-span-1/);
+    expect(order('©')).toContain('desktop:order-3');
+  });
+
+  it('is set larger than Figma: 13, 14, 15px', () => {
+    expect(html).toContain('text-[13px]');
+    expect(html).toContain('tablet:text-[14px]');
+    expect(html).toContain('desktop:text-[15px]');
+    // The Figma sizes it replaces.
+    expect(html).not.toContain('desktop:text-[12.5px]');
   });
 });

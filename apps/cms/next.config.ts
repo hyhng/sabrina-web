@@ -21,6 +21,15 @@ const nextConfig: NextConfig = {
    * directories up. The server then starts and fails on the first import.
    */
   outputFileTracingRoot: path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..'),
+
+  /*
+   * Payload mounts the admin at /admin and nothing else lives on this host, so
+   * the bare address would be a 404. Temporary, so a browser does not remember
+   * it for good.
+   */
+  redirects() {
+    return [{ source: '/', destination: '/admin', permanent: false }];
+  },
 };
 
 export default withPayload(nextConfig);

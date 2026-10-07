@@ -192,7 +192,7 @@ Figma: UI 10 (desktop), UI 11 (mobil). Header a patička jako na homepage, upros
 
 ## 8. Admin (CMS)
 
-Figma: stránka UX, sloupec „CMS / ADMIN" (wireframy, nody v `DESIGN.md`). Admin je **česky**, bez rolí. **Další účet může založit jen přihlášený uživatel** (Uživatelé → Vytvořit nové); vlastní účet smazat nejde, aby se do adminu vždy dalo dostat — **[rozhodnuto 5. 10. 2026, dřív jeden uživatel]**. Zapomenuté heslo zatím nefunguje, dokud není nastavený e-mail (Resend). Navigace: **Projekty · Pořadí na homepage · Nastavení webu · Odhlásit**.
+Figma: stránka UX, sloupec „CMS / ADMIN" (wireframy, nody v `DESIGN.md`). Admin je **česky**, bez rolí. **Další účet může založit jen přihlášený uživatel** (Uživatelé → Vytvořit nové); vlastní účet smazat nejde, aby se do adminu vždy dalo dostat — **[rozhodnuto 5. 10. 2026, dřív jeden uživatel]**. Zapomenuté heslo zatím nefunguje, dokud není nastavený e-mail (Resend). **Přihlášení vydrží 30 dní od poslední návštěvy** (Payload má 2 hodiny) — **[rozhodnuto 7. 10. 2026]**; relace se obnovuje používáním, cookie je `HttpOnly` a na serveru `Secure`. Navigace: **Projekty · Pořadí na homepage · Nastavení webu · Odhlásit**.
 
 ### 8.1 Projekty (dashboard) — `66:6`
 - Seznam projektů: náhled, název, kategorie, počet fotek, stav (koncept / publikováno)

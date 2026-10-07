@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload';
 
+import { authSettings } from './auth-settings.ts';
 import { canDeleteUser } from './user-rules.ts';
 
 /**
@@ -14,7 +15,8 @@ import { canDeleteUser } from './user-rules.ts';
  */
 export const Users: CollectionConfig = {
   slug: 'users',
-  auth: true,
+  // Thirty days since the last visit rather than Payload's two hours.
+  auth: authSettings(process.env),
   labels: { singular: 'Uživatel', plural: 'Uživatelé' },
   admin: {
     useAsTitle: 'email',

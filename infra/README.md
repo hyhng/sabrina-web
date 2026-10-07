@@ -160,10 +160,8 @@ schema or the backup script.
 
 ## Still to do on the real server
 
-- Resend: the code is in place (`@payloadcms/email-resend`, a Czech reset e-mail),
-  only the account is missing. It needs a Resend account owned by the client, a
-  sending domain verified in Cloudflare DNS (SPF/DKIM records Resend lists), and
-  an API key. Then `RESEND_API_KEY` and `EMAIL_FROM` (e.g.
-  `Sabrina Kulhankova <admin@sabrinakulhankova.photography>`) in `.env`, and
-  `docker compose up -d cms`. Until both are set, reset e-mails go to the log and
-  nothing is sent.
+- nothing that blocks use. Resend is live since 7 October: domain
+  `sabrinakulhankova.photography` verified in Resend (SPF/DKIM CNAME and TXT
+  records on `send.`, `rsend.`, `resend._domainkey.` and `_dmarc.`, all DNS only),
+  key and `EMAIL_FROM` in `.env`. The Resend account is the developer's for now
+  and must move to the client before handover (docs/PHASES.md F6).

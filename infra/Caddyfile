@@ -18,6 +18,18 @@
 		X-Content-Type-Options nosniff
 		Referrer-Policy strict-origin-when-cross-origin
 		-Server
+		# The admin is not a public page and nothing in it should be searchable
+		# (docs/SPEC.md 9.2). A header covers every response, files included.
+		X-Robots-Tag "noindex, nofollow"
+	}
+
+	# And a robots.txt that says so, for the crawlers that ask before they look.
+	# Answered here, not by the admin: it has no such route.
+	handle /robots.txt {
+		respond <<ROBOTS
+			User-agent: *
+			Disallow: /
+			ROBOTS 200
 	}
 
 	# 40 MB: a camera original is the largest thing that is posted here, and the
@@ -26,7 +38,9 @@
 		max_size 40MB
 	}
 
-	reverse_proxy cms:3001
+	handle {
+		reverse_proxy cms:3001
+	}
 
 	log {
 		output file /var/log/caddy/admin.log {

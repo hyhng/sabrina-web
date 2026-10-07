@@ -5,3 +5,12 @@
 # which makes every visit ask again for files that cannot have changed.
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
+
+# The *.pages.dev addresses are the preview, not the site. Without this Google
+# can index them next to the real domain and show two copies of the portfolio.
+# Only these hosts: the custom domain must stay indexable (docs/SPEC.md 9.2).
+# The second pattern is Pages' per-deployment addresses (<hash>.<project>.pages.dev).
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

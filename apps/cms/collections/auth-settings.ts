@@ -1,3 +1,5 @@
+import { adminBase, RESET_SUBJECT, resetEmailHtml } from '../lib/email-settings.ts';
+
 /**
  * How long a sign-in lasts in the admin [rozhodnuto 7. 10. 2026].
  *
@@ -15,7 +17,12 @@
 export const SESSION_SECONDS = 60 * 60 * 24 * 30;
 
 export function authSettings(env: Record<string, string | undefined>) {
+  const base = adminBase(env);
   return {
+    forgotPassword: {
+      generateEmailSubject: () => RESET_SUBJECT,
+      generateEmailHTML: (args?: { token?: string }) => resetEmailHtml(base, args?.token ?? ''),
+    },
     tokenExpiration: SESSION_SECONDS,
     cookies: {
       // Not in development: localhost is plain HTTP and a Secure cookie would

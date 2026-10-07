@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres';
+import { resendAdapter } from '@payloadcms/email-resend';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { cs } from '@payloadcms/translations/languages/cs';
 import path from 'node:path';
@@ -10,11 +11,13 @@ import { publishEndpoint } from './endpoints/publish.ts';
 import { Projects } from './collections/Projects.ts';
 import { Users } from './collections/Users.ts';
 import { Homepage } from './globals/Homepage.ts';
+import { emailSettings } from './lib/email-settings.ts';
 import { migrations } from './migrations/index.ts';
 import { Publish } from './globals/Publish.ts';
 import { Settings } from './globals/Settings.ts';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
+const mail = emailSettings(process.env);
 
 /**
  * Payload for the client's admin (docs/TECH.md 6).
@@ -77,6 +80,19 @@ export default buildConfig({
     supportedLanguages: { cs },
     fallbackLanguage: 'cs',
   },
+
+  /*
+   * E-mail is for one thing: a forgotten password. Until RESEND_API_KEY and
+   * EMAIL_FROM are both set on the server, Payload writes e-mails to the log.
+   */
+  email:
+    mail === undefined
+      ? undefined
+      : resendAdapter({
+          apiKey: mail.apiKey,
+          defaultFromAddress: mail.from,
+          defaultFromName: mail.fromName,
+        }),
 
   secret: process.env.PAYLOAD_SECRET ?? '',
 

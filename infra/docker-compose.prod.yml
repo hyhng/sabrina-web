@@ -62,6 +62,8 @@ services:
       SITE_URL: ${SITE_URL:-}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
+      # The admin's own public address, for the link in a password-reset e-mail.
+      PAYLOAD_PUBLIC_URL: https://${ADMIN_DOMAIN}
       NEXT_PUBLIC_IMG_BASE: ${IMG_BASE_URL:-}
     depends_on:
       db:

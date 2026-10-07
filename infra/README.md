@@ -160,5 +160,10 @@ schema or the backup script.
 
 ## Still to do on the real server
 
-- Resend for the admin's e-mail (forgotten password), `RESEND_API_KEY` and
-  `EMAIL_FROM`
+- Resend: the code is in place (`@payloadcms/email-resend`, a Czech reset e-mail),
+  only the account is missing. It needs a Resend account owned by the client, a
+  sending domain verified in Cloudflare DNS (SPF/DKIM records Resend lists), and
+  an API key. Then `RESEND_API_KEY` and `EMAIL_FROM` (e.g.
+  `Sabrina Kulhankova <admin@sabrinakulhankova.photography>`) in `.env`, and
+  `docker compose up -d cms`. Until both are set, reset e-mails go to the log and
+  nothing is sent.

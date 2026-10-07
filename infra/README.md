@@ -130,7 +130,7 @@ and password hashes. Use a token scoped to that bucket
 photo keys only if that token happens to cover both. Unset, the dump stays on the
 server and the log says so — which does not survive losing the server.
 
-On the server since 7 October: cron at 03:00, log in `/var/log/sabrina-backup.log`
+On the server since 7 October, with the copy in the private bucket `sabrina-backups` (token scoped to that bucket alone: it is denied on the photo bucket): cron at 03:00, log in `/var/log/sabrina-backup.log`
 (rotated monthly), dumps in `/var/backups/sabrina`.
 
 Photographs are not backed up: they are already in R2 and immutable. The
@@ -160,7 +160,5 @@ schema or the backup script.
 
 ## Still to do on the real server
 
-- an off-server copy of the backups: a private R2 bucket and `BACKUP_R2_BUCKET`
-  (see Backups). Until then a lost server is a lost database
 - Resend for the admin's e-mail (forgotten password), `RESEND_API_KEY` and
   `EMAIL_FROM`

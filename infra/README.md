@@ -118,18 +118,32 @@ crontab -e
 ```
 
 `backup.sh` dumps the database through its container, checks the dump gunzips
-and is not suspiciously small, uploads it to `r2://<bucket>/backups/`, and
-removes anything older than 30 days from both the bucket and the disk. Without
-R2 configured it still dumps locally and says so.
+and is not suspiciously small, and removes anything older than 30 days. Dumps
+are readable by root alone (`umask 077`).
+
+**Off-server copy.** With `BACKUP_R2_BUCKET` set in `.env` it also uploads to
+`r2://<that bucket>/backups/` and prunes the bucket. That must be a **private
+bucket of its own, with no public access and no custom domain** — never the photo
+bucket, which is public through `img.<domain>`, and a dump holds e-mail addresses
+and password hashes. Use a token scoped to that bucket
+(`BACKUP_R2_ACCESS_KEY_ID` / `BACKUP_R2_SECRET_ACCESS_KEY`); it falls back to the
+photo keys only if that token happens to cover both. Unset, the dump stays on the
+server and the log says so — which does not survive losing the server.
+
+On the server since 7 October: cron at 03:00, log in `/var/log/sabrina-backup.log`
+(rotated monthly), dumps in `/var/backups/sabrina`.
 
 Photographs are not backed up: they are already in R2 and immutable. The
 database is the only thing here that cannot be reconstructed.
 
 ### Restoring — rehearsed, not theoretical
 
-Done on 1 October against this image: dumped a full database, restored it into a
-stack holding only the migrated schema, and read the content back through Caddy.
-Nine projects in, nine projects out, no errors.
+Done on 1 October on a laptop, and on 7 October on the real server: a dump of the
+live database restored into a throwaway `postgres:16` container, row counts
+compared with the live database (1 user, 2 projects, 18 photos — equal), container
+removed. The only errors were `role "sabrina" does not exist` — the dump assigns
+table ownership to the application's role, which the throwaway container lacks;
+harmless, and absent when restoring into the real stack.
 
 ```bash
 cd /opt/sabrina/infra
@@ -141,15 +155,12 @@ gunzip -c /var/backups/sabrina/payload-<stamp>.sql.gz \
 The dump carries `--clean --if-exists`, so it drops what it is replacing. Doing
 this against a live database replaces its contents — take a dump first.
 
-Repeat this on the real server before handover (docs/PHASES.md F6). It is the
-one step on this page that a laptop cannot stand in for.
+Repeat it shortly before handover (docs/PHASES.md F6) and after any change to the
+schema or the backup script.
 
-## Not yet done on a real server
+## Still to do on the real server
 
-Everything above runs locally. These need the machine:
-
-- the `ufw` / SSH / `unattended-upgrades` block, run once on the real Ubuntu
-- Caddy getting a real certificate from Let's Encrypt — locally it issues its own
-- the DNS record for `admin.` pointing at the server's IP, proxied through
-  Cloudflare so the IP stays hidden (docs/TECH.md 7)
-- the restore rehearsal, on the server's own data
+- an off-server copy of the backups: a private R2 bucket and `BACKUP_R2_BUCKET`
+  (see Backups). Until then a lost server is a lost database
+- Resend for the admin's e-mail (forgotten password), `RESEND_API_KEY` and
+  `EMAIL_FROM`

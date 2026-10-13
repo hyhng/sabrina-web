@@ -51,23 +51,30 @@ export function Site({ projects, categoryOrder, settings, imgBase, initialPath }
 
   return (
     <>
-      <Header
-        settings={settings}
-        filter={<Filter value={filter} onChange={setFilter} />}
-        onOpenInformation={() => {
-          pushPath('/information/');
-        }}
-      />
-      <main>
-        <OffsetGrid
-          projects={shown}
-          imgBase={imgBase}
-          onOpen={(project) => {
-            pushPath(`/work/${project.slug}/`);
+      {/*
+       * At least a window tall, with the grid taking what is left: with two
+       * projects on a large monitor the footer otherwise sat halfway up the
+       * screen with blank paper under it.
+       */}
+      <div className="flex min-h-dvh flex-col">
+        <Header
+          settings={settings}
+          filter={<Filter value={filter} onChange={setFilter} />}
+          onOpenInformation={() => {
+            pushPath('/information/');
           }}
         />
-      </main>
-      <Footer />
+        <main className="flex-1">
+          <OffsetGrid
+            projects={shown}
+            imgBase={imgBase}
+            onOpen={(project) => {
+              pushPath(`/work/${project.slug}/`);
+            }}
+          />
+        </main>
+        <Footer />
+      </div>
       {open === undefined ? null : (
         <DetailOverlay project={open} imgBase={imgBase} onClose={closeOverlay} />
       )}

@@ -53,6 +53,10 @@ describe('Header', () => {
     expect(html).not.toContain('desktop:-translate-x-1/2');
   });
 
+  it('stops at the page width and centres, so it lines up with the grid on a large monitor', () => {
+    expect(html).toContain('mx-auto flex w-full max-w-page');
+  });
+
   it('is sticky, over the grid, on a background of its own', () => {
     // Without the background the tiles would show through it as it overlaps them.
     expect(html).toContain('sticky top-0 z-40 bg-paper');
@@ -83,6 +87,11 @@ describe('Footer', () => {
     expect(html).toContain('tablet:flex-row');
     expect(html).toContain('tablet:justify-between');
     expect(html.indexOf('©')).toBeLessThan(html.indexOf('Created by'));
+  });
+
+  it('runs its rule across the window but keeps its content to the page width', () => {
+    expect(/<footer class="([^"]*)"/.exec(html)?.[1]).not.toContain('max-w-page');
+    expect(html).toMatch(/<footer[^>]*><div class="mx-auto flex w-full max-w-page/);
   });
 
   it('sits under a rule', () => {

@@ -80,7 +80,7 @@ export function Header({ settings, filter, onOpenInformation }: HeaderProps) {
       }}
       className={`sticky top-0 z-40 bg-paper transition-transform duration-[280ms] ease-out motion-reduce:transition-none ${hidden ? '-translate-y-full' : ''}`}
     >
-      <div className="flex items-center justify-between px-[16px] pt-[20px] pb-[12px] tablet:px-[24px] tablet:pt-[26px] tablet:pb-[14px] desktop:px-[34px] desktop:py-[30px]">
+      <div className="mx-auto flex w-full max-w-page items-center justify-between px-[16px] pt-[20px] pb-[12px] tablet:px-[24px] tablet:pt-[26px] tablet:pb-[14px] desktop:px-[34px] desktop:py-[30px]">
         {/* Clicking the name closes any overlay and resets the filter. [návrh] */}
         <a
           href="/"

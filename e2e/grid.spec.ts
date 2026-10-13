@@ -64,4 +64,37 @@ test.describe('grid and filter', () => {
     });
     expect(overlaps).toEqual({ wrapped: true, moved: true, clear: true });
   });
+
+  test('on a very large monitor the footer sits at the bottom and the edges line up', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(isMobile, 'a desktop-monitor case');
+    await page.setViewportSize({ width: 3840, height: 2160 });
+    await page.goto('/?filter=art');
+    const box = await page.evaluate(() => {
+      const rect = (selector: string) => document.querySelector(selector)?.getBoundingClientRect();
+      const grid = rect('.offset-grid');
+      const tile = [...document.querySelectorAll('.offset-grid__item')]
+        .find((item) => item.getClientRects().length > 0)
+        ?.getBoundingClientRect();
+      return {
+        footerBottom: Math.round(rect('footer')?.bottom ?? 0),
+        window: window.innerHeight,
+        scrolls: document.documentElement.scrollHeight > window.innerHeight,
+        name: Math.round(rect('header a')?.left ?? 0),
+        copyright: Math.round(rect('footer p')?.left ?? 0),
+        firstTile: Math.round(tile?.left ?? 0),
+        gridWidth: Math.round(grid?.width ?? 0),
+      };
+    });
+    // Three projects do not fill a 4K window: no blank paper under the footer,
+    // and nothing to scroll into.
+    expect(box.footerBottom).toBe(box.window);
+    expect(box.scrolls).toBe(false);
+    // The name, the first tile and the copyright share one left edge.
+    expect(box.gridWidth).toBe(1680);
+    expect(box.name).toBe(box.firstTile);
+    expect(box.copyright).toBe(box.firstTile);
+  });
 });

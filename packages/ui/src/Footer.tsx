@@ -39,12 +39,15 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-[96px] flex flex-col gap-[12px] border-t border-line px-[16px] pt-[24px] pb-[32px] text-[13px] text-ink tablet:mt-[120px] tablet:flex-row tablet:items-start tablet:justify-between tablet:gap-0 tablet:px-[24px] tablet:pt-[28px] tablet:pb-[36px] tablet:text-[14px] desktop:mt-[140px] desktop:px-[34px] desktop:pt-[30px] desktop:pb-[44px] desktop:text-[15px] desktop:leading-[1.4] desktop:text-muted">
-      <p className={TEXT}>© {year} Sabrina Kulhankova</p>
+    <footer className="mt-[96px] border-t border-line tablet:mt-[120px] desktop:mt-[140px]">
+      {/* The rule runs the width of the window; what is under it stops with the grid. */}
+      <div className="mx-auto flex w-full max-w-page flex-col gap-[12px] px-[16px] pt-[24px] pb-[32px] text-[13px] text-ink tablet:flex-row tablet:items-start tablet:justify-between tablet:gap-0 tablet:px-[24px] tablet:pt-[28px] tablet:pb-[36px] tablet:text-[14px] desktop:px-[34px] desktop:pt-[30px] desktop:pb-[44px] desktop:text-[15px] desktop:leading-[1.4] desktop:text-muted">
+        <p className={TEXT}>© {year} Sabrina Kulhankova</p>
 
-      <a href={CREDIT.href} className={TEXT} target="_blank" rel="noreferrer">
-        {CREDIT.prefix} <span className="font-medium">{CREDIT.name}</span>
-      </a>
+        <a href={CREDIT.href} className={TEXT} target="_blank" rel="noreferrer">
+          {CREDIT.prefix} <span className="font-medium">{CREDIT.name}</span>
+        </a>
+      </div>
     </footer>
   );
 }

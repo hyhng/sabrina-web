@@ -19,6 +19,14 @@
     }
   }
 
+  /*
+   * The widest the page's content gets [návrh, docs/DESIGN.md]. The grid, the
+   * header and the footer all stop here and centre, so on a 4K monitor their
+   * edges still line up instead of the header reaching the corners of the
+   * screen while the grid sits in the middle. Use as max-w-page.
+   */
+  --container-page: 1680px;
+
   --color-paper: #faf9f6; /* page background */
   --color-ink: #14130f; /* text */
   --color-muted: #78746b; /* footer, category on hover */
@@ -69,7 +77,7 @@
   .offset-grid {
     container-type: inline-size;
     margin-inline: auto;
-    max-width: 1680px; /* [návrh] docs/DESIGN.md */
+    max-width: var(--container-page);
     padding-inline: 16px;
   }
 

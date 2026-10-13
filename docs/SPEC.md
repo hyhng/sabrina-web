@@ -191,6 +191,7 @@ Figma: UI 10 (desktop), UI 11 (mobil). Header a patička jako na homepage, upros
   - **Písmo je o stupeň větší než ve Figmě** (tam 12 / 12,5 px): mobil 13, tablet 14, desktop 15 px (jako odkazy v headeru).
   - **Odstup nad patičkou** [návrh]: 96 px mobil, 120 px tablet, 140 px desktop. Ve Figmě patička navazuje na mřížku téměř hned a u skutečné stránky se popiska posledního projektu dotýkala linky.
 - Rok v patičce se bere z data buildu.
+- **Velké monitory (2560 px, 4K)** — **[rozhodnuto 13. 10. 2026]**: obsah má největší šířku 1680 px a je uprostřed; platí to pro mřížku, hlavičku i patičku, takže jejich okraje lícují (dřív šla hlavička a patička až ke krajům obrazovky). Stránka je vždy nejméně vysoká jako okno a **patička je u jeho spodního okraje**, i když je projektů málo.
 
 ---
 

@@ -412,21 +412,9 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Homepage {
   id: number;
-  /**
-   * Tažením změň pořadí. Pozice v mřížce se dopočítá sama — každý další projekt jde do nejkratšího sloupce.
-   */
   projects?: (number | Project)[] | null;
-  /**
-   * Tažením změň pořadí.
-   */
   commercialOrder?: (number | Project)[] | null;
-  /**
-   * Tažením změň pořadí.
-   */
   artOrder?: (number | Project)[] | null;
-  /**
-   * Tažením změň pořadí.
-   */
   fashionOrder?: (number | Project)[] | null;
   updatedAt?: string | null;
   createdAt?: string | null;

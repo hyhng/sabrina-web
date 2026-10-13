@@ -243,7 +243,7 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
   - Nově publikovaný projekt se přidá na začátek „Vše" i své kategorie.
   - **Projekt přesunutý do jiné kategorie** se sám přesune i v seznamech: ze starého zmizí, v novém je první. Seznamy se při každém uložení samy zbaví projektů, které do nich nepatří — **[opraveno 13. 10. 2026]**: bez toho zastaralá položka zablokovala uložení pořadí a s ním i každou publikaci.
   - Při zavedení se seznamy předvyplnily pořadím ze „Vše" (migrace `category_order`).
-  - Náhled mřížky vpravo ukazuje pořadí „Vše".
+  - **Pořadí se nastavuje přímo v mřížce** — **[rozhodnuto 13. 10. 2026]**: každá záložka ukazuje titulní fotky ve třech sloupcích jako web (stejný algoritmus) a projekt se přetáhne na místo jiného. Číslo na dlaždici je pořadí. Dlaždice jde odebrat (×); publikované projekty, které v pořadí nejsou, se nabízejí pod mřížkou k přidání. Nahrazuje řádek štítků s názvy a malý náhled v postranním sloupci.
 - Náhled rozložení do 3 sloupců (stejný algoritmus jako web) **[návrh — ve wireframu je, v MVP stačí seznam]**
 
 ### 8.6 Nastavení webu — `70:5`

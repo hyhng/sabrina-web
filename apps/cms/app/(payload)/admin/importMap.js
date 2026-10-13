@@ -2,7 +2,7 @@ import { PhotoGrid as PhotoGrid_af09df45db3b1b10a618cd16d8abcbff } from '../../.
 import { UploadStatus as UploadStatus_6807b23afa610f568ca3c5a72b64e846 } from '../../../components/UploadStatus'
 import { TilePreview as TilePreview_8d17b0a5f2f1c78d7a961ae93f4dcb4c } from '../../../components/TilePreview'
 import { NewProject as NewProject_a758667b0938818b7e8e352b59d52a95 } from '../../../components/NewProject'
-import { OrderPreview as OrderPreview_05f44c313a2bfd54fbebc719dd440b38 } from '../../../components/OrderPreview'
+import { OrderGrid as OrderGrid_805371bd9721602c2bd6d1fa9336ddf4 } from '../../../components/OrderGrid'
 import { SinglePhotoField as SinglePhotoField_04c00c3868f0cfb9f222c3806f974847 } from '../../../components/SinglePhotoField'
 import { CharacterCount as CharacterCount_c4bd9dc50e4d21feed3c6d5556c645dd } from '../../../components/CharacterCount'
 import { PublishNav as PublishNav_ad66fecd5604bb1088011f8207c4d451 } from '../../../components/PublishNav'
@@ -14,7 +14,7 @@ export const importMap = {
   "/components/UploadStatus#UploadStatus": UploadStatus_6807b23afa610f568ca3c5a72b64e846,
   "/components/TilePreview#TilePreview": TilePreview_8d17b0a5f2f1c78d7a961ae93f4dcb4c,
   "/components/NewProject#NewProject": NewProject_a758667b0938818b7e8e352b59d52a95,
-  "/components/OrderPreview#OrderPreview": OrderPreview_05f44c313a2bfd54fbebc719dd440b38,
+  "/components/OrderGrid#OrderGrid": OrderGrid_805371bd9721602c2bd6d1fa9336ddf4,
   "/components/SinglePhotoField#SinglePhotoField": SinglePhotoField_04c00c3868f0cfb9f222c3806f974847,
   "/components/CharacterCount#CharacterCount": CharacterCount_c4bd9dc50e4d21feed3c6d5556c645dd,
   "/components/PublishNav#PublishNav": PublishNav_ad66fecd5604bb1088011f8207c4d451,

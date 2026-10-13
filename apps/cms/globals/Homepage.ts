@@ -77,10 +77,8 @@ export const Homepage: GlobalConfig = {
               hasMany: true,
               label: 'Pořadí projektů',
               admin: {
-                description:
-                  'Tažením změň pořadí. Pozice v mřížce se dopočítá sama — každý další projekt jde do nejkratšího sloupce.',
-                // Projects are made under Projekty, with their photos; not from here.
-                allowCreate: false,
+                // The grid itself, dragged — not a row of chips with titles.
+                components: { Field: '/components/OrderGrid#OrderGrid' },
               },
             },
           ],
@@ -100,21 +98,11 @@ export const Homepage: GlobalConfig = {
               maxDepth: 0,
               // Only this category's projects can be put on its list.
               filterOptions: { category: { equals: category } },
-              admin: { description: 'Tažením změň pořadí.', allowCreate: false },
+              admin: { components: { Field: '/components/OrderGrid#OrderGrid' } },
             },
           ],
         })),
       ],
-    },
-    {
-      // docs/SPEC.md 8.5: ordering is otherwise blind — she sets a sequence
-      // and the algorithm decides the positions. This shows the result.
-      name: 'gridPreview',
-      type: 'ui',
-      admin: {
-        position: 'sidebar',
-        components: { Field: '/components/OrderPreview#OrderPreview' },
-      },
     },
   ],
 };

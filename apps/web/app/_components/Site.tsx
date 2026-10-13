@@ -59,7 +59,7 @@ export function Site({ projects, categoryOrder, settings, imgBase, initialPath }
       <div className="flex min-h-dvh flex-col">
         <Header
           settings={settings}
-          filter={<Filter value={filter} onChange={setFilter} />}
+          filter={<Filter value={filter} onChange={setFilter} labels={settings.categoryLabels} />}
           onOpenInformation={() => {
             pushPath('/information/');
           }}
@@ -67,6 +67,7 @@ export function Site({ projects, categoryOrder, settings, imgBase, initialPath }
         <main className="flex-1">
           <OffsetGrid
             projects={shown}
+            categoryLabels={settings.categoryLabels}
             imgBase={imgBase}
             onOpen={(project) => {
               pushPath(`/work/${project.slug}/`);

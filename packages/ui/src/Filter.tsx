@@ -1,11 +1,12 @@
 'use client';
 
-import { FILTER_LABELS, FILTER_VALUES, type FilterValue } from '@sabrina/shared/filter';
+import type { CategoryLabels } from '@sabrina/shared/categories';
+import { filterLabel, FILTER_VALUES, type FilterValue } from '@sabrina/shared/filter';
 
 /**
  * Category filter (Figma UI 04 node 154:61, UI 06 node 154:323).
  *
- * All · Commercial · Art · Fashion. The active item is full strength with a rule under
+ * All, then the categories under the names the client gave them. The active item is full strength with a rule under
  * it; the others are dimmed and keep an invisible rule so nothing shifts when
  * the selection moves.
  *
@@ -15,9 +16,11 @@ import { FILTER_LABELS, FILTER_VALUES, type FilterValue } from '@sabrina/shared/
 export interface FilterProps {
   value: FilterValue;
   onChange: (value: FilterValue) => void;
+  /** The client's own names for the categories, if she has set any. */
+  labels?: CategoryLabels;
 }
 
-export function Filter({ value, onChange }: FilterProps) {
+export function Filter({ value, onChange, labels }: FilterProps) {
   return (
     <div
       role="group"
@@ -37,7 +40,7 @@ export function Filter({ value, onChange }: FilterProps) {
             className="flex cursor-pointer flex-col gap-[3px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
           >
             <span className={active ? 'text-ink' : 'text-filter-inactive'}>
-              {FILTER_LABELS[item]}
+              {filterLabel(item, labels)}
             </span>
             {/* Always in the layout, only sometimes visible. */}
             <span aria-hidden className={`h-px bg-ink ${active ? '' : 'opacity-0'}`} />

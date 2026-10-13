@@ -72,7 +72,10 @@ Algoritmus žije v `packages/shared/grid.ts` jako čistá funkce (vstup: poměry
 
 ### 3.4 Filtr
 
-- Čtyři položky **All · Commercial · Art · Fashion**, All je výchozí — **[rozhodnuto; Fashion přidáno 13. 10. 2026 na přání klientky]**
+- Čtyři položky **All · Commercial · Documentary · Fashion**, All je výchozí — **[rozhodnuto; Fashion přidáno 13. 10. 2026 na přání klientky]**
+- **Názvy kategorií si klientka může přepsat** v Nastavení webu — **[rozhodnuto 13. 10. 2026]**. Mění se jen to, co se čte na webu (filtr, popiska dlaždice, popis stránky projektu); prázdné pole = výchozí název. Kategorie zůstávají tři a pevné, přidat nebo zrušit je umí jen vývojář (pravidlo 4).
+  - **Art se od 13. 10. jmenuje Documentary.** Hodnota v datech i v adrese zůstává `art` (`/?filter=art`), aby staré odkazy a pořadí fungovaly dál.
+  - V administraci (výběr kategorie u projektu, záložky pořadí) se ukazují výchozí názvy, ne ty přepsané.
 - Aktivní: plná barva + podtržení. Neaktivní: 40 % krytí — **[rozhodnuto, ale viz přístupnost 9.3]**
 - Filtruje se **na klientovi** — všechny projekty jsou v HTML, filtr jen skryje nepatřičné a grid se přepočítá.
 - Po změně filtru se mřížka poskládá znovu jen z vybraných projektů a **prolne se (fade-in 250 ms)** — **[změněno 13. 10. 2026]**. Dřív se dlaždice na nová místa plynule přesouvaly; to stálo na pevně spočítaných pozicích, které se zrušily (viz 3.2).

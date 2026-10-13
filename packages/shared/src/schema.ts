@@ -86,6 +86,8 @@ export const settingsSchema = z.object({
   seoDescription: z.string(),
   /** [proposal] Optional — still an open question (docs/PHASES.md, question 9). */
   ogImage: photoSchema.optional(),
+  /** Her own names for the categories; see `categoryLabel`. */
+  categoryLabels: z.record(z.string(), z.string()).optional(),
 });
 
 /** [proposal] What getContent() returns, so one parse covers a whole build. */

@@ -92,12 +92,23 @@ function projects(raw: unknown): unknown[] {
   });
 }
 
+/** Her names for the categories: the group as Payload sends it, minus the blanks. */
+function categoryLabels(raw: unknown): Record<string, string> {
+  if (!isRecord(raw)) return {};
+  return Object.fromEntries(
+    Object.entries(raw).filter(
+      (entry): entry is [string, string] => typeof entry[1] === 'string' && entry[1].trim() !== '',
+    ),
+  );
+}
+
 function settings(raw: unknown): unknown {
   if (!isRecord(raw)) return raw;
   return {
     ...raw,
     portrait: raw.portrait === null ? undefined : photo(raw.portrait),
     ogImage: raw.ogImage === null ? undefined : photo(raw.ogImage),
+    categoryLabels: categoryLabels(raw.categoryLabels),
   };
 }
 

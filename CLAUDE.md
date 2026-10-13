@@ -51,7 +51,7 @@ Tohle neporušuj ani „dočasně". Když se ti zdá, že je to potřeba, zastav
 1. **`apps/web` zůstává statický export.** Nepoužívat: Server Actions, Intercepting Routes, middleware/proxy, `cookies()`, `headers()`, rewrites/redirects v `next.config`, ISR, `next/image` s výchozím loaderem. Build to stejně shodí — nevymýšlet obezličky.
 2. **Overlaye nejsou intercepting routes.** URL se mění přes `history.pushState`, každá URL má zároveň vlastní předgenerované HTML. Detail v `TECH.md → Overlaye a URL`.
 3. **Poměr stran fotky se bere z dat, nikdy se neměří v prohlížeči.** Grid se musí vyrenderovat bez poskakování ještě před načtením fotek.
-4. **Kategorie je výčet `commercial | art | fashion`**, ne volný text. Jeden zdroj pravdy v `packages/shared`. Nová hodnota = i migrace databáze (Postgres ji drží jako enum).
+4. **Kategorie je výčet `commercial | art | fashion`**, ne volný text. Jeden zdroj pravdy v `packages/shared`. Nová hodnota = i migrace databáze (Postgres ji drží jako enum). Názvy, pod kterými se kategorie ukazují na webu, si klientka mění v Nastavení webu (`art` se zobrazuje jako Documentary); hodnoty výčtu se tím nemění.
 5. **Fotky bez rámečků**, pasparty, stínů, zaoblení. Dlaždice = fotka + popiska.
 6. **Jméno vždy bez diakritiky:** `Sabrina Kulhankova`. Kontakt: `sabrina.kulhankova@gmail.com`, Instagram `@sabrinakulhankova.photography`.
 7. **Font Lora přes `next/font`** (stáhne se při buildu, servíruje se z naší domény). Nikdy `<link>` na fonts.googleapis.com — GDPR.

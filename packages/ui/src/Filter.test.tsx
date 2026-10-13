@@ -8,11 +8,11 @@ const render = (value: FilterValue) =>
   renderToStaticMarkup(<Filter value={value} onChange={vi.fn()} />);
 
 describe('Filter', () => {
-  it('offers All, Commercial, Art and Fashion in that order', () => {
+  it('offers All, Commercial, Documentary and Fashion in that order', () => {
     const html = render('all');
     expect(html.indexOf('All')).toBeLessThan(html.indexOf('Commercial'));
-    expect(html.indexOf('Commercial')).toBeLessThan(html.indexOf('Art'));
-    expect(html.indexOf('Art')).toBeLessThan(html.indexOf('Fashion'));
+    expect(html.indexOf('Commercial')).toBeLessThan(html.indexOf('Documentary'));
+    expect(html.indexOf('Documentary')).toBeLessThan(html.indexOf('Fashion'));
   });
 
   it('marks exactly one item pressed, and All by default', () => {
@@ -24,7 +24,7 @@ describe('Filter', () => {
 
   it('moves the pressed state with the selection', () => {
     expect(/aria-pressed="true"[^>]*>.*?Commercial/s.test(render('commercial'))).toBe(true);
-    expect(/aria-pressed="true"[^>]*>.*?Art/s.test(render('art'))).toBe(true);
+    expect(/aria-pressed="true"[^>]*>.*?Documentary/s.test(render('art'))).toBe(true);
   });
 
   it('dims the inactive items through the token, not a raw opacity', () => {
@@ -43,5 +43,15 @@ describe('Filter', () => {
   it('uses buttons, because nothing is being navigated to', () => {
     expect([...render('all').matchAll(/<button type="button"/g)]).toHaveLength(4);
     expect(render('all')).toContain('aria-label="Filter projects by category"');
+  });
+
+  it('shows the names the client gave the categories for the categories', () => {
+    const html = renderToStaticMarkup(
+      <Filter value="all" onChange={() => undefined} labels={{ art: 'Reportage' }} />,
+    );
+    expect(html).toContain('Reportage');
+    expect(html).not.toContain('Documentary');
+    // The others keep their default.
+    expect(html).toContain('Commercial');
   });
 });

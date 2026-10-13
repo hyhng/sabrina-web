@@ -10,10 +10,10 @@ test.describe('grid and filter', () => {
 
   test('narrows to a category and says so in the URL', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Art', exact: true }).click();
+    await page.getByRole('button', { name: 'Documentary', exact: true }).click();
 
     await expect(page).toHaveURL(/\?filter=art$/);
-    await expect(page.getByRole('button', { name: 'Art', exact: true })).toHaveAttribute(
+    await expect(page.getByRole('button', { name: 'Documentary', exact: true })).toHaveAttribute(
       'aria-pressed',
       'true',
     );
@@ -34,7 +34,7 @@ test.describe('grid and filter', () => {
 
   test('Back leaves the page instead of undoing filter clicks', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Art', exact: true }).click();
+    await page.getByRole('button', { name: 'Documentary', exact: true }).click();
     await page.getByRole('button', { name: 'Commercial' }).click();
     await expect(page).toHaveURL(/\?filter=commercial$/);
 

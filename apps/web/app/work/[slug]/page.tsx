@@ -1,4 +1,4 @@
-import { CATEGORY_LABELS } from '@sabrina/shared/categories';
+import { categoryLabel } from '@sabrina/shared/categories';
 import { photoSrc } from '@sabrina/shared/photo-url';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -35,12 +35,12 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const { homepage } = await getContent();
+  const { homepage, settings } = await getContent();
   const project = homepage.projects.find((candidate) => candidate.slug === slug);
   if (project === undefined) return {};
 
   const description = [
-    `${CATEGORY_LABELS[project.category]} photography by ${SITE_NAME}`,
+    `${categoryLabel(project.category, settings.categoryLabels)} photography by ${SITE_NAME}`,
     project.client === undefined ? undefined : `for ${project.client}`,
   ]
     .filter((part) => part !== undefined)

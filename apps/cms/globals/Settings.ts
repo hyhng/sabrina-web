@@ -1,3 +1,4 @@
+import { CATEGORIES, CATEGORY_LABELS } from '@sabrina/shared/categories';
 import type { GlobalConfig } from 'payload';
 
 /**
@@ -92,6 +93,29 @@ export const Settings: GlobalConfig = {
       label: 'Popis webu pro vyhledávače',
       maxLength: 200,
       admin: { description: 'Krátká věta, kterou Google ukáže pod názvem.' },
+    },
+    {
+      // docs/SPEC.md 3.4: she can rename the categories; she cannot add or
+      // remove one — that list is fixed in packages/shared (CLAUDE.md rule 4).
+      name: 'categoryLabels',
+      type: 'group',
+      label: 'Názvy kategorií na webu',
+      admin: {
+        description:
+          'Jak se kategorie jmenují ve filtru a pod fotkami. Prázdné pole znamená výchozí název. V administraci (výběr kategorie u projektu, záložky pořadí) zůstávají výchozí názvy.',
+      },
+      fields: [
+        {
+          type: 'row',
+          fields: CATEGORIES.map((category) => ({
+            name: category,
+            type: 'text' as const,
+            label: CATEGORY_LABELS[category],
+            maxLength: 24,
+            admin: { placeholder: CATEGORY_LABELS[category] },
+          })),
+        },
+      ],
     },
     {
       name: 'ogImage',

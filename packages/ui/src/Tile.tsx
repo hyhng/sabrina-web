@@ -1,6 +1,6 @@
 'use client';
 
-import { CATEGORY_LABELS } from '@sabrina/shared/categories';
+import { categoryLabel, type CategoryLabels } from '@sabrina/shared/categories';
 import type { Project } from '@sabrina/shared/schema';
 
 import { Photo } from './Photo.tsx';
@@ -28,9 +28,18 @@ export interface TileProps {
    * intercepted (docs/TECH.md 4.1).
    */
   onOpen?: (project: Project) => void;
+  /** The client's own names for the categories, if she has set any. */
+  categoryLabels?: CategoryLabels;
 }
 
-export function Tile({ project, imgBase, eager = false, priority = false, onOpen }: TileProps) {
+export function Tile({
+  project,
+  imgBase,
+  eager = false,
+  priority = false,
+  onOpen,
+  categoryLabels,
+}: TileProps) {
   return (
     <a
       href={`/work/${project.slug}/`}
@@ -56,7 +65,7 @@ export function Tile({ project, imgBase, eager = false, priority = false, onOpen
       <span className="flex flex-col gap-[3px] leading-[1.4]">
         {/* Darkens on hover, per docs/SPEC.md 3.3. */}
         <span className="text-[12.5px] text-soft transition-colors group-hover:text-muted">
-          {CATEGORY_LABELS[project.category]}
+          {categoryLabel(project.category, categoryLabels)}
         </span>
         {/* The photo must not scale on hover — it would shove its neighbours. */}
         <span className="text-[15.5px] text-ink group-hover:underline">{project.title}</span>

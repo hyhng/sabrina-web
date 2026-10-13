@@ -1,4 +1,10 @@
-import { CATEGORIES, CATEGORY_LABELS, type Category } from './categories.ts';
+import {
+  CATEGORIES,
+  CATEGORY_LABELS,
+  categoryLabel,
+  type Category,
+  type CategoryLabels,
+} from './categories.ts';
 import type { Project } from './schema.ts';
 
 /**
@@ -13,6 +19,11 @@ export const FILTER_VALUES: readonly FilterValue[] = ['all', ...CATEGORIES];
 
 /** From the category labels, so a new category cannot be missing from the filter. */
 export const FILTER_LABELS: Record<FilterValue, string> = { all: 'All', ...CATEGORY_LABELS };
+
+/** What a filter item is called, with the client's own category names applied. */
+export function filterLabel(value: FilterValue, labels: CategoryLabels = {}): string {
+  return value === 'all' ? FILTER_LABELS.all : categoryLabel(value, labels);
+}
 
 /** Read the filter out of a `?filter=` value, however mangled. */
 export function readFilter(raw: string | null | undefined): FilterValue {

@@ -7,6 +7,7 @@ import {
   layoutColumns,
   type GridBreakpoint,
 } from '@sabrina/shared/grid';
+import type { CategoryLabels } from '@sabrina/shared/categories';
 import type { Project } from '@sabrina/shared/schema';
 import { useState, type CSSProperties } from 'react';
 
@@ -88,6 +89,8 @@ export interface OffsetGridProps {
   eagerCount?: number;
   /** Open a project without navigating. */
   onOpen?: (project: Project) => void;
+  /** The client's own names for the categories. */
+  categoryLabels?: CategoryLabels;
 }
 
 export function OffsetGrid({
@@ -96,6 +99,7 @@ export function OffsetGrid({
   visibleSlugs,
   eagerCount = 4,
   onOpen,
+  categoryLabels,
 }: OffsetGridProps) {
   const shown =
     visibleSlugs === undefined
@@ -111,6 +115,7 @@ export function OffsetGrid({
         imgBase={imgBase}
         eagerCount={eagerCount}
         onOpen={onOpen}
+        categoryLabels={categoryLabels}
       />
     </div>
   );
@@ -121,11 +126,13 @@ function Columns({
   imgBase,
   eagerCount,
   onOpen,
+  categoryLabels,
 }: {
   shown: Project[];
   imgBase: string;
   eagerCount: number;
   onOpen?: (project: Project) => void;
+  categoryLabels?: CategoryLabels;
 }) {
   // Decided once per mount: nothing on first load, a fade after a filter change.
   const [fade] = useState(openFade);
@@ -154,6 +161,7 @@ function Columns({
                       eager={position < eagerCount}
                       priority={position === 0}
                       onOpen={onOpen}
+                      categoryLabels={categoryLabels}
                     />
                   </div>
                 ))}

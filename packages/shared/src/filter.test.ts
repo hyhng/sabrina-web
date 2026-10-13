@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { categoryLabel } from './categories.ts';
 import {
+  filterLabel,
   filterProjects,
   filterUrl,
   FILTER_LABELS,
@@ -59,12 +61,12 @@ describe('filterUrl', () => {
 });
 
 describe('the filter items', () => {
-  it('are All, then Commercial, Art and Fashion in that order', () => {
+  it('are All, then Commercial, Documentary and Fashion in that order', () => {
     expect(FILTER_VALUES).toEqual(['all', 'commercial', 'art', 'fashion']);
     expect(FILTER_VALUES.map((v) => FILTER_LABELS[v])).toEqual([
       'All',
       'Commercial',
-      'Art',
+      'Documentary',
       'Fashion',
     ]);
   });
@@ -103,5 +105,27 @@ describe('orderedFor', () => {
   it('does not reorder the list it was given', () => {
     orderedFor(all, 'art', { art: ['c', 'b', 'a'] });
     expect(slugs(all)).toEqual(['a', 'w', 'b', 'c']);
+  });
+});
+
+describe('category names', () => {
+  it('uses her own name for a category when she has set one', () => {
+    expect(filterLabel('art', { art: 'Reportage' })).toBe('Reportage');
+    expect(categoryLabel('commercial', { commercial: '  Campaigns ' })).toBe('Campaigns');
+  });
+
+  it('falls back to the default for a blank or missing name', () => {
+    expect(categoryLabel('art', { art: '   ' })).toBe('Documentary');
+    expect(categoryLabel('fashion')).toBe('Fashion');
+    expect(filterLabel('commercial', {})).toBe('Commercial');
+  });
+
+  it('never renames All', () => {
+    expect(filterLabel('all', { all: 'Everything' })).toBe('All');
+  });
+
+  it('keeps the value art for what now reads Documentary, so old links still work', () => {
+    expect(readFilter('art')).toBe('art');
+    expect(filterUrl('/', 'art')).toBe('/?filter=art');
   });
 });

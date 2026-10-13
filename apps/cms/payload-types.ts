@@ -445,6 +445,14 @@ export interface Setting {
    */
   seoDescription?: string | null;
   /**
+   * Jak se kategorie jmenují ve filtru a pod fotkami. Prázdné pole znamená výchozí název. V administraci (výběr kategorie u projektu, záložky pořadí) zůstávají výchozí názvy.
+   */
+  categoryLabels?: {
+    commercial?: string | null;
+    art?: string | null;
+    fashion?: string | null;
+  };
+  /**
    * Ukáže se, když někdo sdílí odkaz na web. Nepovinné.
    */
   ogImage?: (number | null) | Photo;
@@ -486,6 +494,13 @@ export interface SettingsSelect<T extends boolean = true> {
   instagramHandle?: T;
   instagramUrl?: T;
   seoDescription?: T;
+  categoryLabels?:
+    | T
+    | {
+        commercial?: T;
+        art?: T;
+        fashion?: T;
+      };
   ogImage?: T;
   updatedAt?: T;
   createdAt?: T;

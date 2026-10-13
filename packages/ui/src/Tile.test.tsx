@@ -34,7 +34,7 @@ describe('Tile', () => {
   });
 
   it('shows the English category label, not the raw enum', () => {
-    expect(render(project)).toContain('Art');
+    expect(render(project)).toContain('Documentary');
     expect(render({ ...project, category: 'commercial' })).toContain('Commercial');
   });
 

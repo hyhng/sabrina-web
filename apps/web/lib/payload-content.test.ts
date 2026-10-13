@@ -144,6 +144,21 @@ describe('toContent', () => {
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('Empty'));
   });
 
+  it('passes on her names for the categories, without the blank ones', () => {
+    // Payload sends the group with null for every field she left empty.
+    const content = contentSchema.parse(
+      toContent(homepage, {
+        ...settings,
+        categoryLabels: { commercial: null, art: 'Reportage', fashion: '  ' },
+      }),
+    );
+    expect(content.settings.categoryLabels).toEqual({ art: 'Reportage' });
+  });
+
+  it('has no category names when the admin sends none', () => {
+    expect(contentSchema.parse(toContent(homepage, settings)).settings.categoryLabels).toEqual({});
+  });
+
   it('turns her order within a category from ids into slugs', () => {
     const fog = { ...project, id: 18, title: 'Fog', slug: 'fog', category: 'art' };
     const content = contentSchema.parse(

@@ -282,6 +282,7 @@ projektu. Jinak by neuložený projekt dál odkazoval na neexistující fotku a 
 | 5. 10. | Overlaye (detail, Information, fotka přes celé okno) se při otevření kliknutím **objeví fade-in 250 ms**; při příchodu přímo na adresu bez animace | vývojář |
 | 5. 10. | **Nově publikovaný projekt se zařadí na začátek** pořadí na homepage (otázka 10) | vývojář: bez toho byl projekt publikovaný, a přesto nebyl na webu |
 | 5. 10. | **Další účty do adminu** zakládá přihlášený uživatel; vlastní účet smazat nejde. U Publikovat odkaz **„Zobrazit web“** (`SITE_URL`) | vývojář; předání účtu Sabrině, kontrola výsledku publikace |
+| 13. 10. | **Názvy kategorií jdou přepsat v Nastavení webu**; Art se jmenuje **Documentary** (hodnota zůstává `art`) | klientka. Zvolena varianta „jen přejmenovat“, ne volně přidávat a mazat — to by znamenalo opustit pevný výčet (pravidlo 4) |
 | 13. 10. | **Pořadí na homepage se nastavuje přetahováním v mřížce** s titulními fotkami, místo štítků s názvy a odděleného náhledu | vývojář: štítky byly matoucí, pořadí se nastavovalo na jednom místě a výsledek byl vidět jinde |
 | 13. 10. | **Karusel v detailu se sám posouvá po 4 s**, dokud návštěvník nezasáhne; pak se vypne | vývojář. Na poslední fotce stojí (bez smyčky, jak bylo rozhodnuto dřív); ne při omezeném pohybu |
 | 13. 10. | **Web běží na `sabrinakulhankova.photography`** (Pages custom domain, `SITE_URL` na serveru); `pages.dev` zůstává neindexované | starý web z Canvy na doméně skončil; druhou doménu u iFastNetu neřešíme |

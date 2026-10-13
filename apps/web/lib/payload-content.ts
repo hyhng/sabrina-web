@@ -39,9 +39,24 @@ function photo(raw: unknown): unknown {
   };
 }
 
+/**
+ * A project as the site wants it, or undefined when there is nothing to show.
+ *
+ * Photos that did not come back as documents are left out. If the cover is
+ * gone — she deleted the photo that was the cover of a published project — the
+ * first remaining photo stands in, which is what the admin would offer next. A
+ * project with no photos at all cannot be drawn and is left out by `projects`.
+ *
+ * One incomplete project must never fail the whole build: the site would then
+ * silently stay as it was, however many times Publikovat was pressed, with
+ * nothing in the admin to say why (found on 13 October 2026 by walking through
+ * her actions, not by her).
+ */
 function project(raw: unknown): unknown {
   if (!isRecord(raw)) return raw;
-  const photos = Array.isArray(raw.photos) ? raw.photos.map(photo) : raw.photos;
+  const photos = (Array.isArray(raw.photos) ? raw.photos : []).filter(isRecord).map(photo);
+  const coverId = isRecord(raw.cover) ? String(raw.cover.id) : undefined;
+  const cover = photos.find((entry) => isRecord(entry) && entry.id === coverId);
   return {
     ...raw,
     status: raw._status,
@@ -49,7 +64,7 @@ function project(raw: unknown): unknown {
     client: present(raw.client),
     clientLine2: present(raw.clientLine2),
     photos,
-    cover: photo(raw.cover),
+    cover: cover ?? photos[0],
   };
 }
 
@@ -64,7 +79,14 @@ function project(raw: unknown): unknown {
 function projects(raw: unknown): unknown[] {
   if (!Array.isArray(raw)) return [];
   return raw.flatMap((entry) => {
-    if (isRecord(entry)) return [project(entry)];
+    if (isRecord(entry)) {
+      const mapped = project(entry);
+      if (isRecord(mapped) && Array.isArray(mapped.photos) && mapped.photos.length > 0) {
+        return [mapped];
+      }
+      console.warn(`[content] skipping project "${String(entry.title)}": it has no photos`);
+      return [];
+    }
     console.warn(`[content] skipping project ${String(entry)}: not published`);
     return [];
   });

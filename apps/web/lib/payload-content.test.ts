@@ -114,6 +114,36 @@ describe('toContent', () => {
     ]);
   });
 
+  it('uses the first photo when the cover of a published project was deleted', () => {
+    // Postgres nulls the reference when the photo row goes; the project stays published.
+    const second = { ...photo, id: 21 };
+    const content = contentSchema.parse(
+      toContent(
+        { ...homepage, projects: [{ ...project, photos: [second], cover: null }] },
+        settings,
+      ),
+    );
+    expect(content.homepage.projects[0]?.cover.id).toBe('21');
+  });
+
+  it('uses the first photo when the cover is not one of the project photos any more', () => {
+    const second = { ...photo, id: 21 };
+    const content = contentSchema.parse(
+      toContent({ ...homepage, projects: [{ ...project, photos: [second] }] }, settings),
+    );
+    expect(content.homepage.projects[0]?.cover.id).toBe('21');
+  });
+
+  it('leaves out a published project with no photos rather than failing the whole build', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const empty = { ...project, id: 30, slug: 'empty', title: 'Empty', photos: [], cover: null };
+    const content = contentSchema.parse(
+      toContent({ ...homepage, projects: [empty, project] }, settings),
+    );
+    expect(content.homepage.projects.map((entry) => entry.slug)).toEqual(['wool-ss26-campaign']);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('Empty'));
+  });
+
   it('turns her order within a category from ids into slugs', () => {
     const fog = { ...project, id: 18, title: 'Fog', slug: 'fog', category: 'art' };
     const content = contentSchema.parse(
@@ -155,12 +185,14 @@ describe('toContent', () => {
     expect(content.homepage.projects[0]?.photos[0]).not.toHaveProperty('createdAt');
   });
 
-  it('refuses a cover that is not one of the project photos', () => {
-    // The schema's own rule; this checks the mapping does not defeat it.
+  it('falls back to the first photo for a cover that is not one of the project photos', () => {
+    // Used to fail the build on purpose. A build that fails leaves the site as it
+    // was with nothing in the admin to say why, so the mapping repairs it instead.
     const broken = {
       ...homepage,
       projects: [{ ...project, cover: { ...photo, id: 99 } }],
     };
-    expect(() => contentSchema.parse(toContent(broken, settings))).toThrow();
+    const content = contentSchema.parse(toContent(broken, settings));
+    expect(content.homepage.projects[0]?.cover.id).toBe(String(photo.id));
   });
 });

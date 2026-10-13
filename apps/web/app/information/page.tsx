@@ -1,15 +1,22 @@
 import type { Metadata } from 'next';
 
 import { getContent } from '../../lib/content.ts';
+import { shareImage } from '../../lib/share-image.ts';
 import { Site } from '../_components/Site.tsx';
 
 const IMG_BASE = process.env.NEXT_PUBLIC_IMG_BASE ?? '/seed';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { settings } = await getContent();
+  const { homepage, settings } = await getContent();
+  const image = shareImage(settings, homepage.projects, IMG_BASE);
   return {
     title: 'Information',
     description: settings.seoDescription,
+    openGraph: {
+      description: settings.seoDescription,
+      ...(image === undefined ? {} : { images: [image] }),
+    },
+    twitter: { card: image === undefined ? 'summary' : 'summary_large_image' },
   };
 }
 

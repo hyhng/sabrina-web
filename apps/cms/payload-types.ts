@@ -416,6 +416,18 @@ export interface Homepage {
    * Tažením změň pořadí. Pozice v mřížce se dopočítá sama — každý další projekt jde do nejkratšího sloupce.
    */
   projects?: (number | Project)[] | null;
+  /**
+   * Tažením změň pořadí.
+   */
+  commercialOrder?: (number | Project)[] | null;
+  /**
+   * Tažením změň pořadí.
+   */
+  artOrder?: (number | Project)[] | null;
+  /**
+   * Tažením změň pořadí.
+   */
+  fashionOrder?: (number | Project)[] | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -467,6 +479,9 @@ export interface Publish {
  */
 export interface HomepageSelect<T extends boolean = true> {
   projects?: T;
+  commercialOrder?: T;
+  artOrder?: T;
+  fashionOrder?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

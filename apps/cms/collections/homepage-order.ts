@@ -34,3 +34,12 @@ export function withNewFirst(
   if (order.some((entry) => String(entry) === String(id))) return undefined;
   return [id, ...order];
 }
+
+/**
+ * The homepage field that holds her order within one category. One name, used
+ * by the global's config, the publish hook and the site's content mapping
+ * (apps/web/lib/payload-content.ts reads `<category>Order`).
+ */
+export function categoryOrderField(category: string): string {
+  return `${category}Order`;
+}

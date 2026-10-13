@@ -119,6 +119,8 @@ Data všech projektů (včetně metadat fotek) jsou součástí stránky — pro
 
 ### 4.5 Algoritmus gridu
 
+> **Změna 13. 10. 2026:** dlaždice už nejsou absolutně pozicované. Algoritmus dál určuje sloupec z dat, ale ve sloupci dlaždice plynou pod sebou (skutečné elementy sloupců, dvě rozložení v HTML — 2 a 3 sloupce — přepínaná CSS). Důvod: předem spočítaná pozice neví, na kolik řádků se zalomí název. Text níže popisuje původní výpočet pozic; `layoutColumns` platí dál, `placeTiles` web už nepoužívá.
+
 Čistá funkce v `packages/shared/grid.ts`:
 
 ```ts
@@ -178,7 +180,7 @@ Další pozor:
 - Kolekce `Users` s auth, bez rolí; registrace vypnutá, další účet zakládá jen přihlášený uživatel, vlastní účet smazat nejde (rozhodnuto 5. 10.)
 - `Projects` s `versions: { drafts: true }` → koncept / publikováno
 - Slug: hook `beforeValidate` generuje z názvu; po první publikaci pole `readOnly` s popiskem pod polem
-- `Homepage` globál: `relationship` hasMany na `Projects`, řazení tažením; hook po publikaci projektu ho přidá na začátek (rozhodnuto 5. 10.)
+- `Homepage` globál: `relationship` hasMany na `Projects`, řazení tažením; hook po publikaci projektu ho přidá na začátek (rozhodnuto 5. 10.); od 13. 10. navíc pole `<kategorie>Order` (pořadí v kategorii, jen id, `maxDepth: 0`), web je čte v `payload-content.ts` a řadí v `orderedFor`
 - Tlačítko **Publikovat web**: vlastní komponenta → endpoint `/api/publish` → `POST` na `CF_DEPLOY_HOOK_URL`. Ukazuje čas posledního publikování.
 - Náhled dlaždice: importuje `Tile` z `packages/ui`
 - Vzhled adminu jen přes `admin.components` a konfiguraci. **Nepřepisovat CSS Payloadu.**

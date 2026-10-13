@@ -63,9 +63,16 @@ export const projectSchema = z
     path: ['cover'],
   });
 
-/** Tile order on the homepage. The client sets the order, not the position. */
+/**
+ * Tile order on the homepage. The client sets the order, not the position.
+ *
+ * `projects` is the order under All. `categoryOrder` is her order within one
+ * category, as slugs, used when that filter is on [rozhodnuto 13. 10. 2026].
+ * It may be missing or incomplete; see `orderedFor` in filter.ts.
+ */
 export const homepageSchema = z.object({
   projects: z.array(projectSchema),
+  categoryOrder: z.record(z.string(), z.array(z.string())).default({}),
 });
 
 export const settingsSchema = z.object({

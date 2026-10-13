@@ -18,6 +18,7 @@
  * content.ts decides whether it is good enough to build a site from, so a
  * mistake in this file fails the build rather than reaching the site.
  */
+import { CATEGORIES } from '@sabrina/shared/categories';
 
 /** Payload writes `null` for an empty field; the schema means absent. */
 function present(value: unknown): unknown {
@@ -78,9 +79,43 @@ function settings(raw: unknown): unknown {
   };
 }
 
+/** The id of a relationship entry, whether Payload sent the id or the document. */
+function idOf(entry: unknown): string | undefined {
+  const id = isRecord(entry) ? entry.id : entry;
+  return typeof id === 'string' || typeof id === 'number' ? String(id) : undefined;
+}
+
+/**
+ * Her order within each category, as slugs. The admin keeps one list per
+ * category in a field named `<category>Order`, holding project ids; the site
+ * works in slugs, and only for projects that made it into the build.
+ */
+function categoryOrder(homepage: Record<string, unknown>): Record<string, string[]> {
+  const slugById = new Map<string, string>();
+  for (const entry of Array.isArray(homepage.projects) ? homepage.projects : []) {
+    const id = idOf(entry);
+    if (id !== undefined && isRecord(entry) && typeof entry.slug === 'string') {
+      slugById.set(id, entry.slug);
+    }
+  }
+  const order: Record<string, string[]> = {};
+  for (const category of CATEGORIES) {
+    const list = homepage[`${category}Order`];
+    if (!Array.isArray(list)) continue;
+    order[category] = list.flatMap((entry) => {
+      const slug = slugById.get(idOf(entry) ?? '');
+      return slug === undefined ? [] : [slug];
+    });
+  }
+  return order;
+}
+
 export function toContent(homepage: unknown, settingsRaw: unknown): unknown {
   return {
-    homepage: { projects: projects(isRecord(homepage) ? homepage.projects : undefined) },
+    homepage: {
+      projects: projects(isRecord(homepage) ? homepage.projects : undefined),
+      categoryOrder: isRecord(homepage) ? categoryOrder(homepage) : {},
+    },
     settings: settings(settingsRaw),
   };
 }

@@ -45,7 +45,13 @@ export default async function HomePage() {
           __html: JSON.stringify(person).replace(/</g, '\\u003c'),
         }}
       />
-      <Site projects={homepage.projects} settings={settings} imgBase={IMG_BASE} initialPath="/" />
+      <Site
+        projects={homepage.projects}
+        categoryOrder={homepage.categoryOrder}
+        settings={settings}
+        imgBase={IMG_BASE}
+        initialPath="/"
+      />
     </>
   );
 }

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { becomesPublished, orderIds, withNewFirst } from './homepage-order.ts';
+import { CATEGORIES } from '@sabrina/shared/categories';
+
+import { becomesPublished, categoryOrderField, orderIds, withNewFirst } from './homepage-order.ts';
 
 describe('homepage order on publish', () => {
   it('puts a newly published project first', () => {
@@ -25,5 +27,14 @@ describe('homepage order on publish', () => {
   it('reads the order whether the global holds ids or documents', () => {
     expect(orderIds([1, '2', { id: 3 }, { nope: 1 }, null])).toEqual([1, '2', 3]);
     expect(orderIds(undefined)).toEqual([]);
+  });
+
+  it('names one homepage field per category, the name the site reads', () => {
+    // apps/web/lib/payload-content.ts looks for `<category>Order`.
+    expect(CATEGORIES.map(categoryOrderField)).toEqual([
+      'commercialOrder',
+      'artOrder',
+      'fashionOrder',
+    ]);
   });
 });

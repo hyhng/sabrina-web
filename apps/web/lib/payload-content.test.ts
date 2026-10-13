@@ -114,6 +114,34 @@ describe('toContent', () => {
     ]);
   });
 
+  it('turns her order within a category from ids into slugs', () => {
+    const fog = { ...project, id: 18, title: 'Fog', slug: 'fog', category: 'art' };
+    const content = contentSchema.parse(
+      toContent(
+        // The admin sends the category lists as bare ids (maxDepth 0).
+        { ...homepage, projects: [project, fog], commercialOrder: [17], artOrder: [18] },
+        settings,
+      ),
+    );
+    expect(content.homepage.categoryOrder).toEqual({
+      commercial: ['wool-ss26-campaign'],
+      art: ['fog'],
+    });
+  });
+
+  it('leaves out of a category list what did not make it into the build', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    // 99 is a draft: read anonymously, the homepage list holds it as a bare id.
+    const content = contentSchema.parse(
+      toContent({ ...homepage, projects: [project, 99], commercialOrder: [99, 17] }, settings),
+    );
+    expect(content.homepage.categoryOrder.commercial).toEqual(['wool-ss26-campaign']);
+  });
+
+  it('has no category order when the admin sends none, and the schema fills in an empty one', () => {
+    expect(contentSchema.parse(toContent(homepage, settings)).homepage.categoryOrder).toEqual({});
+  });
+
   it('survives a homepage with no projects at all', () => {
     expect(toContent({ projects: undefined }, settings)).toMatchObject({
       homepage: { projects: [] },

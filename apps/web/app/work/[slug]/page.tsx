@@ -64,6 +64,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   return (
     <Site
       projects={homepage.projects}
+      categoryOrder={homepage.categoryOrder}
       settings={settings}
       imgBase={IMG_BASE}
       initialPath={`/work/${slug}/`}

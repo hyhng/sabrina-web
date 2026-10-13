@@ -236,6 +236,11 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
 - Vlastní obrazovka, ne pole v projektu
 - Seznam publikovaných projektů, řazení tažením
 - Nově publikovaný projekt se automaticky přidá **na začátek** — **[rozhodnuto 5. 10. 2026, otázka 10; dřív „na konec“]**. Projekty, které v pořadí už jsou, se nehýbou; přesunout ho jde dál tažením. Přidá se při publikaci (i znovu po odpublikování), ne při každém uložení.
+- **Vlastní pořadí pro každou kategorii** — **[rozhodnuto 13. 10. 2026, přání klientky]**: obrazovka má záložky **Vše · Commercial · Art · Fashion**. „Vše" je pořadí bez filtru, každá kategorie má svůj seznam, který web použije, když je ten filtr zapnutý.
+  - Do seznamu kategorie jdou jen projekty té kategorie. Projekt, který na seznamu chybí, se na webu ukáže **za** seřazenými, v pořadí ze „Vše" — nikdy nezmizí.
+  - Nově publikovaný projekt se přidá na začátek „Vše" i své kategorie.
+  - Při zavedení se seznamy předvyplnily pořadím ze „Vše" (migrace `category_order`).
+  - Náhled mřížky vpravo ukazuje pořadí „Vše".
 - Náhled rozložení do 3 sloupců (stejný algoritmus jako web) **[návrh — ve wireframu je, v MVP stačí seznam]**
 
 ### 8.6 Nastavení webu — `70:5`

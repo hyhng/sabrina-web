@@ -28,6 +28,29 @@ export function filterProjects<T extends Pick<Project, 'category'>>(
   return value === 'all' ? [...projects] : projects.filter((p) => p.category === value);
 }
 
+/**
+ * The projects a filter shows, in the order to show them.
+ *
+ * All is the homepage order. A category uses the client's own order for that
+ * category where she has set one [rozhodnuto 13. 10. 2026]: projects on her
+ * list come first, in her order; any project of the category she has not placed
+ * follows in the homepage order, so a project is never missing from the site
+ * because a list was not kept up. Slugs on the list that are not in the category
+ * (the project was moved to another one) are simply not shown here.
+ */
+export function orderedFor<T extends Pick<Project, 'category' | 'slug'>>(
+  projects: readonly T[],
+  value: FilterValue,
+  categoryOrder: Readonly<Record<string, readonly string[]>> = {},
+): T[] {
+  const shown = filterProjects(projects, value);
+  if (value === 'all') return shown;
+  const rank = new Map((categoryOrder[value] ?? []).map((slug, index) => [slug, index]));
+  // Array.prototype.sort is stable, so equal ranks keep the homepage order.
+  const last = rank.size;
+  return shown.sort((a, b) => (rank.get(a.slug) ?? last) - (rank.get(b.slug) ?? last));
+}
+
 /** The URL a filter choice should produce, keeping the current path. */
 export function filterUrl(pathname: string, value: FilterValue): string {
   return value === 'all' ? pathname : `${pathname}?filter=${value}`;

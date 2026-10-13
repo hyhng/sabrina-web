@@ -22,6 +22,7 @@ export default async function InformationPage() {
   return (
     <Site
       projects={homepage.projects}
+      categoryOrder={homepage.categoryOrder}
       settings={settings}
       imgBase={IMG_BASE}
       initialPath="/information/"

@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { filterProjects, filterUrl, FILTER_LABELS, FILTER_VALUES, readFilter } from './filter.ts';
+import {
+  filterProjects,
+  filterUrl,
+  FILTER_LABELS,
+  FILTER_VALUES,
+  orderedFor,
+  readFilter,
+} from './filter.ts';
 
 const projects = [
   { slug: 'wool', category: 'commercial' as const },
@@ -9,9 +16,10 @@ const projects = [
 ];
 
 describe('readFilter', () => {
-  it('accepts the two categories', () => {
+  it('accepts every category', () => {
     expect(readFilter('commercial')).toBe('commercial');
     expect(readFilter('art')).toBe('art');
+    expect(readFilter('fashion')).toBe('fashion');
   });
 
   it('falls back to all rather than showing nothing', () => {
@@ -59,5 +67,41 @@ describe('the filter items', () => {
       'Art',
       'Fashion',
     ]);
+  });
+});
+
+describe('orderedFor', () => {
+  const all = [
+    { slug: 'a', category: 'art' as const },
+    { slug: 'w', category: 'commercial' as const },
+    { slug: 'b', category: 'art' as const },
+    { slug: 'c', category: 'art' as const },
+  ];
+  const slugs = (list: { slug: string }[]) => list.map((project) => project.slug);
+
+  it('leaves All in the homepage order, whatever the category lists say', () => {
+    expect(slugs(orderedFor(all, 'all', { art: ['c', 'b', 'a'] }))).toEqual(['a', 'w', 'b', 'c']);
+  });
+
+  it('shows a category in her order for that category', () => {
+    expect(slugs(orderedFor(all, 'art', { art: ['c', 'a', 'b'] }))).toEqual(['c', 'a', 'b']);
+  });
+
+  it('falls back to the homepage order when she has set none', () => {
+    expect(slugs(orderedFor(all, 'art'))).toEqual(['a', 'b', 'c']);
+    expect(slugs(orderedFor(all, 'art', {}))).toEqual(['a', 'b', 'c']);
+  });
+
+  it('never loses a project she has not placed: it follows the placed ones', () => {
+    expect(slugs(orderedFor(all, 'art', { art: ['c'] }))).toEqual(['c', 'a', 'b']);
+  });
+
+  it('ignores a slug on the list that is no longer in the category', () => {
+    expect(slugs(orderedFor(all, 'art', { art: ['w', 'b', 'gone'] }))).toEqual(['b', 'a', 'c']);
+  });
+
+  it('does not reorder the list it was given', () => {
+    orderedFor(all, 'art', { art: ['c', 'b', 'a'] });
+    expect(slugs(all)).toEqual(['a', 'w', 'b', 'c']);
   });
 });

@@ -1,8 +1,8 @@
-import { CATEGORIES, CATEGORY_LABELS } from '@sabrina/shared/categories';
+import { CATEGORIES, CATEGORY_LABELS, isCategory } from '@sabrina/shared/categories';
 import { APIError, type CollectionConfig } from 'payload';
 
 import { coverOptions } from './cover-options.ts';
-import { becomesPublished, orderIds, withNewFirst } from './homepage-order.ts';
+import { becomesPublished, categoryOrderField, orderIds, withNewFirst } from './homepage-order.ts';
 import { publishBlocker } from './publish-rules.ts';
 import { isLocked, locksOnPublish, nextSlug } from './slug-rules.ts';
 
@@ -43,17 +43,24 @@ export const Projects: CollectionConfig = {
     ],
     afterChange: [
       // docs/SPEC.md 8.5: a project that goes public joins the homepage order
-      // at the top; without this it was published and still not on the site.
+      // at the top, and its category's order too; without this it was published and still not on the site.
       async ({ doc, previousDoc, req }) => {
         if (!becomesPublished(doc._status, previousDoc?._status)) return doc;
-        const homepage = await req.payload.findGlobal({ slug: 'homepage', depth: 0, req });
-        const next = withNewFirst(orderIds(homepage.projects), doc.id);
-        if (next !== undefined) {
-          await req.payload.updateGlobal({
-            slug: 'homepage',
-            data: { projects: next.map(Number) },
-            req,
-          });
+        const homepage = (await req.payload.findGlobal({
+          slug: 'homepage',
+          depth: 0,
+          req,
+        })) as unknown as Record<string, unknown>;
+        // First under All, and first within its own category.
+        const data: Record<string, number[]> = {};
+        const fields = ['projects'];
+        if (isCategory(doc.category)) fields.push(categoryOrderField(doc.category));
+        for (const field of fields) {
+          const next = withNewFirst(orderIds(homepage[field]), doc.id);
+          if (next !== undefined) data[field] = next.map(Number);
+        }
+        if (Object.keys(data).length > 0) {
+          await req.payload.updateGlobal({ slug: 'homepage', data, req });
         }
         return doc;
       },

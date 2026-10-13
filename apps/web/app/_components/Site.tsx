@@ -1,6 +1,6 @@
 'use client';
 
-import { filterProjects } from '@sabrina/shared/filter';
+import { orderedFor } from '@sabrina/shared/filter';
 import type { Project, Settings } from '@sabrina/shared/schema';
 import {
   DetailOverlay,
@@ -25,20 +25,23 @@ export interface SiteProps {
   projects: Project[];
   settings: Settings;
   imgBase: string;
+  /** Her order within each category, as slugs; All uses `projects` as given. */
+  categoryOrder?: Readonly<Record<string, readonly string[]>>;
   /** The path this HTML file was prerendered for. */
   initialPath: string;
 }
 
-export function Site({ projects, settings, imgBase, initialPath }: SiteProps) {
+export function Site({ projects, categoryOrder, settings, imgBase, initialPath }: SiteProps) {
   const path = usePath(initialPath);
   // From here on, an overlay that opens fades in (overlay-chrome.ts).
   useEffect(markInteractive, []);
   const overlay = useMemo(() => overlayFromPath(path), [path]);
 
   const filter = useFilter();
-  const visibleSlugs = useMemo(
-    () => new Set(filterProjects(projects, filter).map((project) => project.slug)),
-    [projects, filter],
+  // What the filter shows, in her order for that category (docs/SPEC.md 8.5).
+  const shown = useMemo(
+    () => orderedFor(projects, filter, categoryOrder),
+    [projects, filter, categoryOrder],
   );
 
   const open =
@@ -57,8 +60,7 @@ export function Site({ projects, settings, imgBase, initialPath }: SiteProps) {
       />
       <main>
         <OffsetGrid
-          projects={projects}
-          visibleSlugs={visibleSlugs}
+          projects={shown}
           imgBase={imgBase}
           onOpen={(project) => {
             pushPath(`/work/${project.slug}/`);

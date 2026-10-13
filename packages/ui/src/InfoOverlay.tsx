@@ -3,6 +3,7 @@
 import type { Settings } from '@sabrina/shared/schema';
 import { useEffect, useRef, useState } from 'react';
 
+import { CloseButton } from './CloseButton.tsx';
 import { openFade, useFocusTrap, useScrollLock } from './overlay-chrome.ts';
 import { Photo } from './Photo.tsx';
 
@@ -80,14 +81,7 @@ export function InfoOverlay({ settings, imgBase, onClose }: InfoOverlayProps) {
           >
             {TITLE}
           </h1>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="cursor-pointer text-[17px] text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink detail:text-[18px] detail:leading-[1.55]"
-          >
-            ✕
-          </button>
+          <CloseButton onClick={onClose} className="-mr-[6px]" />
         </div>
 
         <div className="px-[16px] pb-[40px] text-[15px] leading-[1.55] text-ink detail:flex detail:items-start detail:px-[64px] detail:pb-0 detail:mt-[34px]">

@@ -229,7 +229,8 @@ describe('DetailOverlay — mobile (UI 09)', () => {
 
   it('uses the mobile type sizes and grows them from 768', () => {
     expect(html).toContain('text-[15px] text-ink detail:text-[18px]');
-    expect(html).toContain('text-[17px]');
+    // The close button is drawn, one size everywhere (CloseButton.tsx).
+    expect(html).not.toContain('text-[17px]');
   });
 
   it('sets the meta under the photo at 14px at every width', () => {

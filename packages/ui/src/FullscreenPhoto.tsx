@@ -4,6 +4,7 @@ import type { Photo as PhotoData } from '@sabrina/shared/schema';
 import { useEffect, useRef } from 'react';
 
 import { ArrowButton } from './ArrowButton.tsx';
+import { CloseButton } from './CloseButton.tsx';
 import { OPEN_FADE } from './overlay-chrome.ts';
 import { Photo } from './Photo.tsx';
 
@@ -11,7 +12,7 @@ import { Photo } from './Photo.tsx';
  * One photo of a series over the whole window (docs/SPEC.md 4.6) [rozhodnuto
  * 5. 10. 2026, vzor lydiebonhomme.com]. Opened by clicking the photo in a
  * project detail; no title, no meta, just the picture as large as it fits,
- * whole, with the arrows at the window's edges and a round ✕ top right.
+ * whole, with the arrows at the window's edges and the close button top right.
  *
  * It sits inside the detail and shares its place in the series with it, so ←
  * → page the same photos and closing lands on the photo last looked at. Esc
@@ -103,21 +104,11 @@ export function FullscreenPhoto({
         />
       ) : null}
 
-      <button
-        type="button"
+      <CloseButton
         onClick={onClose}
-        aria-label="Close full screen"
-        className="absolute top-[24px] right-[24px] flex size-[40px] cursor-pointer items-center justify-center rounded-full bg-arrow/55 backdrop-blur-[3px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
-      >
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-          <path
-            d="M14 14L26 26M26 14L14 26"
-            stroke="white"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
-      </button>
+        label="Close full screen"
+        className="absolute top-[24px] right-[24px]"
+      />
     </div>
   );
 }

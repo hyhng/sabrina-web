@@ -4,6 +4,7 @@ import type { Project } from '@sabrina/shared/schema';
 import { useEffect, useRef, useState } from 'react';
 
 import { Carousel } from './Carousel.tsx';
+import { CloseButton } from './CloseButton.tsx';
 import { openFade, useFocusTrap, useScrollLock } from './overlay-chrome.ts';
 
 /**
@@ -107,14 +108,9 @@ export function DetailOverlay({ project, imgBase, onClose }: DetailOverlayProps)
           >
             {project.title}
           </h1>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="cursor-pointer text-[17px] text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink detail:text-[18px] detail:leading-[1.5]"
-          >
-            ✕
-          </button>
+          {/* Pulled out by the 6px its box is wider than its cross, so the cross
+              itself lines up with the column's edge. */}
+          <CloseButton onClick={onClose} className="-mr-[6px]" />
         </div>
 
         {/* Full-bleed on mobile, inside the column from 768 up. */}

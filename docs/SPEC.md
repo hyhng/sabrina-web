@@ -240,6 +240,7 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
 - **Vlastní pořadí pro každou kategorii** — **[rozhodnuto 13. 10. 2026, přání klientky]**: obrazovka má záložky **Vše · Commercial · Art · Fashion**. „Vše" je pořadí bez filtru, každá kategorie má svůj seznam, který web použije, když je ten filtr zapnutý.
   - Do seznamu kategorie jdou jen projekty té kategorie. Projekt, který na seznamu chybí, se na webu ukáže **za** seřazenými, v pořadí ze „Vše" — nikdy nezmizí.
   - Nově publikovaný projekt se přidá na začátek „Vše" i své kategorie.
+  - **Projekt přesunutý do jiné kategorie** se sám přesune i v seznamech: ze starého zmizí, v novém je první. Seznamy se při každém uložení samy zbaví projektů, které do nich nepatří — **[opraveno 13. 10. 2026]**: bez toho zastaralá položka zablokovala uložení pořadí a s ním i každou publikaci.
   - Při zavedení se seznamy předvyplnily pořadím ze „Vše" (migrace `category_order`).
   - Náhled mřížky vpravo ukazuje pořadí „Vše".
 - Náhled rozložení do 3 sloupců (stejný algoritmus jako web) **[návrh — ve wireframu je, v MVP stačí seznam]**

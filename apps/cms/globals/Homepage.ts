@@ -1,7 +1,7 @@
 import { CATEGORIES, CATEGORY_LABELS } from '@sabrina/shared/categories';
 import type { GlobalConfig } from 'payload';
 
-import { categoryOrderField } from '../collections/homepage-order.ts';
+import { categoryOrderField, keepCategory, orderIds } from '../collections/homepage-order.ts';
 
 /**
  * The order of the grid (docs/SPEC.md 8.5).
@@ -19,6 +19,46 @@ export const Homepage: GlobalConfig = {
   access: {
     read: () => true,
     update: ({ req }) => Boolean(req.user),
+  },
+  hooks: {
+    /*
+     * Before anything is validated, each category's list drops the projects
+     * that are no longer in that category (homepage-order.ts → keepCategory).
+     * Every list is gone through, not only the ones being changed: a save
+     * validates the whole document, and one stale entry in a list nobody touched
+     * was enough to refuse it.
+     */
+    beforeValidate: [
+      async ({ data, originalDoc, req }) => {
+        const incoming = (data ?? {}) as Record<string, unknown>;
+        const stored = (originalDoc ?? {}) as Record<string, unknown>;
+        const lists = CATEGORIES.map((category) => {
+          const field = categoryOrderField(category);
+          return { category, field, ids: orderIds(incoming[field] ?? stored[field]) };
+        });
+        const wanted = [...new Set(lists.flatMap((list) => list.ids.map(String)))];
+        if (wanted.length === 0) return data;
+
+        const found = await req.payload.find({
+          collection: 'projects',
+          where: { id: { in: wanted } },
+          depth: 0,
+          limit: wanted.length,
+          pagination: false,
+          req,
+        });
+        const categoryOf = new Map(
+          found.docs.map((doc) => [String(doc.id), String(doc.category)] as const),
+        );
+        const cleaned = Object.fromEntries(
+          lists.map((list) => [
+            list.field,
+            keepCategory(list.ids, categoryOf, list.category).map(Number),
+          ]),
+        );
+        return { ...incoming, ...cleaned };
+      },
+    ],
   },
   fields: [
     {

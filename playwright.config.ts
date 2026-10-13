@@ -14,7 +14,13 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: process.env.CI !== undefined,
   retries: process.env.CI === undefined ? 0 : 1,
-  reporter: process.env.CI === undefined ? 'list' : [['list'], ['html', { open: 'never' }]],
+  /*
+   * In CI also `github`: it writes each failure — test name and error — as an
+   * annotation on the run's summary page. Without it the summary says only
+   * "exit code 1" and the reason is two clicks and a scroll away.
+   */
+  reporter:
+    process.env.CI === undefined ? 'list' : [['list'], ['github'], ['html', { open: 'never' }]],
   use: {
     baseURL: 'http://localhost:4173',
     trace: 'on-first-retry',

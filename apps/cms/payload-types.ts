@@ -139,7 +139,7 @@ export interface Project {
    */
   slug: string;
   slugLocked?: boolean | null;
-  category: 'commercial' | 'art';
+  category: 'commercial' | 'art' | 'fashion';
   year?: number | null;
   client?: string | null;
   clientLine2?: string | null;

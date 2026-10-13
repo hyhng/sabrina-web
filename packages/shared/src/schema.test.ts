@@ -59,7 +59,7 @@ describe('schema smoke', () => {
         status: 'published',
       }).success,
     ).toBe(false);
-    expect(CATEGORIES).toEqual(['commercial', 'art']);
+    expect(CATEGORIES).toEqual(['commercial', 'art', 'fashion']);
   });
   it('validates settings', () => {
     expect(

@@ -35,8 +35,10 @@ describe('Header', () => {
   });
 
   it('narrows the links as the screen narrows', () => {
-    // Address from desktop, Instagram from tablet, Information always.
-    expect(html).toMatch(/hidden desktop:inline[^>]*>\s*sabrina/);
+    // Address from 1280 (it ran into the filter below that), Instagram from
+    // tablet, Information always.
+    expect(html).toMatch(/hidden min-\[1280px\]:inline[^>]*>\s*sabrina/);
+    expect(html).not.toMatch(/hidden desktop:inline[^>]*>\s*sabrina/);
     expect(html).toContain('hidden tablet:inline');
   });
 

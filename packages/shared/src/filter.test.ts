@@ -50,9 +50,14 @@ describe('filterUrl', () => {
   });
 });
 
-describe('the three filter items', () => {
-  it('are All, Commercial and Art in that order', () => {
-    expect(FILTER_VALUES).toEqual(['all', 'commercial', 'art']);
-    expect(FILTER_VALUES.map((v) => FILTER_LABELS[v])).toEqual(['All', 'Commercial', 'Art']);
+describe('the filter items', () => {
+  it('are All, then Commercial, Art and Fashion in that order', () => {
+    expect(FILTER_VALUES).toEqual(['all', 'commercial', 'art', 'fashion']);
+    expect(FILTER_VALUES.map((v) => FILTER_LABELS[v])).toEqual([
+      'All',
+      'Commercial',
+      'Art',
+      'Fashion',
+    ]);
   });
 });

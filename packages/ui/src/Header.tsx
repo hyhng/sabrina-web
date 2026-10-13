@@ -16,7 +16,7 @@ import { nextHeaderScroll, type HeaderScroll } from './header-visibility.ts';
  * reader to walk through.
  *
  * What the right-hand side shows narrows as the screen does: all three links
- * on desktop, Information and Instagram on tablet, Information alone on mobile.
+ * from 1280, Information and Instagram from tablet, Information alone on mobile.
  *
  * Sticky, and it gets out of the way: it slides up while the visitor scrolls
  * down and slides back down as soon as they scroll up [rozhodnuto 5. 10. 2026,
@@ -96,7 +96,9 @@ export function Header({ settings, filter, onOpenInformation }: HeaderProps) {
           <a href="/information/" onClick={openInformation}>
             Information
           </a>
-          <a href={`mailto:${settings.email}`} className="hidden desktop:inline">
+          {/* From 1280, not 1024: with four filter items in the middle, the address
+              ran into them on every window narrower than about 1220. */}
+          <a href={`mailto:${settings.email}`} className="hidden min-[1280px]:inline">
             {settings.email}
           </a>
           <a

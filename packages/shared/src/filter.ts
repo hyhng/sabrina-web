@@ -1,8 +1,8 @@
-import { CATEGORIES, type Category } from './categories.ts';
+import { CATEGORIES, CATEGORY_LABELS, type Category } from './categories.ts';
 import type { Project } from './schema.ts';
 
 /**
- * Category filter (docs/SPEC.md 3.4). All, Commercial, Art — All is the
+ * Category filter (docs/SPEC.md 3.4). All, then every category — All is the
  * default, and an unrecognised value in the URL falls back to it rather than
  * showing an empty page (docs/SPEC.md 2).
  */
@@ -11,11 +11,8 @@ export type FilterValue = 'all' | Category;
 
 export const FILTER_VALUES: readonly FilterValue[] = ['all', ...CATEGORIES];
 
-export const FILTER_LABELS: Record<FilterValue, string> = {
-  all: 'All',
-  commercial: 'Commercial',
-  art: 'Art',
-};
+/** From the category labels, so a new category cannot be missing from the filter. */
+export const FILTER_LABELS: Record<FilterValue, string> = { all: 'All', ...CATEGORY_LABELS };
 
 /** Read the filter out of a `?filter=` value, however mangled. */
 export function readFilter(raw: string | null | undefined): FilterValue {

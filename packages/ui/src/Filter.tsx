@@ -5,7 +5,7 @@ import { FILTER_LABELS, FILTER_VALUES, type FilterValue } from '@sabrina/shared/
 /**
  * Category filter (Figma UI 04 node 154:61, UI 06 node 154:323).
  *
- * All · Commercial · Art. The active item is full strength with a rule under
+ * All · Commercial · Art · Fashion. The active item is full strength with a rule under
  * it; the others are dimmed and keep an invisible rule so nothing shifts when
  * the selection moves.
  *

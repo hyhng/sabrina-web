@@ -1,8 +1,12 @@
 /**
  * The one source of truth for project categories (CLAUDE.md, rule 4).
  * The web filter, the tile caption and the Payload field all read from here.
+ *
+ * Fashion was added on 13 October 2026 at the client's request; the two before
+ * it date from 23 September. The order here is the order of the filter. A new
+ * value also needs a database migration: Postgres holds the list as an enum.
  */
-export const CATEGORIES = ['commercial', 'art'] as const;
+export const CATEGORIES = ['commercial', 'art', 'fashion'] as const;
 
 export type Category = (typeof CATEGORIES)[number];
 
@@ -10,6 +14,7 @@ export type Category = (typeof CATEGORIES)[number];
 export const CATEGORY_LABELS: Record<Category, string> = {
   commercial: 'Commercial',
   art: 'Art',
+  fashion: 'Fashion',
 };
 
 export function isCategory(value: unknown): value is Category {

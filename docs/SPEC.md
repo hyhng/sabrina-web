@@ -24,7 +24,7 @@ Jedna stránka, overlaye mají vlastní URL.
 | URL | Co se zobrazí | Poznámka |
 |---|---|---|
 | `/` | grid, filtr All | |
-| `/?filter=commercial`, `/?filter=art` | grid, filtrovaný | neplatná hodnota → All |
+| `/?filter=commercial`, `/?filter=art`, `/?filter=fashion` | grid, filtrovaný | neplatná hodnota → All |
 | `/work/[slug]/` | grid v pozadí + otevřený detail projektu | sdílitelný odkaz, indexuje se |
 | `/information/` | grid v pozadí + otevřený Information | |
 | cokoliv jiného | 404 | |
@@ -68,7 +68,7 @@ Algoritmus žije v `packages/shared/grid.ts` jako čistá funkce (vstup: poměry
 
 ### 3.4 Filtr
 
-- Tři položky **All · Commercial · Art**, All je výchozí — **[rozhodnuto]**
+- Čtyři položky **All · Commercial · Art · Fashion**, All je výchozí — **[rozhodnuto; Fashion přidáno 13. 10. 2026 na přání klientky]**
 - Aktivní: plná barva + podtržení. Neaktivní: 40 % krytí — **[rozhodnuto, ale viz přístupnost 9.3]**
 - Filtruje se **na klientovi** — všechny projekty jsou v HTML, filtr jen skryje nepatřičné a grid se přepočítá.
 - Přeskládání je animované (layout animace, stejná mechanika jako přechod do detailu). Mizející dlaždice fade out, zbylé se přesunou. **[návrh]**
@@ -175,7 +175,7 @@ Figma: UI 10 (desktop), UI 11 (mobil). Header a patička jako na homepage, upros
 |---|---|---|---|
 | Vlevo | jméno (odkaz na `/`) | jméno | jméno |
 | Uprostřed | filtr | — | — |
-| Vpravo | Information · e-mail · Instagram | Information · Instagram | Information |
+| Vpravo | Information · e-mail · Instagram (e-mail až od 1280 px, pod tím by narážel do filtru) | Information · Instagram | Information |
 | Filtr | v headeru uprostřed | pod jménem | pod jménem |
 | Patička | vlevo © rok, vpravo „Created by **KeySpace**" (bez navigace) | totéž | pod sebou: © rok, „Created by KeySpace" |
 
@@ -211,7 +211,7 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
 ### 8.3 Editor projektu — `67:2`, fotky `77:2`
 - Formulář: Název · Slug · Kategorie · Rok · Klient + druhý řádek · Kredity (opakovatelné: role + jméno) · Titulní fotka
 - **Slug se generuje z názvu a po první publikaci se zamkne** — napsané přímo pod polem
-- **Kategorie:** výběr ze dvou hodnot (Commercial / Art)
+- **Kategorie:** výběr ze tří hodnot (Commercial / Art / Fashion)
 - Pole **„Typ dlaždice" neexistuje** (zrušeno)
 - Vpravo **náhled dlaždice** ve skutečné velikosti — stejná komponenta `Tile` z `packages/ui` jako na webu
 - Záložka **Fotky**: drag & drop nahrávání a **mřížka náhledů** — řazení tažením, klik na fotku otevře detail (**Nastavit jako titulní**, posun dřív/později, alt text (volitelný), smazání). Titulní fotka se nevybírá ze seznamu názvů, ale z obrázků
@@ -295,7 +295,7 @@ Kanonická definice v `packages/shared/schema.ts` (zod). Payload kolekce musí o
 |---|---|---|
 | `title` | string, povinné | |
 | `slug` | string, unikátní | z názvu; zamčené po první publikaci |
-| `category` | `'commercial' \| 'art'` | povinné |
+| `category` | `'commercial' \| 'art' \| 'fashion'` | povinné |
 | `year` | number | |
 | `client` | string | např. „Marlow" |
 | `clientLine2` | string | např. „Marlow Cosmetics" |

@@ -145,7 +145,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo · 🔒 blokuje kli
 - [ ] 🔒 Klientka nahraje finální projekty a fotky
 - [ ] 🔒 Bio, klienti, kredity, portrét
 - [ ] 🔒 Potvrzení kategorií Commercial / Art
-- [~] Favicon, OG obrázek webu — **favicon hotový 13. 10.** (Figma `177:3`: celé jméno na bílém čtverci; `app/icon.svg`, `favicon.ico` 16/32/48, `apple-icon.png` 180). V záložce o 16 px je nečitelný, viz deník. OG obrázek chybí
+- [~] Favicon, OG obrázek webu — **favicon hotový 13. 10.** (Figma `177:3`: iniciály **SK** fontem Lora na bílém čtverci; `app/icon.svg`, `favicon.ico` 16/32/48, `apple-icon.png` 180). První verze bylo celé jméno, v 16 px nečitelné; nahrazeno týž den. OG obrázek chybí
 - [ ] Kontrola gridu s reálnými poměry stran (pár fotek na šířku drží rytmus)
 - [ ] Cross-browser: Chrome, Safari macOS + iOS, Firefox, Edge
 - [ ] Výkon a přístupnost na reálných fotkách

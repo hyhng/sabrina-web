@@ -72,6 +72,10 @@ test.describe('grid and filter', () => {
     test.skip(isMobile, 'a desktop-monitor case');
     await page.setViewportSize({ width: 3840, height: 2160 });
     await page.goto('/?filter=art');
+    // The filter in the address is applied once the page is interactive; until
+    // then all nine projects are there and the page is taller than the window.
+    // Measuring before that failed in WebKit and on CI's slower machine.
+    await expect(page.locator('.offset-grid__item:visible')).toHaveCount(3);
     const box = await page.evaluate(() => {
       const rect = (selector: string) => document.querySelector(selector)?.getBoundingClientRect();
       const grid = rect('.offset-grid');

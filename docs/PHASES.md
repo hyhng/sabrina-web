@@ -282,6 +282,7 @@ projektu. Jinak by neuložený projekt dál odkazoval na neexistující fotku a 
 | 5. 10. | Overlaye (detail, Information, fotka přes celé okno) se při otevření kliknutím **objeví fade-in 250 ms**; při příchodu přímo na adresu bez animace | vývojář |
 | 5. 10. | **Nově publikovaný projekt se zařadí na začátek** pořadí na homepage (otázka 10) | vývojář: bez toho byl projekt publikovaný, a přesto nebyl na webu |
 | 5. 10. | **Další účty do adminu** zakládá přihlášený uživatel; vlastní účet smazat nejde. U Publikovat odkaz **„Zobrazit web“** (`SITE_URL`) | vývojář; předání účtu Sabrině, kontrola výsledku publikace |
+| 13. 10. | **Mřížka: dlaždice ve sloupci plynou pod sebou** místo předem spočítaných pozic; při změně filtru fade místo přesunu | klientka: delší název na mobilu zasahoval pod další fotku. Pozice spočítaná předem neví, na kolik řádků se název zalomí |
 | 13. 10. | **Třetí kategorie Fashion** (filtr All · Commercial · Art · Fashion) + migrace enumu v DB | klientka. Migrace vyzkoušená na kopii ostré DB |
 | 13. 10. | **Jeden kreslený křížek** pro zavření (detail, Information, fullscreen) | vývojář: tři různé křížky, glyf „✕“ se liší podle fontu |
 | 13. 10. | E-mail v hlavičce až od 1280 px | se čtyřmi položkami filtru do něj narážel na oknech pod ~1220 px (se třemi už pod ~1160) |

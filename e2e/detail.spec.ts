@@ -36,7 +36,7 @@ test.describe('project detail', () => {
     await page.goto('/work/fog/');
     await expect(page.getByRole('dialog')).toBeVisible();
     // The grid is behind it, prerendered, not fetched.
-    await expect(page.locator('.offset-grid__item')).toHaveCount(9);
+    await expect(page.locator('.offset-grid__item:visible')).toHaveCount(9);
   });
 
   test('closes with Escape', async ({ page }) => {

@@ -58,6 +58,10 @@ Algoritmus žije v `packages/shared/grid.ts` jako čistá funkce (vstup: poměry
 
 > Ověřeno: UI 04 ve Figmě přesně odpovídá tomuto algoritmu. **UI 04B (filtr) je ve Figmě skládaný ručně a algoritmu neodpovídá** — kód se řídí algoritmem, rozdíl oproti 04B je přijatý.
 
+- **Dlaždice ve sloupci leží pod sebou a řídí se skutečnou výškou popisky** — **[rozhodnuto 13. 10. 2026]**. Algoritmus z dat dál určuje jen to, do kterého sloupce projekt patří. Dřív měla každá dlaždice předem spočítanou svislou pozici s předpokladem jednořádkového názvu, takže delší název na mobilu (sloupec 173 px) zasahoval pod další fotku.
+  - V HTML jsou proto dvě rozložení (dva sloupce a tři), CSS ukáže to, které odpovídá šířce. Obě chtějí stejné soubory fotek, nic se nestahuje dvakrát.
+  - Nic se v prohlížeči neměří a nic po načtení neposkočí: výška fotky je dál z dat.
+
 ### 3.3 Dlaždice
 
 - Fotka (titulní fotka projektu) na celou šířku sloupce, poměr stran z dat, `object-fit: cover`
@@ -71,7 +75,7 @@ Algoritmus žije v `packages/shared/grid.ts` jako čistá funkce (vstup: poměry
 - Čtyři položky **All · Commercial · Art · Fashion**, All je výchozí — **[rozhodnuto; Fashion přidáno 13. 10. 2026 na přání klientky]**
 - Aktivní: plná barva + podtržení. Neaktivní: 40 % krytí — **[rozhodnuto, ale viz přístupnost 9.3]**
 - Filtruje se **na klientovi** — všechny projekty jsou v HTML, filtr jen skryje nepatřičné a grid se přepočítá.
-- Přeskládání je animované (layout animace, stejná mechanika jako přechod do detailu). Mizející dlaždice fade out, zbylé se přesunou. **[návrh]**
+- Po změně filtru se mřížka poskládá znovu jen z vybraných projektů a **prolne se (fade-in 250 ms)** — **[změněno 13. 10. 2026]**. Dřív se dlaždice na nová místa plynule přesouvaly; to stálo na pevně spočítaných pozicích, které se zrušily (viz 3.2).
 - Položky filtru jsou `<button aria-pressed>`, stav se propisuje do URL.
 
 ---

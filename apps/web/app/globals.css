@@ -58,13 +58,12 @@
 /**
  * Offset grid — paired with OffsetGrid.tsx in packages/ui.
  *
- * The component emits per-breakpoint custom properties on each tile
- * (--c-m/-t/-d for the column, --a-* for the column-width multiple, --b-* for
- * the fixed pixels); these rules pick which set applies. Numbers live in the
- * HTML, breakpoint switching lives here — no JavaScript either side.
- *
- * Widths are cqw, not %, because a percentage in `top` would resolve against
- * the container's height. Column widths from docs/DESIGN.md → Grid.
+ * Columns are real elements and the tiles in them flow, so a caption of any
+ * height pushes the next tile down. The component renders one arrangement for
+ * two columns and one for three; these rules show the one that fits and set the
+ * gaps. Each column carries its offset as a multiple of the column width
+ * (--o-m / --o-t / --o-d), since the offsets scale with the column
+ * (docs/DESIGN.md → Grid). Widths are cqw so they follow the grid, not the page.
  */
 @layer components {
   .offset-grid {
@@ -74,65 +73,41 @@
     padding-inline: 16px;
   }
 
-  .offset-grid__canvas {
-    position: relative;
+  .offset-grid__columns {
+    display: flex;
+    align-items: flex-start;
     --cols: 2;
     --gap: 12px;
+    --gap-y: 28px;
     --cw: calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols));
-    height: var(--h-m);
+    gap: var(--gap);
   }
 
-  .offset-grid__item {
-    position: absolute;
-    width: var(--cw);
-    left: calc((var(--cw) + var(--gap)) * var(--c));
-    top: calc(var(--cw) * var(--a) + var(--b));
-    --c: var(--c-m);
-    --a: var(--a-m);
-    --b: var(--b-m);
-    /*
-     * Filtering re-lays out the grid; the tiles slide rather than jump
-     * (docs/SPEC.md 3.4). top and left are calc() over custom properties, so
-     * changing the properties is enough — no animation library involved.
-     */
-    transition:
-      top 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
-      left 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
-      opacity 260ms ease;
+  .offset-grid__columns--wide {
+    display: none;
   }
 
-  /* Filtered out: fades in place, keeps its position, stops being reachable. */
-  .offset-grid__item[data-hidden='true'] {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .offset-grid__canvas {
-    transition: height 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-
-  /* docs/SPEC.md 4.5: every transition becomes a short fade. */
-  @media (prefers-reduced-motion: reduce) {
-    .offset-grid__item {
-      transition: opacity 120ms ease;
-    }
-    .offset-grid__canvas {
-      transition: none;
-    }
+  .offset-grid__column {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: var(--gap-y);
+    /* Without this a long unbroken word would widen the column. */
+    min-width: 0;
+    margin-top: calc(var(--cw) * var(--o, 0));
+    --o: var(--o-m);
   }
 
   @media (min-width: 600px) {
     .offset-grid {
       padding-inline: 24px;
     }
-    .offset-grid__canvas {
+    .offset-grid__columns {
       --gap: 20px;
-      height: var(--h-t);
+      --gap-y: 48px;
     }
-    .offset-grid__item {
-      --c: var(--c-t);
-      --a: var(--a-t);
-      --b: var(--b-t);
+    .offset-grid__column {
+      --o: var(--o-t);
     }
   }
 
@@ -140,15 +115,19 @@
     .offset-grid {
       padding-inline: 34px;
     }
-    .offset-grid__canvas {
+    .offset-grid__columns {
       --cols: 3;
       --gap: 84px;
-      height: var(--h-d);
+      --gap-y: 96px;
     }
-    .offset-grid__item {
-      --c: var(--c-d);
-      --a: var(--a-d);
-      --b: var(--b-d);
+    .offset-grid__columns--narrow {
+      display: none;
+    }
+    .offset-grid__columns--wide {
+      display: flex;
+    }
+    .offset-grid__column {
+      --o: var(--o-d);
     }
   }
 }

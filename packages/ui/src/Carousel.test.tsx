@@ -1,7 +1,13 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import { Carousel, swipeDirection, SWIPE_THRESHOLD } from './Carousel.tsx';
+import {
+  AUTO_ADVANCE_MS,
+  Carousel,
+  shouldAutoAdvance,
+  swipeDirection,
+  SWIPE_THRESHOLD,
+} from './Carousel.tsx';
 
 const photo = (id: string) => ({
   id,
@@ -56,5 +62,41 @@ describe('swipeDirection', () => {
     expect(swipeDirection(0, 10, 5)).toBe('previous');
     expect(swipeDirection(0, 10, 20)).toBeNull();
     expect(SWIPE_THRESHOLD).toBe(48);
+  });
+});
+
+describe('shouldAutoAdvance', () => {
+  const running = {
+    auto: true,
+    index: 0,
+    last: 3,
+    hovered: false,
+    full: false,
+    hidden: false,
+    reducedMotion: false,
+  };
+
+  it('moves the series on when nobody is doing anything', () => {
+    expect(shouldAutoAdvance(running)).toBe(true);
+    expect(AUTO_ADVANCE_MS).toBe(4000);
+  });
+
+  it('stops once the visitor has taken over', () => {
+    expect(shouldAutoAdvance({ ...running, auto: false })).toBe(false);
+  });
+
+  it('stops on the last photo, because the series does not wrap', () => {
+    expect(shouldAutoAdvance({ ...running, index: 3 })).toBe(false);
+    expect(shouldAutoAdvance({ ...running, index: 0, last: 0 })).toBe(false);
+  });
+
+  it('waits while the pointer is on the photo, a photo is full screen, or the tab is hidden', () => {
+    expect(shouldAutoAdvance({ ...running, hovered: true })).toBe(false);
+    expect(shouldAutoAdvance({ ...running, full: true })).toBe(false);
+    expect(shouldAutoAdvance({ ...running, hidden: true })).toBe(false);
+  });
+
+  it('never runs for someone who asked for reduced motion', () => {
+    expect(shouldAutoAdvance({ ...running, reducedMotion: true })).toBe(false);
   });
 });

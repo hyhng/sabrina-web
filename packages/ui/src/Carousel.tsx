@@ -56,6 +56,42 @@ import { Photo } from './Photo.tsx';
  */
 export const FULLSCREEN_QUERY = '(min-width: 768px) and (hover: hover)';
 
+/**
+ * How long a photo stays before the series moves on by itself [rozhodnuto
+ * 13. 10. 2026]. Long enough to look at a photograph, short enough that a
+ * visitor who does nothing still sees the series.
+ */
+export const AUTO_ADVANCE_MS = 4000;
+
+/**
+ * Whether the series should move on by itself right now.
+ *
+ * It runs until the visitor does anything with the series — an arrow, a key, a
+ * swipe, opening a photo — and then stops for good in that detail: once someone
+ * is paging, the pace is theirs. It waits while the pointer rests on the photo,
+ * while a photo is open full screen and while the tab is in the background. It
+ * stops on the last photo, since the series does not wrap. And it does not run
+ * at all for someone who has asked for reduced motion.
+ */
+export function shouldAutoAdvance(state: {
+  auto: boolean;
+  index: number;
+  last: number;
+  hovered: boolean;
+  full: boolean;
+  hidden: boolean;
+  reducedMotion: boolean;
+}): boolean {
+  return (
+    state.auto &&
+    state.index < state.last &&
+    !state.hovered &&
+    !state.full &&
+    !state.hidden &&
+    !state.reducedMotion
+  );
+}
+
 /** Space between neighbouring photos in the row, so no sliver of one shows. */
 export const SLIDE_GAP = 24;
 
@@ -87,6 +123,10 @@ export interface CarouselProps {
 export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselProps) {
   const [index, setIndex] = useState(startIndex);
   const [full, setFull] = useState(false);
+  // Moves on by itself until the visitor takes over (shouldAutoAdvance).
+  const [auto, setAuto] = useState(true);
+  const [hovered, setHovered] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const swipeFrom = useRef<number | null>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
   const closeFull = useCallback(() => {
@@ -113,9 +153,11 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
   /** The tallest frame at a given width is the one with the smallest ratio. */
   const tallest = Math.min(...photos.map((photo) => photo.aspectRatio));
   const goBack = () => {
+    setAuto(false);
     setIndex((current) => Math.max(0, current - 1));
   };
   const goForward = () => {
+    setAuto(false);
     setIndex((current) => Math.min(last, current + 1));
   };
   const canGoBack = index > 0;
@@ -123,6 +165,8 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      setAuto(false);
       if (event.key === 'ArrowLeft') setIndex((current) => Math.max(0, current - 1));
       if (event.key === 'ArrowRight') setIndex((current) => Math.min(last, current + 1));
     }
@@ -131,6 +175,39 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [last]);
+
+  // One timer per photo: set when a photo comes up, cleared when anything that
+  // matters changes, so it never fires for a state that is no longer true.
+  useEffect(() => {
+    const check = () =>
+      shouldAutoAdvance({
+        auto,
+        index,
+        last,
+        hovered,
+        full,
+        hidden,
+        reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      });
+    if (!check()) return;
+    const timer = window.setTimeout(() => {
+      if (check()) setIndex((current) => Math.min(last, current + 1));
+    }, AUTO_ADVANCE_MS);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [auto, index, last, hovered, full, hidden]);
+
+  // Kept as state so the timer starts again when the visitor comes back to the tab.
+  useEffect(() => {
+    const onVisibility = () => {
+      setHidden(document.visibilityState === 'hidden');
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, []);
 
   const photo = photos[index];
 
@@ -144,7 +221,15 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
          * photo be sized in the stage's units below.
          */
         style={{ '--ratio': String(tallest), containerType: 'size' } as CSSProperties}
+        onMouseEnter={() => {
+          setHovered(true);
+        }}
+        onMouseLeave={() => {
+          setHovered(false);
+        }}
         onTouchStart={(event) => {
+          // A finger on the photo is taking over, whether or not it becomes a swipe.
+          setAuto(false);
           swipeFrom.current = event.touches[0]?.clientX ?? null;
         }}
         onTouchEnd={(event) => {
@@ -189,6 +274,7 @@ export function Carousel({ photos, imgBase, title, startIndex = 0 }: CarouselPro
                   aspectRatio: String(slide.aspectRatio),
                 }}
                 onClick={() => {
+                  setAuto(false);
                   if (window.matchMedia(FULLSCREEN_QUERY).matches) setFull(true);
                 }}
               >

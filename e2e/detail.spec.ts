@@ -159,3 +159,37 @@ test.describe('full screen', () => {
     await expect(page.getByRole('dialog')).toBeVisible();
   });
 });
+
+test.describe('auto-advance', () => {
+  // Which photo is on screen: the slide that is not inert.
+  const current = (page: Page) =>
+    page.evaluate(() => {
+      const slides = [...document.querySelectorAll('[role="dialog"] .group\\/photo > div')];
+      const shown = slides.find((slide) => !slide.hasAttribute('inert'));
+      return shown?.querySelector('img')?.getAttribute('alt') ?? '';
+    });
+
+  test('moves on by itself, and stops for good once the visitor pages', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(isMobile, 'the keys used here are a desktop interaction');
+    await page.clock.install();
+    await page.goto('/work/wool-ss26-campaign/');
+    await overlayIsLive(page);
+    // Keep the pointer off the photo: hovering it holds the series still.
+    await page.mouse.move(5, 5);
+
+    const first = await current(page);
+    await page.clock.fastForward(4100);
+    await expect.poll(() => current(page)).not.toBe(first);
+    const second = await current(page);
+
+    // She takes over: one step back, and it stays there however long she waits.
+    await page.keyboard.press('ArrowLeft');
+    await expect.poll(() => current(page)).toBe(first);
+    await page.clock.fastForward(20_000);
+    expect(await current(page)).toBe(first);
+    expect(second).not.toBe(first);
+  });
+});

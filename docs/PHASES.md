@@ -282,6 +282,8 @@ projektu. Jinak by neuložený projekt dál odkazoval na neexistující fotku a 
 | 5. 10. | Overlaye (detail, Information, fotka přes celé okno) se při otevření kliknutím **objeví fade-in 250 ms**; při příchodu přímo na adresu bez animace | vývojář |
 | 5. 10. | **Nově publikovaný projekt se zařadí na začátek** pořadí na homepage (otázka 10) | vývojář: bez toho byl projekt publikovaný, a přesto nebyl na webu |
 | 5. 10. | **Další účty do adminu** zakládá přihlášený uživatel; vlastní účet smazat nejde. U Publikovat odkaz **„Zobrazit web“** (`SITE_URL`) | vývojář; předání účtu Sabrině, kontrola výsledku publikace |
+| 13. 10. | **Karusel v detailu se sám posouvá po 4 s**, dokud návštěvník nezasáhne; pak se vypne | vývojář. Na poslední fotce stojí (bez smyčky, jak bylo rozhodnuto dřív); ne při omezeném pohybu |
+| 13. 10. | **Web běží na `sabrinakulhankova.photography`** (Pages custom domain, `SITE_URL` na serveru); `pages.dev` zůstává neindexované | starý web z Canvy na doméně skončil; druhou doménu u iFastNetu neřešíme |
 | 13. 10. | **Velké monitory:** hlavička a patička mají stejnou největší šířku jako mřížka (1680 px), patička je vždy u spodního okraje okna | vývojář: na 4K se dvěma projekty visela patička v půlce obrazovky a hlavička nelícovala s mřížkou |
 | 13. 10. | **Pořadí projektů zvlášť pro každou kategorii** (záložky v Pořadí na homepage) | klientka. Chybějící projekt se řadí za seřazené, takže z webu nikdy nezmizí; seznamy předvyplněné migrací |
 | 13. 10. | **Mřížka: dlaždice ve sloupci plynou pod sebou** místo předem spočítaných pozic; při změně filtru fade místo přesunu | klientka: delší název na mobilu zasahoval pod další fotku. Pozice spočítaná předem neví, na kolik řádků se název zalomí |

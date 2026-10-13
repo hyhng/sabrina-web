@@ -110,6 +110,7 @@ Figma: UI 05 (desktop, fotka na výšku), UI 05B (fotka na šířku), UI 09 (mob
 - **Neprotáčí se dokola.** Na první fotce není šipka zpět, na poslední není šipka vpřed. Bez počítadla je to jediný signál konce série. **[návrh]**
 - Detail se otevře na **titulní fotce** (ta, ze které byl přechod z dlaždice). **[návrh]**
 - Sousední fotka (±1) se přednačítá.
+- **Série se sama posouvá po 4 s** — **[rozhodnuto 13. 10. 2026]**, dokud návštěvník sám nic neudělá. První šipka, klávesa, swipe nebo klik na fotku ji v tom detailu vypne nadobro. Čeká, když je myš nad fotkou, když je otevřená fotka přes celé okno a když je panel na pozadí. Na poslední fotce se zastaví (série se neprotáčí). S `prefers-reduced-motion` se nespouští vůbec.
 - Přechod mezi fotkami: **slide** (~380 ms) — **[změněno 24. 9. 2026]**, původně návrh crossfade ~250 ms. Fotky leží vedle sebe a celá řada se posune.
 - **Plocha fotek je u každé série stejná** (viz 4.1), takže se při listování nehýbou šipky ani meta a každá fotka je v ní vycentrovaná. **Pod 768 px** má fotka plnou šířku a plocha je vysoká jako nejvyšší fotka série při dané šířce (nejmenší poměr stran), počítáno z dat — **[rozhodnuto 24. 9. 2026]**.
 

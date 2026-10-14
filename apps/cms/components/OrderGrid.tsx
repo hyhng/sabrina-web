@@ -5,13 +5,13 @@ import { photoUrl } from '@sabrina/shared/photo-url';
 import { useEffect, useState } from 'react';
 
 import {
-  addable,
   categoryOfField,
   orderColumns,
+  shownInOrder,
   toOrderProject,
   type OrderProject,
 } from '../lib/order-grid.ts';
-import { fieldId, idsOf, moveTo, without } from '../lib/photo-tiles.ts';
+import { fieldId, idsOf, moveTo } from '../lib/photo-tiles.ts';
 
 import './order-grid.css';
 
@@ -28,6 +28,12 @@ import './order-grid.css';
  *
  * One component for every list: the order under All and each category's own.
  * Nothing is saved until she saves, as everywhere else in the admin.
+ *
+ * Every published project is on the grid [rozhodnuto 14. 10. 2026]. One she has
+ * not placed yet sits at the top, newest first, marked Nový — exactly where the
+ * site shows it — and dragging anything places them all as they stand. There
+ * is no list of projects waiting to be added and no way to take one off here:
+ * a project leaves the site by being unpublished.
  */
 
 const IMG_BASE = process.env.NEXT_PUBLIC_IMG_BASE ?? '';
@@ -83,23 +89,22 @@ export function OrderGrid({ path, field: config }: OrderGridProps) {
     );
   }
 
-  const byId = new Map(all.map((project) => [project.id, project]));
-  const listed = ids
-    .map((id) => byId.get(id))
-    .filter((project): project is OrderProject => project !== undefined);
-  const columns = orderColumns(listed);
-  const candidates = addable(all, ids, category);
+  const shown = shownInOrder(all, ids, category);
+  const placed = new Set(shown.filter((entry) => entry.placed).map((entry) => entry.project.id));
+  const order = shown.map((entry) => entry.project.id);
+  const columns = orderColumns(shown.map((entry) => entry.project));
 
   return (
     <div className="field-type order-grid">
       <span className="field-label">{label}</span>
       <p className="order-grid__note">
         Přetáhni projekt na místo jiného. Takhle se mřížka poskládá na počítači; číslo je pořadí,
-        kterým se řídí i telefon.
+        kterým se řídí i telefon. Nově publikované projekty jsou nahoře se štítkem Nový. Z webu
+        projekt zmizí jen tím, že ho odpublikuješ.
       </p>
 
-      {listed.length === 0 ? (
-        <p className="order-grid__empty">Zatím tu není žádný projekt.</p>
+      {shown.length === 0 ? (
+        <p className="order-grid__empty">Zatím tu není žádný publikovaný projekt.</p>
       ) : (
         <div className="order-grid__columns">
           {columns.map((column, index) => (
@@ -128,7 +133,7 @@ export function OrderGrid({ path, field: config }: OrderGridProps) {
                   onDrop={(event) => {
                     if (dragId === undefined) return;
                     event.preventDefault();
-                    commit(moveTo(ids, dragId, project.id));
+                    commit(moveTo(order, dragId, project.id));
                     setDragId(undefined);
                     setOverId(undefined);
                   }}
@@ -152,17 +157,14 @@ export function OrderGrid({ path, field: config }: OrderGridProps) {
                       />
                     )}
                     <span className="order-grid__number">{position + 1}</span>
-                    <button
-                      type="button"
-                      className="order-grid__remove"
-                      aria-label={`Odebrat ${project.title} z pořadí`}
-                      title="Odebrat z pořadí"
-                      onClick={() => {
-                        commit(without(ids, project.id));
-                      }}
-                    >
-                      ×
-                    </button>
+                    {placed.has(project.id) ? null : (
+                      <span
+                        className="order-grid__new"
+                        title="Ještě nezařazený — stojí nahoře, dokud ho nepřetáhneš"
+                      >
+                        Nový
+                      </span>
+                    )}
                   </div>
                   <span className="order-grid__title">
                     {project.title}
@@ -173,24 +175,6 @@ export function OrderGrid({ path, field: config }: OrderGridProps) {
                 </div>
               ))}
             </div>
-          ))}
-        </div>
-      )}
-
-      {candidates.length === 0 ? null : (
-        <div className="order-grid__add">
-          <p className="order-grid__note">Publikované projekty, které v tomhle pořadí nejsou:</p>
-          {candidates.map((project) => (
-            <button
-              key={project.id}
-              type="button"
-              className="order-grid__add-button"
-              onClick={() => {
-                commit([...ids, project.id]);
-              }}
-            >
-              + {project.title}
-            </button>
           ))}
         </div>
       )}

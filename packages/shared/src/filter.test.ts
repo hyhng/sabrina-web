@@ -94,12 +94,13 @@ describe('orderedFor', () => {
     expect(slugs(orderedFor(all, 'art', {}))).toEqual(['a', 'b', 'c']);
   });
 
-  it('never loses a project she has not placed: it follows the placed ones', () => {
-    expect(slugs(orderedFor(all, 'art', { art: ['c'] }))).toEqual(['c', 'a', 'b']);
+  it('never loses a project she has not placed: it comes first, then her order', () => {
+    // Changed on 14 October: unplaced projects lead, so a new one is seen.
+    expect(slugs(orderedFor(all, 'art', { art: ['c'] }))).toEqual(['a', 'b', 'c']);
   });
 
   it('ignores a slug on the list that is no longer in the category', () => {
-    expect(slugs(orderedFor(all, 'art', { art: ['w', 'b', 'gone'] }))).toEqual(['b', 'a', 'c']);
+    expect(slugs(orderedFor(all, 'art', { art: ['w', 'b', 'gone'] }))).toEqual(['a', 'c', 'b']);
   });
 
   it('does not reorder the list it was given', () => {

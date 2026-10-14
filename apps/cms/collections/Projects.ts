@@ -1,8 +1,7 @@
-import { CATEGORIES, CATEGORY_LABELS, isCategory } from '@sabrina/shared/categories';
+import { CATEGORIES, CATEGORY_LABELS } from '@sabrina/shared/categories';
 import { APIError, type CollectionConfig } from 'payload';
 
 import { coverOptions } from './cover-options.ts';
-import { orderChanges } from './homepage-order.ts';
 import { publishBlocker } from './publish-rules.ts';
 import { isLocked, locksOnPublish, nextSlug } from './slug-rules.ts';
 
@@ -39,33 +38,6 @@ export const Projects: CollectionConfig = {
         const blocker = publishBlocker(data);
         if (blocker !== undefined) throw new APIError(blocker, 400);
         return locksOnPublish(data._status) ? { ...data, slugLocked: true } : data;
-      },
-    ],
-    afterChange: [
-      // docs/SPEC.md 8.5: a project that goes public joins the homepage order
-      // at the top, and its category's order too; one moved to another category
-      // goes first in that category's list (homepage-order.ts).
-      async ({ doc, previousDoc, req }) => {
-        const homepage = (await req.payload.findGlobal({
-          slug: 'homepage',
-          depth: 0,
-          req,
-        })) as unknown as Record<string, unknown>;
-        const changes = orderChanges({
-          homepage,
-          id: doc.id,
-          status: doc._status,
-          previousStatus: previousDoc?._status,
-          category: isCategory(doc.category) ? doc.category : undefined,
-          previousCategory: previousDoc?.category,
-        });
-        if (Object.keys(changes).length > 0) {
-          const data = Object.fromEntries(
-            Object.entries(changes).map(([field, ids]) => [field, ids.map(Number)]),
-          );
-          await req.payload.updateGlobal({ slug: 'homepage', data, req });
-        }
-        return doc;
       },
     ],
   },

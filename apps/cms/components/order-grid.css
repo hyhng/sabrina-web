@@ -81,7 +81,7 @@
 }
 
 .order-grid__number,
-.order-grid__remove {
+.order-grid__new {
   position: absolute;
   top: 0.4rem;
   min-width: 1.5rem;
@@ -102,16 +102,10 @@
   pointer-events: none;
 }
 
-.order-grid__remove {
+.order-grid__new {
   right: 0.4rem;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.12s ease;
-}
-
-.order-grid__tile:hover .order-grid__remove,
-.order-grid__remove:focus-visible {
-  opacity: 1;
+  pointer-events: none;
+  background: var(--theme-success-600);
 }
 
 .order-grid__title {
@@ -125,25 +119,4 @@
 .order-grid__draft {
   font-style: normal;
   color: var(--theme-warning-600);
-}
-
-.order-grid__add {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--theme-elevation-100);
-}
-
-.order-grid__add-button {
-  margin: 0 0.5rem 0.5rem 0;
-  padding: 0.35rem 0.7rem;
-  border: 1px solid var(--theme-elevation-250);
-  border-radius: 3px;
-  background: var(--theme-elevation-0);
-  color: var(--theme-elevation-800);
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.order-grid__add-button:hover {
-  border-color: var(--theme-elevation-500);
 }

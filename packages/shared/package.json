@@ -9,6 +9,7 @@
     "./categories": "./src/categories.ts",
     "./filter": "./src/filter.ts",
     "./grid": "./src/grid.ts",
+    "./order": "./src/order.ts",
     "./photo-url": "./src/photo-url.ts",
     "./schema": "./src/schema.ts",
     "./slug": "./src/slug.ts",

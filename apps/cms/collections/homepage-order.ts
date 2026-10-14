@@ -1,11 +1,10 @@
 /**
- * Where a project goes in the homepage order when it is published
- * (docs/SPEC.md 8.5) — at the top [rozhodnuto 5. 10. 2026, otevřená otázka 10;
- * SPEC said the end]. The newest work leads, and she can still drag it
- * anywhere. Projects already in the order keep their place.
+ * The homepage orders (docs/SPEC.md 8.5): plain functions of the data so they
+ * can be tested without a database.
  *
- * Plain functions of the data so they can be tested without a database; the
- * hook in Projects.ts does the reading and writing.
+ * Since 14 October 2026 nothing is added to a list when a project is published:
+ * every published project is on the site, unplaced ones first
+ * (packages/shared/order.ts). What is left here is keeping the lists valid.
  */
 
 /** Ids as the global holds them: bare ids or populated documents. */
@@ -19,20 +18,6 @@ export function orderIds(value: unknown): (string | number)[] {
     }
     return [];
   });
-}
-
-/** True when this save is the one that makes the project public. */
-export function becomesPublished(status: unknown, previousStatus: unknown): boolean {
-  return status === 'published' && previousStatus !== 'published';
-}
-
-/** The order with `id` first, or undefined when it is already in it. */
-export function withNewFirst(
-  order: readonly (string | number)[],
-  id: string | number,
-): (string | number)[] | undefined {
-  if (order.some((entry) => String(entry) === String(id))) return undefined;
-  return [id, ...order];
 }
 
 /**
@@ -59,37 +44,4 @@ export function keepCategory(
   category: string,
 ): (string | number)[] {
   return list.filter((id) => categoryOf.get(String(id)) === category);
-}
-
-/**
- * What a saved project changes in the homepage orders, or nothing.
- *
- * Published for the first time: first under All and first in its category.
- * Already on the homepage and moved to another category: first in the new
- * category's list. Leaving the old list is not written here — the homepage
- * drops what no longer belongs whenever it is saved (keepCategory).
- */
-export function orderChanges(args: {
-  homepage: Readonly<Record<string, unknown>>;
-  id: string | number;
-  status: unknown;
-  previousStatus: unknown;
-  category: unknown;
-  previousCategory: unknown;
-}): Record<string, (string | number)[]> {
-  const { homepage, id, category } = args;
-  const changes: Record<string, (string | number)[]> = {};
-  const first = (field: string) => {
-    const next = withNewFirst(orderIds(homepage[field]), id);
-    if (next !== undefined) changes[field] = next;
-  };
-  const onHomepage = orderIds(homepage.projects).some((entry) => String(entry) === String(id));
-
-  if (becomesPublished(args.status, args.previousStatus)) {
-    first('projects');
-    if (typeof category === 'string') first(categoryOrderField(category));
-  } else if (onHomepage && typeof category === 'string' && category !== args.previousCategory) {
-    first(categoryOrderField(category));
-  }
-  return changes;
 }

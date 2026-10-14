@@ -240,13 +240,12 @@ Tlačítko v dialogu: **„Vytvořit a nahrát fotky"**.
 ### 8.5 Pořadí na homepage — `69:2`
 - Vlastní obrazovka, ne pole v projektu
 - Seznam publikovaných projektů, řazení tažením
-- Nově publikovaný projekt se automaticky přidá **na začátek** — **[rozhodnuto 5. 10. 2026, otázka 10; dřív „na konec“]**. Projekty, které v pořadí už jsou, se nehýbou; přesunout ho jde dál tažením. Přidá se při publikaci (i znovu po odpublikování), ne při každém uložení.
+- **Na webu je každý publikovaný projekt** — **[rozhodnuto 14. 10. 2026, mění 5. a 13. 10.]**. Pořadí ho jen řadí: projekt, který Sabrina ještě nezařadila, je **nahoře, nejnovější první** (podle data vytvoření), za ním její pořadí. Platí pro „Vše“ i pro každou kategorii. V mřížce v adminu má štítek *Nový*; prvním přetažením se zařadí. Z webu projekt zmizí jen odpublikováním.
+  - Dřív web ukazoval jen projekty v seznamu a do seznamu se projekt přidal jen v okamžiku první publikace. Projekty publikované před tím pravidlem nebo ve chvíli, kdy publikování padalo, zůstaly publikované a na webu nebyly (14. 10.: 4 z 24).
 - **Vlastní pořadí pro každou kategorii** — **[rozhodnuto 13. 10. 2026, přání klientky]**: obrazovka má záložky **Vše · Commercial · Art · Fashion**. „Vše" je pořadí bez filtru, každá kategorie má svůj seznam, který web použije, když je ten filtr zapnutý.
-  - Do seznamu kategorie jdou jen projekty té kategorie. Projekt, který na seznamu chybí, se na webu ukáže **za** seřazenými, v pořadí ze „Vše" — nikdy nezmizí.
-  - Nově publikovaný projekt se přidá na začátek „Vše" i své kategorie.
   - **Projekt přesunutý do jiné kategorie** se sám přesune i v seznamech: ze starého zmizí, v novém je první. Seznamy se při každém uložení samy zbaví projektů, které do nich nepatří — **[opraveno 13. 10. 2026]**: bez toho zastaralá položka zablokovala uložení pořadí a s ním i každou publikaci.
   - Při zavedení se seznamy předvyplnily pořadím ze „Vše" (migrace `category_order`).
-  - **Pořadí se nastavuje přímo v mřížce** — **[rozhodnuto 13. 10. 2026]**: každá záložka ukazuje titulní fotky ve třech sloupcích jako web (stejný algoritmus) a projekt se přetáhne na místo jiného. Číslo na dlaždici je pořadí. Dlaždice jde odebrat (×); publikované projekty, které v pořadí nejsou, se nabízejí pod mřížkou k přidání. Nahrazuje řádek štítků s názvy a malý náhled v postranním sloupci.
+  - **Pořadí se nastavuje přímo v mřížce** — **[rozhodnuto 13. 10. 2026]**: každá záložka ukazuje titulní fotky ve třech sloupcích jako web (stejný algoritmus) a projekt se přetáhne na místo jiného. Číslo na dlaždici je pořadí. Dlaždice se z pořadí neodebírá a nic se ručně nepřidává (viz výše). Nahrazuje řádek štítků s názvy a malý náhled v postranním sloupci.
 - Náhled rozložení do 3 sloupců (stejný algoritmus jako web) **[návrh — ve wireframu je, v MVP stačí seznam]**
 
 ### 8.6 Nastavení webu — `70:5`

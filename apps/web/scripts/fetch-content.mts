@@ -29,8 +29,8 @@ import { toContent } from '../lib/payload-content.ts';
 const WEB_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_FILE = path.join(WEB_ROOT, 'content', 'payload.json');
 
-/** homepage → projects → photos needs 2; settings only its own photos. */
-const DEPTH = { homepage: 2, settings: 1 } as const;
+/** The homepage holds only her orders, as ids; the projects are read on their own. */
+const DEPTH = { homepage: 0, settings: 1 } as const;
 
 /*
  * `next build` reads .env.production on its own; this script runs under plain
@@ -65,8 +65,29 @@ async function readGlobal(name: keyof typeof DEPTH): Promise<unknown> {
   return response.json();
 }
 
-const [homepage, settings] = await Promise.all([readGlobal('homepage'), readGlobal('settings')]);
-const content = toContent(homepage, settings);
+/**
+ * Every published project. Anonymous, so drafts are not among them. Each one is
+ * on the site, whether or not she has placed it in an order (docs/SPEC.md 8.5).
+ */
+async function readPublished(): Promise<unknown[]> {
+  const url = `${base}/api/projects?depth=1&limit=1000&sort=-createdAt`;
+  const response = await fetch(url, { headers: { Accept: 'application/json' } });
+  if (!response.ok) {
+    throw new Error(`${url} answered ${String(response.status)} ${response.statusText}`);
+  }
+  const body = (await response.json()) as { docs?: unknown[]; hasNextPage?: boolean };
+  if (body.hasNextPage === true) {
+    throw new Error(`${url}: more than 1000 published projects — page through them`);
+  }
+  return body.docs ?? [];
+}
+
+const [homepage, settings, published] = await Promise.all([
+  readGlobal('homepage'),
+  readGlobal('settings'),
+  readPublished(),
+]);
+const content = toContent(homepage, settings, published);
 
 /*
  * Validated here as well as in the build. Failing at this point costs a clear

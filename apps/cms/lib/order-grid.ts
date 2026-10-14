@@ -1,5 +1,6 @@
 import { CATEGORIES } from '@sabrina/shared/categories';
 import { GRID_DESKTOP, layoutColumns } from '@sabrina/shared/grid';
+import { unplacedFirst } from '@sabrina/shared/order';
 
 import { categoryOrderField } from '../collections/homepage-order.ts';
 
@@ -13,6 +14,7 @@ export interface OrderProject {
   title: string;
   category?: string;
   published: boolean;
+  createdAt?: string;
   cover?: { id: string; aspectRatio: number; widths: number[]; dominantColor: string };
 }
 
@@ -34,6 +36,7 @@ export function toOrderProject(raw: unknown): OrderProject | undefined {
     title: typeof doc.title === 'string' ? doc.title : '',
     category: typeof doc.category === 'string' ? doc.category : undefined,
     published: doc._status === 'published',
+    createdAt: typeof doc.createdAt === 'string' ? doc.createdAt : undefined,
     cover:
       usable !== undefined && typeof usable.aspectRatio === 'number' && Array.isArray(usable.widths)
         ? {
@@ -70,19 +73,22 @@ export function orderColumns(
 }
 
 /**
- * Projects that could be on this list and are not: published, of the list's
- * category when it has one. What the "add" row offers.
+ * What a list shows, in the order the site will: every published project of the
+ * list's category (or every one, for the order under All), the ones she has not
+ * placed first and newest first, then hers (packages/shared/order.ts). Drafts are
+ * not on the site and are not shown; an entry for one is dropped when she saves.
  */
-export function addable(
+export function shownInOrder(
   all: readonly OrderProject[],
   listedIds: readonly string[],
   category: string | undefined,
-): OrderProject[] {
-  const listed = new Set(listedIds);
-  return all.filter(
-    (project) =>
-      project.published &&
-      !listed.has(project.id) &&
-      (category === undefined || project.category === category),
+): { project: OrderProject; placed: boolean }[] {
+  const eligible = all.filter(
+    (project) => project.published && (category === undefined || project.category === category),
   );
+  const listed = new Set(listedIds);
+  return unplacedFirst(eligible, listedIds).map((project) => ({
+    project,
+    placed: listed.has(project.id),
+  }));
 }

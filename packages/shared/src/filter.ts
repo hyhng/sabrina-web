@@ -43,10 +43,10 @@ export function filterProjects<T extends Pick<Project, 'category'>>(
  * The projects a filter shows, in the order to show them.
  *
  * All is the homepage order. A category uses the client's own order for that
- * category where she has set one [rozhodnuto 13. 10. 2026]: projects on her
- * list come first, in her order; any project of the category she has not placed
- * follows in the homepage order, so a project is never missing from the site
- * because a list was not kept up. Slugs on the list that are not in the category
+ * category where she has set one [rozhodnuto 13. 10. 2026]. A project of the
+ * category that is not on her list comes first, in the homepage order
+ * [změněno 14. 10. 2026, dřív na konci] — the build already lists every
+ * project, unplaced ones first (packages/shared/order.ts). Slugs on the list that are not in the category
  * (the project was moved to another one) are simply not shown here.
  */
 export function orderedFor<T extends Pick<Project, 'category' | 'slug'>>(
@@ -58,8 +58,8 @@ export function orderedFor<T extends Pick<Project, 'category' | 'slug'>>(
   if (value === 'all') return shown;
   const rank = new Map((categoryOrder[value] ?? []).map((slug, index) => [slug, index]));
   // Array.prototype.sort is stable, so equal ranks keep the homepage order.
-  const last = rank.size;
-  return shown.sort((a, b) => (rank.get(a.slug) ?? last) - (rank.get(b.slug) ?? last));
+  // Not on her list: first, as in the build's own order (packages/shared/order.ts).
+  return shown.sort((a, b) => (rank.get(a.slug) ?? -1) - (rank.get(b.slug) ?? -1));
 }
 
 /** The URL a filter choice should produce, keeping the current path. */

@@ -89,18 +89,27 @@ describe('toContent', () => {
     expect(content.homepage.projects[0]?.client).toBe('Wool');
   });
 
-  it('drops a project the admin would not hand over, and says which', () => {
-    /*
-     * A draft read anonymously comes back as a bare id — measured. For a public
-     * build that is the drafts filtering themselves out, but silence would turn
-     * a broken request into an empty homepage.
-     */
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+  it('leaves out a draft that is still on her list', () => {
+    // A draft read anonymously comes back as a bare id — measured. It is not
+    // among the published projects, so the list entry simply has nothing to show.
     const mixed = { ...homepage, projects: [26, project] };
     const content = contentSchema.parse(toContent(mixed, settings));
-    expect(content.homepage.projects).toHaveLength(1);
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining('26'));
-    warn.mockRestore();
+    expect(content.homepage.projects.map((entry) => entry.slug)).toEqual(['wool-ss26-campaign']);
+  });
+
+  it('shows every published project, those she has not placed first and newest first', () => {
+    // 14 October: published but not on her list used to mean not on the site.
+    const placed = { ...project, id: 17, createdAt: '2026-09-01T00:00:00.000Z' };
+    const older = { ...project, id: 18, slug: 'older', createdAt: '2026-10-01T00:00:00.000Z' };
+    const newer = { ...project, id: 19, slug: 'newer', createdAt: '2026-10-12T00:00:00.000Z' };
+    const content = contentSchema.parse(
+      toContent({ ...homepage, projects: [17] }, settings, [placed, older, newer]),
+    );
+    expect(content.homepage.projects.map((entry) => entry.slug)).toEqual([
+      'newer',
+      'older',
+      'wool-ss26-campaign',
+    ]);
   });
 
   it('keeps her order', () => {
@@ -171,6 +180,7 @@ describe('toContent', () => {
     expect(content.homepage.categoryOrder).toEqual({
       commercial: ['wool-ss26-campaign'],
       art: ['fog'],
+      fashion: [],
     });
   });
 
@@ -183,8 +193,12 @@ describe('toContent', () => {
     expect(content.homepage.categoryOrder.commercial).toEqual(['wool-ss26-campaign']);
   });
 
-  it('has no category order when the admin sends none, and the schema fills in an empty one', () => {
-    expect(contentSchema.parse(toContent(homepage, settings)).homepage.categoryOrder).toEqual({});
+  it('orders a category with no list of hers newest first', () => {
+    expect(contentSchema.parse(toContent(homepage, settings)).homepage.categoryOrder).toEqual({
+      commercial: ['wool-ss26-campaign'],
+      art: [],
+      fashion: [],
+    });
   });
 
   it('survives a homepage with no projects at all', () => {

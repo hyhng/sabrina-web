@@ -19,6 +19,7 @@
  * mistake in this file fails the build rather than reaching the site.
  */
 import { CATEGORIES } from '@sabrina/shared/categories';
+import { unplacedFirst } from '@sabrina/shared/order';
 
 /** Payload writes `null` for an empty field; the schema means absent. */
 function present(value: unknown): unknown {
@@ -118,37 +119,62 @@ function idOf(entry: unknown): string | undefined {
   return typeof id === 'string' || typeof id === 'number' ? String(id) : undefined;
 }
 
-/**
- * Her order within each category, as slugs. The admin keeps one list per
- * category in a field named `<category>Order`, holding project ids; the site
- * works in slugs, and only for projects that made it into the build.
- */
-function categoryOrder(homepage: Record<string, unknown>): Record<string, string[]> {
-  const slugById = new Map<string, string>();
-  for (const entry of Array.isArray(homepage.projects) ? homepage.projects : []) {
+/** The published projects that can be drawn, keyed by id, with their dates. */
+function pool(raw: unknown[]): { id: string; createdAt?: string; doc: Record<string, unknown> }[] {
+  const seen = new Set<string>();
+  return raw.flatMap((entry) => {
+    if (!isRecord(entry)) return [];
     const id = idOf(entry);
-    if (id !== undefined && isRecord(entry) && typeof entry.slug === 'string') {
-      slugById.set(id, entry.slug);
-    }
-  }
-  const order: Record<string, string[]> = {};
-  for (const category of CATEGORIES) {
-    const list = homepage[`${category}Order`];
-    if (!Array.isArray(list)) continue;
-    order[category] = list.flatMap((entry) => {
-      const slug = slugById.get(idOf(entry) ?? '');
-      return slug === undefined ? [] : [slug];
-    });
-  }
-  return order;
+    if (id === undefined || seen.has(id)) return [];
+    seen.add(id);
+    return [
+      {
+        id,
+        createdAt: typeof entry.createdAt === 'string' ? entry.createdAt : undefined,
+        doc: entry,
+      },
+    ];
+  });
 }
 
-export function toContent(homepage: unknown, settingsRaw: unknown): unknown {
+/** Ids on one of her lists, in her order. */
+function listIds(raw: unknown): string[] {
+  return Array.isArray(raw) ? raw.flatMap((entry) => idOf(entry) ?? []) : [];
+}
+
+/**
+ * The content the site is built from (docs/SPEC.md 8.5).
+ *
+ * `published` is every published project, read anonymously. Each of them is on
+ * the site: her lists only order them, and one she has not placed comes first,
+ * newest first (packages/shared/order.ts). Without `published` — an older call,
+ * or a test — the projects on the homepage list are all there is.
+ */
+export function toContent(homepage: unknown, settingsRaw: unknown, published?: unknown): unknown {
+  const home = isRecord(homepage) ? homepage : {};
+  const available = pool(
+    Array.isArray(published) ? published : Array.isArray(home.projects) ? home.projects : [],
+  );
+  const ordered = unplacedFirst(available, listIds(home.projects));
+  const shown = projects(ordered.map((entry) => entry.doc));
+  const slugs = new Set(
+    shown.flatMap((entry) =>
+      isRecord(entry) && typeof entry.slug === 'string' ? [entry.slug] : [],
+    ),
+  );
+
+  // The same rule within each category: unplaced first, newest first, then her order.
+  const categoryOrder: Record<string, string[]> = {};
+  for (const category of CATEGORIES) {
+    const inCategory = available.filter((entry) => entry.doc.category === category);
+    categoryOrder[category] = unplacedFirst(inCategory, listIds(home[`${category}Order`])).flatMap(
+      (entry) =>
+        typeof entry.doc.slug === 'string' && slugs.has(entry.doc.slug) ? [entry.doc.slug] : [],
+    );
+  }
+
   return {
-    homepage: {
-      projects: projects(isRecord(homepage) ? homepage.projects : undefined),
-      categoryOrder: isRecord(homepage) ? categoryOrder(homepage) : {},
-    },
+    homepage: { projects: shown, categoryOrder },
     settings: settings(settingsRaw),
   };
 }

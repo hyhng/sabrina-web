@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { addable, categoryOfField, orderColumns, toOrderProject } from './order-grid.ts';
+import { categoryOfField, orderColumns, shownInOrder, toOrderProject } from './order-grid.ts';
 
 const project = (id: string, category: string, published = true, aspectRatio = 0.75) => ({
   id,
@@ -34,16 +34,31 @@ describe('orderColumns', () => {
   });
 });
 
-describe('addable', () => {
-  const all = [project('1', 'art'), project('2', 'fashion'), project('3', 'art', false)];
+describe('shownInOrder', () => {
+  const dated = (id: string, category: string, createdAt: string, published = true) => ({
+    ...project(id, category, published),
+    createdAt,
+  });
+  const all = [
+    dated('1', 'art', '2026-09-01'),
+    dated('2', 'fashion', '2026-10-10'),
+    dated('3', 'art', '2026-10-12'),
+    dated('4', 'art', '2026-10-13', false),
+  ];
+  const view = (ids: string[], category?: string) =>
+    shownInOrder(all, ids, category).map(({ project: p, placed }) => `${p.id}${placed ? '' : '*'}`);
 
-  it('offers published projects that are not on the list', () => {
-    expect(addable(all, ['1'], undefined).map((entry) => entry.id)).toEqual(['2']);
+  it('shows every published project, unplaced ones first and newest first, marked', () => {
+    expect(view(['1'])).toEqual(['3*', '2*', '1']);
   });
 
-  it('offers only projects of its own category for a category list', () => {
-    expect(addable(all, [], 'art').map((entry) => entry.id)).toEqual(['1']);
-    expect(addable(all, [], 'fashion').map((entry) => entry.id)).toEqual(['2']);
+  it('keeps to the category of the list', () => {
+    expect(view(['1'], 'art')).toEqual(['3*', '1']);
+    expect(view([], 'fashion')).toEqual(['2*']);
+  });
+
+  it('leaves out drafts, even when they are on the list', () => {
+    expect(view(['4', '1'])).toEqual(['3*', '2*', '1']);
   });
 });
 

@@ -6,3 +6,4 @@ export * from './schema.ts';
 export * from './slug.ts';
 export * from './upload.ts';
 export * from './order.ts';
+export * from './phone.ts';

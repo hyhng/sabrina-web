@@ -1,5 +1,6 @@
 'use client';
 
+import { telHref } from '@sabrina/shared/phone';
 import type { Settings } from '@sabrina/shared/schema';
 import { useEffect, useRef, useState } from 'react';
 
@@ -114,6 +115,12 @@ export function InfoOverlay({ settings, imgBase, onClose }: InfoOverlayProps) {
               <a href={`mailto:${settings.email}`} className="underline">
                 {settings.email}
               </a>
+              {/* Optional: only there once she has filled it in. */}
+              {settings.phone === undefined ? null : (
+                <a href={telHref(settings.phone)} className="underline">
+                  {settings.phone}
+                </a>
+              )}
               <a
                 href={settings.instagramUrl}
                 target="_blank"

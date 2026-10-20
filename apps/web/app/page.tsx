@@ -35,6 +35,7 @@ export default async function HomePage() {
     jobTitle: 'Photographer',
     url: `${SITE_URL}/`,
     email: settings.email,
+    ...(settings.phone === undefined ? {} : { telephone: settings.phone }),
     sameAs: [settings.instagramUrl],
     address: {
       '@type': 'PostalAddress',

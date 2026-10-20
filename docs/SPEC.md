@@ -165,6 +165,7 @@ Figma: UI 07 (desktop), UI 08 (mobil).
 - Nahoře vlevo titulek **„Sabrina Kulhankova, photographer."**, vpravo ✕
 - Tři sloupce: **portrét** · **bio** · **kontakt** (`Based in Prague.`, e-mail jako `mailto:`, Instagram jako odkaz ven)
 - Kontakt je text, **ne formulář** — **[rozhodnuto]**
+- **Telefon** (nepovinný) pod e-mailem — **[rozhodnuto 20. 10. 2026, přání klientky]**: v Nastavení webu, ukáže se tak, jak ho napíše, a je to odkaz `tel:`. Prázdné pole = žádný telefon na webu.
 - Overlay se na desktopu **nemá scrollovat** — délku bia hlídá admin (počítadlo znaků, viz 8.4)
 - **Mobil:** horní lišta s titulkem a ✕, pod ní portrét přes šířku, bio, kontakt, svislý scroll
 - Zavření stejně jako detail (✕, Esc, Zpět)

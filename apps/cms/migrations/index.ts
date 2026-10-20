@@ -3,6 +3,7 @@ import * as migration_20261013_180226_add_fashion_category from './20261013_1802
 import * as migration_20261013_180944_category_order from './20261013_180944_category_order';
 import * as migration_20261013_190445_reconcile_category_order from './20261013_190445_reconcile_category_order';
 import * as migration_20261013_204619_category_labels from './20261013_204619_category_labels';
+import * as migration_20261020_120800_settings_phone from './20261020_120800_settings_phone';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20261013_204619_category_labels.up,
     down: migration_20261013_204619_category_labels.down,
-    name: '20261013_204619_category_labels'
+    name: '20261013_204619_category_labels',
+  },
+  {
+    up: migration_20261020_120800_settings_phone.up,
+    down: migration_20261020_120800_settings_phone.down,
+    name: '20261020_120800_settings_phone'
   },
 ];

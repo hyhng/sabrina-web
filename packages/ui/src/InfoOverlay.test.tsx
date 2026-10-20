@@ -64,6 +64,14 @@ describe('InfoOverlay', () => {
     expect(html).not.toContain('<input');
   });
 
+  it('shows the phone as she wrote it and dials it, only when there is one', () => {
+    // Added 20 October 2026; optional.
+    expect(html).not.toContain('tel:');
+    const withPhone = render({ ...settings, phone: '+420 777 123 456' });
+    expect(withPhone).toContain('href="tel:+420777123456"');
+    expect(withPhone).toContain('>+420 777 123 456<');
+  });
+
   it('shows the portrait and survives not having one', () => {
     expect(html).toContain('/seed/photos/portrait/400.webp');
     const without = render({ ...settings, portrait: undefined });

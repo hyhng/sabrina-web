@@ -10,6 +10,7 @@
     "./filter": "./src/filter.ts",
     "./grid": "./src/grid.ts",
     "./order": "./src/order.ts",
+    "./phone": "./src/phone.ts",
     "./photo-url": "./src/photo-url.ts",
     "./schema": "./src/schema.ts",
     "./slug": "./src/slug.ts",

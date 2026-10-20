@@ -168,6 +168,17 @@ describe('toContent', () => {
     expect(contentSchema.parse(toContent(homepage, settings)).settings.categoryLabels).toEqual({});
   });
 
+  it('passes on the phone, and leaves it out when she left it empty', () => {
+    const withPhone = contentSchema.parse(
+      toContent(homepage, { ...settings, phone: ' +420 777 123 456 ' }),
+    );
+    expect(withPhone.settings.phone).toBe('+420 777 123 456');
+    for (const empty of [null, '', '   ']) {
+      const none = contentSchema.parse(toContent(homepage, { ...settings, phone: empty }));
+      expect(none.settings.phone).toBeUndefined();
+    }
+  });
+
   it('turns her order within a category from ids into slugs', () => {
     const fog = { ...project, id: 18, title: 'Fog', slug: 'fog', category: 'art' };
     const content = contentSchema.parse(

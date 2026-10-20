@@ -110,6 +110,8 @@ function settings(raw: unknown): unknown {
     portrait: raw.portrait === null ? undefined : photo(raw.portrait),
     ogImage: raw.ogImage === null ? undefined : photo(raw.ogImage),
     categoryLabels: categoryLabels(raw.categoryLabels),
+    // Optional: null or blank in the admin means no phone on the site.
+    phone: typeof raw.phone === 'string' && raw.phone.trim() !== '' ? raw.phone.trim() : undefined,
   };
 }
 

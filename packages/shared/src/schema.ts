@@ -81,6 +81,8 @@ export const settingsSchema = z.object({
   bio: z.string(),
   location: z.string(),
   email: z.email(),
+  /** Optional; shown as she wrote it, dialled from `telHref` [rozhodnuto 20. 10. 2026]. */
+  phone: z.string().min(1).optional(),
   instagramHandle: z.string().min(1),
   instagramUrl: z.url(),
   seoDescription: z.string(),

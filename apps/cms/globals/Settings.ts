@@ -73,6 +73,16 @@ export const Settings: GlobalConfig = {
           defaultValue: 'Based in Prague.',
         },
         { name: 'email', type: 'email', label: 'E-mail' },
+        {
+          name: 'phone',
+          type: 'text',
+          label: 'Telefon',
+          maxLength: 32,
+          admin: {
+            description:
+              'Nepovinné. Ukáže se v Information tak, jak ho napíšeš, např. +420 777 123 456.',
+          },
+        },
       ],
     },
     {

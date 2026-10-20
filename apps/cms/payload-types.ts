@@ -436,6 +436,10 @@ export interface Setting {
   location?: string | null;
   email?: string | null;
   /**
+   * Nepovinné. Ukáže se v Information tak, jak ho napíšeš, např. +420 777 123 456.
+   */
+  phone?: string | null;
+  /**
    * Včetně zavináče, např. @sabrinakulhankova.photography
    */
   instagramHandle?: string | null;
@@ -491,6 +495,7 @@ export interface SettingsSelect<T extends boolean = true> {
   bio?: T;
   location?: T;
   email?: T;
+  phone?: T;
   instagramHandle?: T;
   instagramUrl?: T;
   seoDescription?: T;
